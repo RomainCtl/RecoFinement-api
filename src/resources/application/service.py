@@ -8,13 +8,13 @@ class ApplicationService:
     @staticmethod
     def get_application_data(uid):
         """ Get application data by uid """
-        if not (user := Application.query.filter_by(uid=uid).first()):
+        if not (application := Application.query.filter_by(uid=uid).first()):
             return err_resp("Application not found!", "application_404", 404)
 
         from .utils import load_data
 
         try:
-            application_data = load_data(user)
+            application_data = load_data(application)
 
             resp = message(True, "Application data sent")
             resp["application"] = application_data

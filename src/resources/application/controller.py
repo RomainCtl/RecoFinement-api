@@ -18,6 +18,6 @@ class ApplicationGet(Resource):
         },
     )
     @jwt_required
-    def get(self, gid):
-        """ Get a specific application's data by their gid """
-        return ApplicationService.get_application_data(gid)
+    def get(self, uid):
+        """ Get a specific application's data by their uid """
+        return ApplicationService.get_application_data(uid)
