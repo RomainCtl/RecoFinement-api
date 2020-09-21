@@ -1,7 +1,7 @@
 # Game Schemas
 from src import ma
 
-from src.model.game import Game
+from src.model import Game
 
 
 class GameSchema(ma.SQLAlchemyAutoSchema):

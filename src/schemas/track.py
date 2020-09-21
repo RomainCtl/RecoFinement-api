@@ -1,7 +1,7 @@
 # Track Schemas
 from src import ma
 
-from src.model.track import Track
+from src.model import Track
 
 
 class TrackSchema(ma.SQLAlchemyAutoSchema):

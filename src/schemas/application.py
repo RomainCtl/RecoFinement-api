@@ -1,7 +1,7 @@
 # Application Schemas
 from src import ma
 
-from src.model.application import Application
+from src.model import Application
 
 
 class ApplicationSchema(ma.SQLAlchemyAutoSchema):

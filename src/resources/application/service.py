@@ -1,7 +1,7 @@
 from flask import current_app
 
 from src.utils import err_resp, message, internal_err_resp
-from src.model.application import Application
+from src.model import Application
 
 
 class ApplicationService:

@@ -1,7 +1,7 @@
 from flask import current_app
 
 from src.utils import err_resp, message, internal_err_resp
-from src.model.book import Book
+from src.model import Book
 
 
 class BookService:

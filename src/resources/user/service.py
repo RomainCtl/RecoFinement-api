@@ -1,7 +1,7 @@
 from flask import current_app
 
 from src.utils import err_resp, message, internal_err_resp
-from src.model.user import User
+from src.model import User
 
 
 class UserService:

@@ -4,7 +4,7 @@ def load_data(book_db_obj):
     Parameters:
     - Book db object
     """
-    from src.schemas.book import BookSchema
+    from src.schemas import BookSchema
 
     book_schema = BookSchema()
 

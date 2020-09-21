@@ -1,7 +1,7 @@
 # User Schemas
 from src import ma
 
-from src.model.user import User
+from src.model import User
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):

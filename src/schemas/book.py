@@ -1,7 +1,7 @@
 # Book Schemas
 from src import ma
 
-from src.model.book import Book
+from src.model import Book
 
 
 class BookSchema(ma.SQLAlchemyAutoSchema):

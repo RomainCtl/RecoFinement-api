@@ -1,7 +1,7 @@
 from flask import current_app
 
 from src.utils import err_resp, message, internal_err_resp
-from src.model.game import Game
+from src.model import Game
 
 
 class GameService:

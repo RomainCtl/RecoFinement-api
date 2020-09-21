@@ -4,7 +4,7 @@ def load_data(game_db_obj):
     Parameters:
     - Game db object
     """
-    from src.schemas.game import GameSchema
+    from src.schemas import GameSchema
 
     game_schema = GameSchema()
 

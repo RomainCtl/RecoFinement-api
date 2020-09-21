@@ -4,7 +4,7 @@ def load_data(track_db_obj):
     Parameters:
     - Track db object
     """
-    from src.schemas.track import TrackSchema
+    from src.schemas import TrackSchema
 
     track_schema = TrackSchema()
 

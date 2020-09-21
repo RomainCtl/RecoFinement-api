@@ -4,7 +4,7 @@ def load_data(application_db_obj):
     Parameters:
     - Application db object
     """
-    from src.schemas.application import ApplicationSchema
+    from src.schemas import ApplicationSchema
 
     application_schema = ApplicationSchema()
 
