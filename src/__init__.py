@@ -1,6 +1,6 @@
 from flask import Flask
 
-from src.addons import db, ma, migrate, cors
+from src.addons import db, ma, migrate, cors, bcrypt, jwt
 import settings
 
 
@@ -15,6 +15,8 @@ def create_app():
     # Registers flask extensions
     db.init_app(app)
     ma.init_app(app)
+    jwt.init_app(app)
+    bcrypt.init_app(app)
     cors.init_app(app)
     migrate.init_app(app,db=db)
 

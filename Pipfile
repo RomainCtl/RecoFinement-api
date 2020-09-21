@@ -18,6 +18,8 @@ flask-marshmallow = "*"
 pytest = "*"
 pytest-flask = "*"
 flask-restx = "*"
+flask-bcrypt = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.8"

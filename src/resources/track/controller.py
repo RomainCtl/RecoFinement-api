@@ -7,7 +7,7 @@ api = TrackDto.api
 data_resp = TrackDto.data_resp
 
 
-@api.route("/<uuid:gid>")
+@api.route("/<string:gid>")
 class TrackGet(Resource):
     @api.doc(
         "Get a specific track",
