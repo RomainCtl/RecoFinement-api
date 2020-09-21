@@ -3,7 +3,7 @@ import uuid
 
 from ..addons import db
 
-class Genre(db.model):
+class Genre(db.Model):
     """
     Genre Model for storing genre related details
     """

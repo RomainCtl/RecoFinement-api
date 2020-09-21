@@ -10,7 +10,7 @@ trackTags = db.Table("track_tags",
     db.Column("count", db.Integer, default=0)
 )
 
-class Track(db.model):
+class Track(db.Model):
     """
     Track Model for storing track related details
     """
@@ -23,7 +23,7 @@ class Track(db.model):
     date_year = db.Column(db.SmallInteger)
     date_month = db.Column(db.SmallInteger)
     date_day = db.Column(db.SmallInteger)
-    rating = db.Column(db.float)
+    rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.

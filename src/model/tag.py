@@ -1,6 +1,6 @@
 from ..addons import db
 
-class Tag(db.model):
+class Tag(db.Model):
     """
     Tag Model for storing tag related details
     """

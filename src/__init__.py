@@ -1,8 +1,6 @@
-from flask_cors import CORS
-from dotenv import load_dotenv
-import os
+from flask import Flask
 
-from src.addons import app, api, db, ma, migrate
+from src.addons import db, ma, migrate, cors
 import settings
 
 
@@ -10,20 +8,19 @@ def create_app():
     """
     Create application
     """
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    #: Flask application
+    app = Flask(__name__)
     app.config.from_object(settings)
 
-    with app.app_context():
-        db.init_app(app)
-        ma.init_app(app)
+    # Registers flask extensions
+    db.init_app(app)
+    ma.init_app(app)
+    cors.init_app(app)
+    migrate.init_app(app,db=db)
 
-        migrate.init_app(app,db=db)
+    # Register blueprints
+    from .resources import api_bp
 
-        api.init_app(app)
-
-    # api.add_resource(HomeResource, '/', '/home', endpoint="home")
-
-    # api.add_resource(MusicResource, /music', endpoint="music_all")
-    # api.add_resource(MusicResource, /music/<int:msc_id>', endpoint="music_by_id")
+    app.register_blueprint(api_bp, url_prefix="/api")
 
     return app
