@@ -2,7 +2,7 @@ from flask_restx import Namespace, fields
 
 class UserDto:
     api = Namespace("user", description="User related operations.")
-    track = api.model(
+    user = api.model(
         "User object",
         {
             "uuid": fields.String,
@@ -16,6 +16,6 @@ class UserDto:
         {
             "status": fields.Boolean,
             "message": fields.String,
-            "user": fields.Nested(track),
+            "user": fields.Nested(user),
         },
     )

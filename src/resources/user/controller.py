@@ -20,4 +20,4 @@ class UserGet(Resource):
     @jwt_required
     def get(self, uuid):
         """ Get a specific user's data by their uuid """
-        return UserService.get_track_data(uuid)
+        return UserService.get_user_data(uuid)
