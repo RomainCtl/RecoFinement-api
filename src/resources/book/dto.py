@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-class ApplicationDto:
+class BookDto:
     api = Namespace("book", description="Book related operations.")
     book = api.model(
         "Book object",
