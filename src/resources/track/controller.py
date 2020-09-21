@@ -1,4 +1,5 @@
 from flask_restx import Resource
+from flask_jwt_extended import jwt_required
 
 from .service import TrackService
 from .dto import TrackDto
@@ -16,6 +17,7 @@ class TrackGet(Resource):
             404: "Track not found!",
         },
     )
+    @jwt_required
     def get(self, gid):
         """ Get a specific track's data by their gid """
         return TrackService.get_track_data(gid)

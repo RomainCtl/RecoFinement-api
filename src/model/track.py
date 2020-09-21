@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-from ..addons import db
+from src import db
 
 
 trackTags = db.Table("track_tags",
