@@ -9,7 +9,7 @@ data_resp = TrackDto.data_resp
 
 
 @api.route("/<string:gid>")
-class TrackGet(Resource):
+class TrackController(Resource):
     @api.doc(
         "Get a specific track",
         responses={

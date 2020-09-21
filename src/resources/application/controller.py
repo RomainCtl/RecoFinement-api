@@ -9,7 +9,7 @@ data_resp = ApplicationDto.data_resp
 
 
 @api.route("/<string:uid>")
-class ApplicationGet(Resource):
+class ApplicationController(Resource):
     @api.doc(
         "Get a specific application",
         responses={

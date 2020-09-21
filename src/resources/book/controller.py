@@ -9,7 +9,7 @@ data_resp = BookDto.data_resp
 
 
 @api.route("/<string:isbn>")
-class BookGet(Resource):
+class BookController(Resource):
     @api.doc(
         "Get a specific book",
         responses={

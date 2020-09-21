@@ -9,7 +9,7 @@ data_resp = GameDto.data_resp
 
 
 @api.route("/<string:uid>")
-class GameGet(Resource):
+class GameController(Resource):
     @api.doc(
         "Get a specific game",
         responses={

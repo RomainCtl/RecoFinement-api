@@ -9,7 +9,7 @@ data_resp = UserDto.data_resp
 
 
 @api.route("/<string:uuid>")
-class UserGet(Resource):
+class UserController(Resource):
     @api.doc(
         "Get a specific user",
         responses={
