@@ -1,10 +1,9 @@
 from flask_cors import CORS
-from flask_restplus import Api
-import settings
-import os
 from dotenv import load_dotenv
+import os
 
 from src.addons import app, api, db, ma, migrate
+import settings
 
 
 def create_app():
