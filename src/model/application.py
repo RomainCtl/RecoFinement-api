@@ -1,3 +1,6 @@
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+
 from src import db
 
 class Application(db.Model):
@@ -5,6 +8,7 @@ class Application(db.Model):
     Application Model for storing application related details
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    uid = db.Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True, nullable=False)
     app_name = db.Column(db.String(255), unique=True, index=True)
     category = db.Column(db.String(255))
     rating = db.Column(db.Float)
