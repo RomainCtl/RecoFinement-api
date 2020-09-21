@@ -46,7 +46,7 @@ During the successive phases of development, you will have to modify the databas
 > All files and scripts produced by [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) are stored in the directory `./migrations/`.
 
 To change the database structure and create a new database migration script, follow these steps:
-1. Edit the [SQLAlchemy](https://www.sqlalchemy.org/) data models in the directory `./src/database/`
+1. Edit the [SQLAlchemy](https://www.sqlalchemy.org/) data models in the directory `./src/model/`
 2. Run the following command to generate a new database migration script:
 ```bash
 make db-migration version="explicit_version_name"
