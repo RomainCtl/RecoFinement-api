@@ -5,6 +5,10 @@
 
 > Check instruction about requirements in the `README.md` file of the master project.
 
+## Requirements
+
+* [PostgreSQL](https://www.postgresql.org/) Server with a database with the name of your choice (Do not forget to define env variables, see next point).
+
 
 ## Configuration
 
@@ -14,7 +18,7 @@ In order to run correctly, the project needs to recover its configuration. To do
 cp .env.default .env
 ```
 
-Then replace the values.
+Then replace the values, and in particular the variables for the connection to the database.
 
 
 ## Usage
@@ -23,6 +27,9 @@ Basic usage:
 ```bash
 # Initialize project (install dependencies)
 make init
+
+# Update database to the last migration (or initialize it if it does not exist)
+make db-upgrade
 
 # Serve locally the development build
 make serve
