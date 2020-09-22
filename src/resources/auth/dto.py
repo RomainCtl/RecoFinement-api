@@ -7,6 +7,7 @@ class AuthDto:
     user_obj = api.model(
         "User object",
         {
+            "uuid": fields.String,
             "email": fields.String,
             "username": fields.String,
         },
