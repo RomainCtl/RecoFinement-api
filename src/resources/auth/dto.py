@@ -8,10 +8,7 @@ class AuthDto:
         "User object",
         {
             "email": fields.String,
-            "name": fields.String,
             "username": fields.String,
-            "joined_date": fields.DateTime,
-            "role_id": fields.Integer,
         },
     )
 
@@ -28,8 +25,6 @@ class AuthDto:
         {
             "email": fields.String(required=True),
             "username": fields.String(required=True),
-            # Name is optional
-            "name": fields.String,
             "password": fields.String(required=True),
         },
     )
