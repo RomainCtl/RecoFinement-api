@@ -20,6 +20,12 @@ def create_app():
     cors.init_app(app)
     migrate.init_app(app,db=db)
 
+    # JWT overrided method
+    from .model import RevokedToken
+    @jwt.token_in_blacklist_loader
+    def check_if_token_is_revoked(decrypted_token):
+        return RevokedToken.is_revoked(decrypted_token['jti'])
+
     # Register blueprints
     from .resources import api_bp
 

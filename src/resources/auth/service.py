@@ -3,8 +3,8 @@ from flask_jwt_extended import create_access_token
 
 from src import db
 from src.utils import message, err_resp, internal_err_resp
-from src.model.user import User
-from src.schemas.user import UserSchema
+from src.model import User, RevokedToken
+from src.schemas import UserSchema
 
 user_schema = UserSchema()
 
@@ -85,3 +85,17 @@ class AuthService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def logout(data):
+        jti = data['jti']
+        try:
+            revoked_token = RevokedToken(jti=jti)
+
+            db.session.add(revoked_token)
+            db.session.commit()
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+

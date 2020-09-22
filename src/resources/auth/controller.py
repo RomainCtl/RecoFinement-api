@@ -1,5 +1,6 @@
 from flask import request, abort
 from flask_restx import Resource
+from flask_jwt_extended import get_raw_jwt, jwt_required
 
 from src.utils import validation_error
 
@@ -32,6 +33,7 @@ class AuthLogin(Resource):
             404: "Email does not match any account.",
         },
     )
+    @api.doc(security=None)
     @api.expect(auth_login, validate=True)
     def post(self):
         """ Login using email and password """
@@ -60,6 +62,7 @@ class AuthRegister(Resource):
             400: "Malformed data or validations failed.",
         },
     )
+    @api.doc(security=None)
     @api.expect(auth_register, validate=True)
     def post(self):
         """ User registration """
@@ -71,3 +74,22 @@ class AuthRegister(Resource):
             return validation_error(False, errors), 400
 
         return AuthService.register(register_data)
+
+@api.route("/logout")
+class AuthLogout(Resource):
+    """ User logout endpoint
+    """
+    @api.doc(
+        "Auth logout",
+        responses={
+            204: ("Successfully logout user."),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def post(self):
+        """ User logout """
+        token = get_raw_jwt()
+
+        return AuthService.logout(token)
+

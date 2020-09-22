@@ -11,7 +11,13 @@ from .user.controller import api as user_ns
 # Import controller APIs as namespaces.
 api_bp = Blueprint("api", __name__)
 
-api = Api(api_bp, title="RecoFinement API", description="Main routes.")
+api = Api(api_bp, title="RecoFinement API", description="Main routes.", security='Bearer Auth', authorizations={
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    },
+})
 
 # API namespaces
 api.add_namespace(app_ns)
