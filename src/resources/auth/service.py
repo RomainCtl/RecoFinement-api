@@ -20,9 +20,9 @@ class AuthService:
             # Fetch user data
             if not (user := User.query.filter_by(email=email).first()):
                 return err_resp(
-                    "Failed auth.",
-                    "auth_404",
-                    404,
+                    "Failed to log in.",
+                    "invalid_auth",
+                    401,
                 )
 
             elif user and user.verify_password(password):
@@ -37,7 +37,7 @@ class AuthService:
                 return resp, 200
 
             return err_resp(
-                "Failed to log in, password may be incorrect.", "password_invalid", 401
+                "Failed to log in.", "invalid_auth", 401
             )
 
         except Exception as error:
@@ -48,14 +48,14 @@ class AuthService:
     def register(data):
         # Assign vars
 
-        ## Required values
+        # Required values
         email = data["email"]
         username = data["username"]
         password = data["password"]
 
         # Check if the email is taken
         if User.query.filter_by(email=email).first() is not None:
-            return err_resp("Email is already being used.", "email_taken", 403)
+            return err_resp("Email is already being used.", "email_taken", 400)
 
         try:
             new_user = User(
@@ -99,4 +99,3 @@ class AuthService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
-
