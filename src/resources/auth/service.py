@@ -20,8 +20,8 @@ class AuthService:
             # Fetch user data
             if not (user := User.query.filter_by(email=email).first()):
                 return err_resp(
-                    "The email you have entered does not match any account.",
-                    "email_404",
+                    "Failed auth.",
+                    "auth_404",
                     404,
                 )
 
@@ -95,6 +95,7 @@ class AuthService:
             db.session.add(revoked_token)
             db.session.commit()
 
+            return "", 204
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
