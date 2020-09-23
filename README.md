@@ -29,7 +29,7 @@ Basic usage:
 make init
 
 # Update database to the last migration (or initialize it if it does not exist)
-make db-upgrade
+make db-updade
 
 # Serve locally the development build
 make serve
