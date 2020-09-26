@@ -1,20 +1,22 @@
 from flask_restx import Namespace, fields
 
+
 class TrackDto:
     api = Namespace("track", description="Track related operations.")
     track = api.model(
         "Track object",
         {
-            "gid": fields.String,
-            "name": fields.String,
+            "track_id": fields.String,
+            "title": fields.String,
+            "year": fields.Integer,
             "artist_name": fields.String,
-            "album_name": fields.String,
+            "release": fields.String,
+            "recording_mbid": fields.String,
             "language": fields.String,
-            "date_year": fields.Integer,
-            "date_month": fields.Integer,
-            "date_day": fields.Integer,
             "rating": fields.Float,
             "rating_count": fields.Integer,
+            "url": fields.String,
+            "covert_art_url": fields.String,
         },
     )
 
