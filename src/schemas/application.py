@@ -7,4 +7,5 @@ from src.model import Application
 class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         # Fields to expose, add more if needed.
-        fields = ("uid", "app_name", "category", "rating", "reviews", "installs", "size", "price", "content_rating", "last_updated", "minimum_version", "latest_version")
+        fields = ("app_id", "name", "category", "rating", "reviews", "size", "installs",
+                  "price", "content_rating", "genres", "last_updated", "current_version", "android_version")
