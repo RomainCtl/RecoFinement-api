@@ -11,12 +11,18 @@ from .user.controller import api as user_ns
 # Import controller APIs as namespaces.
 api_bp = Blueprint("api", __name__)
 
-api = Api(api_bp, title="RecoFinement API", description="Main routes.", security='Bearer Auth', authorizations={
-    'Bearer Auth': {
+api = Api(api_bp, title="RecoFinement API", description="Main routes.", security=["ApiKey", "ApiKeyCSRF"], authorizations={
+    'ApiKey': {
+        'type': 'apiKey',
+        'in': 'cookie',
+        'name': 'access_token_cookie'
+    },
+    # we need to recover the 'csrf_access_token' cookie by ourself on swagger: https://github.com/python-restx/flask-restx/issues/96
+    'ApiKeyCSRF': {
         'type': 'apiKey',
         'in': 'header',
-        'name': 'Authorization'
-    },
+        'name': 'X-CSRF-TOKEN'
+    }
 })
 
 # API namespaces

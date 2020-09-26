@@ -1,5 +1,5 @@
-from flask import current_app
-from flask_jwt_extended import create_access_token
+from flask import current_app, jsonify, make_response
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 
 from src import db
 from src.utils import message, err_resp, internal_err_resp
@@ -31,10 +31,12 @@ class AuthService:
                 access_token = create_access_token(identity=user.uuid)
 
                 resp = message(True, "Successfully logged in.")
-                resp["access_token"] = access_token
                 resp["user"] = user_info
 
-                return resp, 200
+                resp = make_response(jsonify(**resp), 200)
+                set_access_cookies(resp, access_token)
+
+                return resp
 
             return err_resp(
                 "Failed to log in.", "invalid_auth", 401
@@ -77,10 +79,12 @@ class AuthService:
             access_token = create_access_token(identity=new_user.uuid)
 
             resp = message(True, "User has been registered.")
-            resp["access_token"] = access_token
             resp["user"] = user_info
 
-            return resp, 201
+            resp = make_response(jsonify(**resp), 201)
+            set_access_cookies(resp, access_token)
+
+            return resp
 
         except Exception as error:
             current_app.logger.error(error)
@@ -90,12 +94,15 @@ class AuthService:
     def logout(data):
         jti = data['jti']
         try:
+            resp = make_response("", 204)
+            unset_jwt_cookies(resp)
+
             revoked_token = RevokedToken(jti=jti)
 
             db.session.add(revoked_token)
             db.session.commit()
 
-            return "", 204
+            return resp
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
