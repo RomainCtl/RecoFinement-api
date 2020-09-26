@@ -8,7 +8,7 @@ from src import db, bcrypt
 MetaUserBook = db.Table("meta_user_book",
                         db.Column("user_id", db.Integer, db.ForeignKey(
                             "user.user_id"), primary_key=True),
-                        db.Column("isbn", db.Integer, db.ForeignKey(
+                        db.Column("isbn", db.String(13), db.ForeignKey(
                             "book.isbn"), primary_key=True),
                         db.Column("rating", db.Integer, default=None),
                         CheckConstraint("rating <= 5 and rating >= 0")
