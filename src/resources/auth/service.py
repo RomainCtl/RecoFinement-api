@@ -28,7 +28,7 @@ class AuthService:
             elif user and user.verify_password(password):
                 user_info = user_schema.dump(user)
 
-                access_token = create_access_token(identity=user.id)
+                access_token = create_access_token(identity=user.uuid)
 
                 resp = message(True, "Successfully logged in.")
                 resp["access_token"] = access_token
@@ -74,7 +74,7 @@ class AuthService:
             db.session.commit()
 
             # Create an access token
-            access_token = create_access_token(identity=new_user.id)
+            access_token = create_access_token(identity=new_user.uuid)
 
             resp = message(True, "User has been registered.")
             resp["access_token"] = access_token

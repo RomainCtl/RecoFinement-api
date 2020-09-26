@@ -35,4 +35,13 @@ class RegisterSchema(Schema):
             ),
         ],
     )
-    password = fields.Str(required=True, validate=[Length(min=8, max=128)])
+    password = fields.Str(
+        required=True,
+        validate=[
+            Length(min=8, max=128),
+            Regexp(
+                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}",
+                error="Password must contain at least minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character !"
+            ),
+        ],
+    )
