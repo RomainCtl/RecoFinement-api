@@ -1,5 +1,6 @@
 from flask_restx import Namespace, fields
 
+
 class BookDto:
     api = Namespace("book", description="Book related operations.")
     book = api.model(
@@ -13,8 +14,6 @@ class BookDto:
             "image_url_s": fields.String,
             "image_url_m": fields.String,
             "image_url_l": fields.String,
-            "rating": fields.Float,
-            "rating_count": fields.Integer,
         },
     )
 
