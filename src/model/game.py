@@ -1,24 +1,20 @@
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
-
 from src import db
+
 
 class Game(db.Model):
     """
     Game Model for storing game related details
     """
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    uid = db.Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True, nullable=False)
-    name = db.Column(db.String(255))
-    icon_url = db.Column(db.String(255))
-    rating = db.Column(db.Float)
-    rating_count = db.Column(db.Integer)
-    price = db.Column(db.Float)
-    in_app_purchases = db.Column(db.Float)
-    description = db.Column(db.Text)
-    developer = db.Column(db.String(255))
-    languages = db.Column(db.String(255))
-    size = db.Column(db.Integer)
-    primary_genre = db.Column(db.String(45))
+    game_id = db.Column(db.Integer, primary_key=True,
+                        autoincrement=True, index=True)
+    steamid = db.Column(db.Integer, nullable=True)
+    name = db.Column(db.String(255), index=True)
+    short_description = db.Column(db.Text)
+    header_image = db.Column(db.String(255))
+    website = db.Column(db.String(255))
+    developers = db.Column(db.String(255))
+    publishers = db.Column(db.String(255))
+    price = db.Column(db.String(255))
     genres = db.Column(db.String(255))
-    original_release_date = db.Column(db.String(45))
+    recommendations = db.Column(db.String(255))
+    release_date = db.Column(db.String(255))
