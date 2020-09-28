@@ -17,7 +17,7 @@ def create_app():
     ma.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "http://127.0.0.1:5000"}})
+    cors.init_app(app, resources={r"*": {"origins": "*"}})
     migrate.init_app(app, db=db)
 
     # JWT overrided method
