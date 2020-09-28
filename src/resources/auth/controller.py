@@ -40,7 +40,7 @@ class AuthLogin(Resource):
 
         # Validate data
         if (errors := login_schema.validate(login_data)):
-            return validation_error(False, errors), 400
+            return validation_error(False, errors)
 
         return AuthService.login(login_data)
 
