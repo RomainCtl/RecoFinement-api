@@ -69,7 +69,7 @@ class AuthRegister(Resource):
 
         # Validate data
         if (errors := register_schema.validate(register_data)):
-            return validation_error(False, errors), 400
+            return validation_error(False, errors)
 
         return AuthService.register(register_data)
 
