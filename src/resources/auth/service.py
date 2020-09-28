@@ -2,7 +2,7 @@ from flask import current_app, jsonify, make_response
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 
 from src import db
-from src.utils import message, err_resp, internal_err_resp
+from src.utils import message, err_resp, internal_err_resp, validation_error
 from src.model import User, RevokedToken
 from src.schemas import UserSchema
 
@@ -57,7 +57,7 @@ class AuthService:
 
         # Check if the email is taken
         if User.query.filter_by(email=email).first() is not None:
-            return err_resp("Email is already being used.", "email_taken", 400)
+            return validation_error(False, ["Email is already being used."]), 400
 
         try:
             new_user = User(

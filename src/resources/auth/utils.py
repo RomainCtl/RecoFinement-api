@@ -1,9 +1,10 @@
 # Validations with Marshmallow
-from marshmallow import Schema, fields
+from ..utils import MSchema
+from marshmallow import ValidationError, fields
 from marshmallow.validate import Regexp, Length, Email
 
 
-class LoginSchema(Schema):
+class LoginSchema(MSchema):
     """ /auth/login [POST]
 
     Parameters:
@@ -15,7 +16,7 @@ class LoginSchema(Schema):
     password = fields.Str(required=True, validate=[Length(min=8, max=128)])
 
 
-class RegisterSchema(Schema):
+class RegisterSchema(MSchema):
     """ /auth/register [POST]
 
     Parameters:
