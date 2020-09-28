@@ -17,6 +17,7 @@ JWT_TOKEN_LOCATION = ['cookies']
 JWT_COOKIE_DOMAIN = '127.0.0.1'
 JWT_ACCESS_COOKIE_PATH = '/api/'
 JWT_COOKIE_CSRF_PROTECT = True
+JWT_COOKIE_SAMESITE = "Strict"
 
 JWT_COOKIE_SECURE = False  # Only allow JWT cookies to be sent over https.
 
