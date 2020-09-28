@@ -4,9 +4,9 @@ import uuid
 from src import db
 
 similarsTracks = db.Table("similars_track",
-                          db.Column("track_id0", db.String(45), db.ForeignKey(
+                          db.Column("track_id0", db.Integer, db.ForeignKey(
                               "track.track_id"), primary_key=True),
-                          db.Column("track_id1", db.String(45), db.ForeignKey(
+                          db.Column("track_id1", db.Integer, db.ForeignKey(
                               "track.track_id"), primary_key=True),
                           db.Column("similarity", db.Float)
                           )
