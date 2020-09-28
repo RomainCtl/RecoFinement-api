@@ -1,7 +1,7 @@
 from marshmallow import Schema, ValidationError
 
 
-class MSchema(Schema):
+class DTOSchema(Schema):
     def handle_error(self, exc, data, **kwargs):
         """raise our custom exception when (de)serialization fails."""
         errors = []

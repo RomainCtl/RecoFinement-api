@@ -1,10 +1,10 @@
 # Validations with Marshmallow
-from ..utils import MSchema
+from ..utils import DTOSchema
 from marshmallow import ValidationError, fields
 from marshmallow.validate import Regexp, Length, Email
 
 
-class LoginSchema(MSchema):
+class LoginSchema(DTOSchema):
     """ /auth/login [POST]
 
     Parameters:
@@ -16,7 +16,7 @@ class LoginSchema(MSchema):
     password = fields.Str(required=True, validate=[Length(min=8, max=128)])
 
 
-class RegisterSchema(MSchema):
+class RegisterSchema(DTOSchema):
     """ /auth/register [POST]
 
     Parameters:

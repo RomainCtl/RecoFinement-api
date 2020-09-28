@@ -4,9 +4,9 @@ from flask_jwt_extended import create_access_token, set_access_cookies, unset_jw
 from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error
 from src.model import User, RevokedToken
-from src.schemas import UserSchema
+from src.schemas import UserBase
 
-user_schema = UserSchema()
+user_base = UserBase()
 
 
 class AuthService:
@@ -25,7 +25,7 @@ class AuthService:
                 )
 
             elif user and user.verify_password(password):
-                user_info = user_schema.dump(user)
+                user_info = user_base.dump(user)
 
                 access_token = create_access_token(identity=user.uuid)
 
@@ -69,7 +69,7 @@ class AuthService:
             db.session.flush()
 
             # Load the new user's info
-            user_info = user_schema.dump(new_user)
+            user_info = user_base.dump(new_user)
 
             # Commit changes to DB
             db.session.commit()

@@ -4,8 +4,8 @@ def load_data(user_db_obj):
     Parameters:
     - User db object
     """
-    from src.schemas import UserSchema
+    from src.schemas import UserObject
 
-    user_schema = UserSchema()
+    user_schema = UserObject()
 
     return user_schema.dump(user_db_obj)
