@@ -15,6 +15,8 @@ class ApplicationDto:
             "size": fields.String,
             "installs": fields.String,
             "price": fields.Float,
+            "type": fields.String,
+            "price": fields.String,
             "content_rating": fields.String,
             "genres": fields.String,
             "last_updated": fields.String,

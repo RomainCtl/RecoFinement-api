@@ -9,7 +9,6 @@ class GameDto:
             "game_id": fields.String,
             "steamid": fields.String,
             "name": fields.String,
-            "icon_url": fields.String,
             "short_description": fields.String,
             "header_image": fields.String,
             "website": fields.String,

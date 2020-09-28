@@ -6,9 +6,9 @@ from src.model import Game
 
 class GameService:
     @staticmethod
-    def get_game_data(uid):
-        """ Get game data by uid """
-        if not (game := Game.query.filter_by(uid=uid).first()):
+    def get_game_data(game_id):
+        """ Get game data by id """
+        if not (game := Game.query.filter_by(game_id=game_id).first()):
             return err_resp("Game not found!", 404)
 
         from .utils import load_data

@@ -6,9 +6,9 @@ from src.model import Track
 
 class TrackService:
     @staticmethod
-    def get_track_data(gid):
-        """ Get track data by gid """
-        if not (user := Track.query.filter_by(gid=gid).first()):
+    def get_track_data(track_id):
+        """ Get track data by id """
+        if not (user := Track.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)
 
         from .utils import load_data

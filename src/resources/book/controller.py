@@ -14,6 +14,7 @@ class BookController(Resource):
         "Get a specific book",
         responses={
             200: ("Book data successfully sent", data_resp),
+            401: ("Authentication required"),
             404: "Book not found!",
         },
     )

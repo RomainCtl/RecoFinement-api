@@ -14,6 +14,7 @@ class UserController(Resource):
         "Get a specific user",
         responses={
             200: ("User data successfully sent", data_resp),
+            401: ("Authentication required"),
             404: "User not found!",
         },
     )

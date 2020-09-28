@@ -8,16 +8,17 @@ api = GameDto.api
 data_resp = GameDto.data_resp
 
 
-@api.route("/<string:uid>")
+@api.route("/<string:game_id>")
 class GameController(Resource):
     @api.doc(
         "Get a specific game",
         responses={
             200: ("Game data successfully sent", data_resp),
+            401: ("Authentication required"),
             404: "Game not found!",
         },
     )
     @jwt_required
-    def get(self, uid):
-        """ Get a specific game's data by their uid """
-        return GameService.get_game_data(uid)
+    def get(self, game_id):
+        """ Get a specific game's data by their id """
+        return GameService.get_game_data(game_id)

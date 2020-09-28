@@ -11,6 +11,7 @@ class TrackDto:
             "year": fields.Integer,
             "artist_name": fields.String,
             "release": fields.String,
+            "track_mmid": fields.String,
             "recording_mbid": fields.String,
             "language": fields.String,
             "rating": fields.Float,
