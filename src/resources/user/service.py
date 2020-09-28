@@ -9,7 +9,7 @@ class UserService:
     def get_user_data(uuid):
         """ Get user data by uuid """
         if not (user := User.query.filter_by(uuid=uuid).first()):
-            return err_resp("User not found!", "user_404", 404)
+            return err_resp("User not found!", 404)
 
         from .utils import load_data
 

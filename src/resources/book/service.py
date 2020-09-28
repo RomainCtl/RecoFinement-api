@@ -9,7 +9,7 @@ class BookService:
     def get_book_data(isbn):
         """ Get book data by isbn """
         if not (book := Book.query.filter_by(isbn=isbn).first()):
-            return err_resp("Application not found!", "book_404", 404)
+            return err_resp("Application not found!", 404)
 
         from .utils import load_data
 

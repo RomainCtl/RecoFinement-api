@@ -21,7 +21,6 @@ class AuthService:
             if not (user := User.query.filter_by(email=email).first()):
                 return err_resp(
                     "Failed to log in.",
-                    "invalid_auth",
                     401,
                 )
 
@@ -39,7 +38,7 @@ class AuthService:
                 return resp
 
             return err_resp(
-                "Failed to log in.", "invalid_auth", 401
+                "Failed to log in.", 401
             )
 
         except Exception as error:
@@ -57,7 +56,7 @@ class AuthService:
 
         # Check if the email is taken
         if User.query.filter_by(email=email).first() is not None:
-            return validation_error(False, ["Email is already being used."]), 400
+            return validation_error(False, "Email is already being used.")
 
         try:
             new_user = User(

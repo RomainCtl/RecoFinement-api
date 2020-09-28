@@ -9,7 +9,7 @@ class TrackService:
     def get_track_data(gid):
         """ Get track data by gid """
         if not (user := Track.query.filter_by(gid=gid).first()):
-            return err_resp("Track not found!", "track_404", 404)
+            return err_resp("Track not found!", 404)
 
         from .utils import load_data
 

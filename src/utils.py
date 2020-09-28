@@ -4,14 +4,15 @@ def message(status, message):
 
 
 def validation_error(status, errors):
+    if type(errors) != list:
+        errors = [errors]
     response_object = {"status": status, "errors": errors}
 
-    return response_object
+    return response_object, 400
 
 
-def err_resp(msg, reason, code):
+def err_resp(msg, code):
     err = message(False, msg)
-    err["error_reason"] = reason
     return err, code
 
 

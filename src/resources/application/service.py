@@ -9,7 +9,7 @@ class ApplicationService:
     def get_application_data(uid):
         """ Get application data by uid """
         if not (application := Application.query.filter_by(uid=uid).first()):
-            return err_resp("Application not found!", "application_404", 404)
+            return err_resp("Application not found!", 404)
 
         from .utils import load_data
 
