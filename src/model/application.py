@@ -13,6 +13,7 @@ class Application(db.Model):
     reviews = db.Column(db.Integer)
     size = db.Column(db.String(255))
     installs = db.Column(db.String(255))
+    type = db.Column(db.String(45))
     price = db.Column(db.Float)
     content_rating = db.Column(db.String(255))
     genres = db.Column(db.String(255))

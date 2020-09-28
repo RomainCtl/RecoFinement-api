@@ -5,7 +5,7 @@ from src import db
 
 
 trackTags = db.Table("track_tags",
-                     db.Column("track_id", db.Integer, db.ForeignKey(
+                     db.Column("track_id", db.String(45), db.ForeignKey(
                          "track.track_id"), primary_key=True),
                      db.Column("tag_id", db.Integer, db.ForeignKey(
                          "tag.tag_id"), primary_key=True),
@@ -13,9 +13,9 @@ trackTags = db.Table("track_tags",
                      )
 
 similarsTracks = db.Table("similars_track",
-                          db.Column("track_id0", db.Integer, db.ForeignKey(
+                          db.Column("track_id0", db.String(45), db.ForeignKey(
                               "track.track_id"), primary_key=True),
-                          db.Column("track_id1", db.Integer, db.ForeignKey(
+                          db.Column("track_id1", db.String(45), db.ForeignKey(
                               "track.track_id"), primary_key=True),
                           db.Column("similarity", db.Float)
                           )
@@ -25,7 +25,7 @@ class Track(db.Model):
     """
     Track Model for storing track related details
     """
-    track_id = db.Column(db.Integer, primary_key=True,
+    track_id = db.Column(db.String(45), primary_key=True,
                          autoincrement=True, index=True)
     title = db.Column(db.String(255), index=True)
     year = db.Column(db.SmallInteger)
@@ -36,8 +36,8 @@ class Track(db.Model):
     language = db.Column(db.String(45))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
-    url = db.Column(db.String(255))
-    covert_art_url = db.Column(db.String(255))
+    url = db.Column(db.Text)
+    covert_art_url = db.Column(db.Text)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
     tags = db.relationship("Tag", secondary=trackTags, lazy="subquery")
