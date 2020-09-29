@@ -1,5 +1,5 @@
 # Validations with Marshmallow
-from marshmallow import ValidationError, fields
+from marshmallow import fields
 from marshmallow.validate import Regexp, Length, Email
 
 from src.utils import DTOSchema

@@ -10,9 +10,9 @@ data_resp = TrackDto.data_resp
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class TrackResource(Resource):
+class TrackSearchResource(Resource):
     @api.doc(
-        "Get tracks",
+        "Search tracks",
         responses={
             200: ("Track data successfully sent", data_resp),
             401: ("Authentication required"),

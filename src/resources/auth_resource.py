@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import get_raw_jwt, jwt_required
 
