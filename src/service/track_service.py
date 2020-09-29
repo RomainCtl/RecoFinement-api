@@ -10,7 +10,7 @@ class TrackService:
         """ Search track data by title """
         tracks, total_pages = Paginator.get_from(
             TrackModel.query.filter(
-                TrackModel.title.like("%"+search_term+"%")),
+                TrackModel.title.ilike("%"+search_term+"%")),
             page,
         )
 

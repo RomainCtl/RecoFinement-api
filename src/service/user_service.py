@@ -1,10 +1,33 @@
 from flask import current_app
 
-from src.utils import err_resp, message, internal_err_resp
+from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
 from src.model import UserModel
 
 
 class UserService:
+    @staticmethod
+    def search_user_data(search_term, page):
+        """ Search user data by username """
+        users, total_pages = Paginator.get_from(
+            UserModel.query.filter(
+                UserModel.username.ilike("%"+search_term+"%")),
+            page,
+        )
+
+        try:
+            user_data = UserService._load_datas(users)
+
+            return pagination_resp(
+                message="Track data sent",
+                content=user_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
     @staticmethod
     def get_user_data(uuid):
         """ Get user's data by uuid """
