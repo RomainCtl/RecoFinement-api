@@ -1,5 +1,3 @@
-from .application import ApplicationSchema
-from .book import BookSchema
-from .game import GameSchema
-from .track import TrackSchema
-from .user import UserBase, UserObject
+from .auth_schema import LoginSchema, RegisterSchema
+from .track_schema import TrackBase
+from .user_schema import UserBase, UserObject

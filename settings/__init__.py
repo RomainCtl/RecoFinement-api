@@ -22,3 +22,5 @@ JWT_COOKIE_SAMESITE = "Strict"
 JWT_COOKIE_SECURE = False  # Only allow JWT cookies to be sent over https.
 
 PORT = os.environ['SERVICE_PORT']
+
+PAGE_SIZE = 20
