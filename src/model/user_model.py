@@ -60,6 +60,13 @@ MetaUserTrackModel = db.Table("meta_user_track",
                               CheckConstraint("rating <= 5 and rating >= 0")
                               )
 
+GroupMembersModel = db.Table("group_members",
+                             db.Column("user_id", db.Integer, db.ForeignKey(
+                                 "user.user_id"), primary_key=True),
+                             db.Column("group_id", db.Integer, db.ForeignKey(
+                                 "group.group_id"), primary_key=True)
+                             )
+
 
 class UserModel(db.Model):
     """
@@ -85,6 +92,11 @@ class UserModel(db.Model):
         "MovieModel", secondary=MetaUserMovieModel, lazy="subquery")
     meta_user_tracks = db.relationship(
         "TrackModel", secondary=MetaUserTrackModel, lazy="subquery")
+
+    groups = db.relationship(
+        "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
+    owned_groups = db.relationship(
+        "GroupModel", backref="owner", lazy='dynamic')
 
     @property
     def password(self):
