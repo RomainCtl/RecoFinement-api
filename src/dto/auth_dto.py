@@ -6,11 +6,20 @@ from .base import UserBaseObj, messageObj
 class AuthDto:
     api = Namespace("auth", description="Authenticate and receive tokens.")
 
-    user_obj = api.model(
-        "User object",
-        UserBaseObj
+    # Objects
+    api.models[UserBaseObj.name] = UserBaseObj
+    user_base = UserBaseObj
+
+    # Responses
+    auth_success = api.model(
+        "Auth success response",
+        {
+            **messageObj,
+            "user": fields.Nested(user_base),
+        },
     )
 
+    # Excepted data
     auth_login = api.model(
         "Login data",
         {
@@ -25,13 +34,5 @@ class AuthDto:
             "email": fields.String(required=True),
             "username": fields.String(required=True),
             "password": fields.String(required=True),
-        },
-    )
-
-    auth_success = api.model(
-        "Auth success response",
-        {
-            **messageObj,
-            "user": fields.Nested(user_obj),
         },
     )

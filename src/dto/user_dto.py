@@ -1,27 +1,31 @@
 from flask_restx import Namespace, fields
 
-from .base import UserBaseObj, messageObj, paginationObj
+from .base import UserBaseObj, GroupBaseObj, UserItemObj, messageObj, paginationObj
 
 
 class UserDto:
     api = Namespace("user", description="User related operations.")
-    user = api.model(
-        "User object",
-        UserBaseObj,
-    )
 
-    data_resp = api.model(
+    # Objects
+    api.models[UserBaseObj.name] = UserBaseObj
+    user_base = UserBaseObj
+
+    api.models[UserItemObj.name] = UserItemObj
+    user_item = UserItemObj
+
+    # Responses
+    data_resp = api.clone(
         "User Data Response",
+        messageObj,
         {
-            **messageObj,
-            "user": fields.Nested(user),
-        },
+            "user": fields.Nested(user_item)
+        }
     )
 
-    search_data_resp = api.model(
+    search_data_resp = api.clone(
         "User Research Data Response",
+        paginationObj,
         {
-            **paginationObj,
-            "content": fields.List(fields.Nested(user)),
-        },
+            "content": fields.List(fields.Nested(user_base))
+        }
     )

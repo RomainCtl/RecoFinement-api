@@ -65,8 +65,8 @@ class UserService:
         Parameters:
         - User db object
         """
-        from src.schemas import UserBase
+        from src.schemas import UserObject
 
-        user_schema = UserBase()
+        user_schema = UserObject()
 
         return user_schema.dump(user_db_obj)

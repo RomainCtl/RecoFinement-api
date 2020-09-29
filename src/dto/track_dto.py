@@ -5,15 +5,16 @@ from .base import TrackBaseObj, paginationObj
 
 class TrackDto:
     api = Namespace("track", description="Track related operations.")
-    track = api.model(
-        "Track object",
-        TrackBaseObj,
-    )
 
-    data_resp = api.model(
+    # Objects
+    api.models[TrackBaseObj.name] = TrackBaseObj
+    track_base = TrackBaseObj
+
+    # Responses
+    data_resp = api.clone(
         "Track Research Data Response",
+        paginationObj,
         {
-            **paginationObj,
-            "content": fields.List(fields.Nested(track)),
+            "content": fields.List(fields.Nested(track_base)),
         },
     )
