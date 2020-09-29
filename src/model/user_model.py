@@ -55,7 +55,6 @@ MetaUserTrackModel = db.Table("meta_user_track",
                                   "user.user_id"), primary_key=True),
                               db.Column("track_id", db.Integer, db.ForeignKey(
                                   "track.track_id"), primary_key=True),
-                              db.Column("play_count", db.Integer, default=0),
                               db.Column("rating", db.Integer, default=None),
                               CheckConstraint("rating <= 5 and rating >= 0")
                               )
