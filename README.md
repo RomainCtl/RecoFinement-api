@@ -5,6 +5,10 @@
 
 > Check instruction about requirements in the `README.md` file of the master project.
 
+## Requirements
+
+* [PostgreSQL](https://www.postgresql.org/) Server with a database with the name of your choice (Do not forget to define env variables, see next point).
+
 
 ## Configuration
 
@@ -14,7 +18,7 @@ In order to run correctly, the project needs to recover its configuration. To do
 cp .env.default .env
 ```
 
-Then replace the values.
+Then replace the values, and in particular the variables for the connection to the database.
 
 
 ## Usage
@@ -23,6 +27,9 @@ Basic usage:
 ```bash
 # Initialize project (install dependencies)
 make init
+
+# Update database to the last migration (or initialize it if it does not exist)
+make db-updade
 
 # Serve locally the development build
 make serve
@@ -46,7 +53,7 @@ During the successive phases of development, you will have to modify the databas
 > All files and scripts produced by [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) are stored in the directory `./migrations/`.
 
 To change the database structure and create a new database migration script, follow these steps:
-1. Edit the [SQLAlchemy](https://www.sqlalchemy.org/) data models in the directory `./src/database/`
+1. Edit the [SQLAlchemy](https://www.sqlalchemy.org/) data models in the directory `./src/model/`
 2. Run the following command to generate a new database migration script:
 ```bash
 make db-migration version="explicit_version_name"

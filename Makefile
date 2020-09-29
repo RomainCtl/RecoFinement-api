@@ -92,7 +92,7 @@ SPACE = ${null} ${null}
 #	- $2 = Branch type name (ex: feature, hotfix, doc)
 define git-new-setvars
 	$(eval NEW_BRANCH_TYPE = $2)
-	$(eval NEW_BRANCH_TITLE_PREFIX = $(shell txt="$(NEW_BRANCH_TYPE)"; echo "$$(echo "$$txt" | sed 's/.*/\u&/')" ))
+	$(eval NEW_BRANCH_TITLE_PREFIX = $(NEW_BRANCH_TYPE))
 	$(eval NEW_BRANCH_TITLE = [$(NEW_BRANCH_TITLE_PREFIX)] $(strip $(1)))
 	$(eval NEW_BRANCH_NAME = $(NEW_BRANCH_TYPE)/$(strip $(1)))
 
@@ -117,7 +117,7 @@ git-prune: ## Delete all unused branch (remote ref and local)
 	done
 
 # ---------------------
-git-branch: ## create new branch [feat|fix|doc|devops] (ex: make git-new feat="add new feature")
+git-branch: ## create new branch [feat|fix|doc|devops] (ex: make git-branch feat="add new feature")
 	$(if $(feat), $(call git-new-setvars,$(feat),feature))
 	$(if $(fix), $(call git-new-setvars,$(fix),bugfix))
 	$(if $(doc), $(call git-new-setvars,$(doc),doc))
@@ -128,7 +128,7 @@ git-branch: ## create new branch [feat|fix|doc|devops] (ex: make git-new feat="a
 	git checkout $(GIT_BRANCH_MAIN)
 	git pull --rebase
 	git checkout -b $(NEW_BRANCH_NAME)
-	git pull-request -k -m " " -C " " --title "$(NEW_BRANCH_TITLE)"
+	git pull-request --fork never -k -m " " -C " " --title "$(NEW_BRANCH_TITLE)"
 
 # ---------------------
 git-master: ## Back to main branch and reset to main branch

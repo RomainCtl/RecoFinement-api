@@ -1,8 +1,6 @@
-from flask_cors import CORS
-from dotenv import load_dotenv
-import os
+from flask import Flask
 
-from src.addons import app, api, db, ma, migrate
+from src.addons import db, ma, migrate, cors, bcrypt, jwt
 import settings
 
 
@@ -10,20 +8,28 @@ def create_app():
     """
     Create application
     """
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    #: Flask application
+    app = Flask(__name__)
     app.config.from_object(settings)
 
-    with app.app_context():
-        db.init_app(app)
-        ma.init_app(app)
+    # Registers flask extensions
+    db.init_app(app)
+    ma.init_app(app)
+    jwt.init_app(app)
+    bcrypt.init_app(app)
+    cors.init_app(app, resources={r"*": {"origins": "*"}})
+    migrate.init_app(app, db=db)
 
-        migrate.init_app(app,db=db)
+    # JWT overrided method
+    from .model import RevokedTokenModel
 
-        api.init_app(app)
+    @jwt.token_in_blacklist_loader
+    def check_if_token_is_revoked(decrypted_token):
+        return RevokedTokenModel.is_revoked(decrypted_token['jti'])
 
-    # api.add_resource(HomeResource, '/', '/home', endpoint="home")
+    # Register blueprints
+    from .resources import api_bp
 
-    # api.add_resource(MusicResource, /music', endpoint="music_all")
-    # api.add_resource(MusicResource, /music/<int:msc_id>', endpoint="music_by_id")
+    app.register_blueprint(api_bp, url_prefix="/api")
 
     return app
