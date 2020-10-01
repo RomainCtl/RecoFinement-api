@@ -16,6 +16,7 @@ class AuthDto:
         {
             **messageObj,
             "user": fields.Nested(user_base),
+            "access_token": fields.String,
         },
     )
 

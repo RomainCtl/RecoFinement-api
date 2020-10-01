@@ -31,11 +31,9 @@ class AuthService:
 
                 resp = message(True, "Successfully logged in.")
                 resp["user"] = user_info
+                resp["access_token"] = access_token
 
-                resp = make_response(jsonify(**resp), 200)
-                set_access_cookies(resp, access_token)
-
-                return resp
+                return resp, 200
 
             return err_resp(
                 "Failed to log in.", 401
@@ -79,11 +77,9 @@ class AuthService:
 
             resp = message(True, "User has been registered.")
             resp["user"] = user_info
+            resp["access_token"] = access_token
 
-            resp = make_response(jsonify(**resp), 201)
-            set_access_cookies(resp, access_token)
-
-            return resp
+            return resp, 201
 
         except Exception as error:
             current_app.logger.error(error)
