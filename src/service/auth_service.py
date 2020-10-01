@@ -59,7 +59,7 @@ class AuthService:
             return validation_error(False, "Email is already being used.")
 
         try:
-            new_user = User(
+            new_user = UserModel(
                 email=email,
                 username=username,
                 password=password,
