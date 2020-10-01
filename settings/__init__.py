@@ -14,8 +14,6 @@ JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(seconds=43_200)
 JWT_BLACKLIST_ENABLED = True
 JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 
-JWT_COOKIE_SECURE = False  # Only allow JWT cookies to be sent over https.
-
 PORT = os.environ['SERVICE_PORT']
 
 PAGE_SIZE = 20

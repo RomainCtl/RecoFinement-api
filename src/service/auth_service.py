@@ -1,5 +1,5 @@
 from flask import current_app, jsonify, make_response
-from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies
 
 from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error
@@ -90,7 +90,6 @@ class AuthService:
         jti = data['jti']
         try:
             resp = make_response("", 204)
-            unset_jwt_cookies(resp)
 
             revoked_token = RevokedTokenModel(jti=jti)
 
