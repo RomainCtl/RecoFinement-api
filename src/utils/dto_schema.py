@@ -6,5 +6,5 @@ class DTOSchema(Schema):
         """raise our custom exception when (de)serialization fails."""
         errors = []
         for k, m in exc.messages.items():
-            errors.append(*m)
+            errors += [*m]
         raise ValidationError(message=errors)
