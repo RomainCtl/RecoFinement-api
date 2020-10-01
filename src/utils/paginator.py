@@ -10,7 +10,7 @@ class Paginator:
         page_size = settings.PAGE_SIZE
         offset = (page_number - 1) * page_size
 
-        total_elem = query.with_entities(func.count()).scalar()
+        total_elem = query.count()
         if offset < 0:
             return [], math.ceil(total_elem / page_size)
 
