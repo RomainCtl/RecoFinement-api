@@ -5,4 +5,4 @@ from .group_model import GroupModel
 from .movie_model import MovieModel
 from .revokedtoken_model import RevokedTokenModel
 from .track_model import TrackModel
-from .user_model import UserModel
+from .user_model import UserModel, MetaUserTrackModel

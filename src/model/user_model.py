@@ -50,14 +50,20 @@ MetaUserMovieModel = db.Table("meta_user_movie",
                               CheckConstraint("rating <= 5 and rating >= 0")
                               )
 
-MetaUserTrackModel = db.Table("meta_user_track",
-                              db.Column("user_id", db.Integer, db.ForeignKey(
-                                  "user.user_id"), primary_key=True),
-                              db.Column("track_id", db.Integer, db.ForeignKey(
-                                  "track.track_id"), primary_key=True),
-                              db.Column("rating", db.Integer, default=None),
-                              CheckConstraint("rating <= 5 and rating >= 0")
-                              )
+
+class MetaUserTrackModel(db.Model):
+    """
+    MetaUserTrack Model for storing metadata between user and track
+    """
+    __tablename__ = "meta_user_track"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    track_id = db.Column(db.Integer, db.ForeignKey(
+        "track.track_id"), primary_key=True)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
+
 
 GroupMembersModel = db.Table("group_members",
                              db.Column("user_id", db.Integer, db.ForeignKey(
@@ -90,7 +96,7 @@ class UserModel(db.Model):
     meta_user_movies = db.relationship(
         "MovieModel", secondary=MetaUserMovieModel, lazy="subquery")
     meta_user_tracks = db.relationship(
-        "TrackModel", secondary=MetaUserTrackModel, lazy="subquery")
+        "TrackModel", secondary=MetaUserTrackModel.__table__, lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))

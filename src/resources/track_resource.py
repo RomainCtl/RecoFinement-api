@@ -9,6 +9,25 @@ api = TrackDto.api
 data_resp = TrackDto.data_resp
 
 
+@api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class TrackResource(Resource):
+    @api.doc(
+        "Get list of Tracks",
+        responses={
+            200: ("Track data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of track """
+        try:
+            page = int(request.args.get('page'))
+        except ValueError:
+            page = 1
+        return TrackService.get_track_list_data(page)
+
+
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class TrackSearchResource(Resource):
     @api.doc(

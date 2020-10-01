@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import UserService
 from src.dto import UserDto
@@ -37,9 +37,34 @@ class UserSearchResource(Resource):
     )
     @jwt_required
     def get(self, search_term):
-        """ Getlist of track's data by term """
+        """ Get list of track's data by term """
         try:
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
         return UserService.search_user_data(search_term, page)
+
+
+@api.route("/track")
+class UserTrackResource(Resource):
+
+    track_rating = UserDto.track_rating
+
+    @api.doc(
+        "Give rate to a track",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Track not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(track_rating, validate=True)
+    def post(self):
+        """ Give rate to a track """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.give_rate(rate_data["track_id"], rate_data["rating"], user_uuid)

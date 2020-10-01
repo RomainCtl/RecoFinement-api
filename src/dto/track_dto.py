@@ -12,7 +12,7 @@ class TrackDto:
 
     # Responses
     data_resp = api.clone(
-        "Track Research Data Response",
+        "Track list Data Response",
         paginationObj,
         {
             "content": fields.List(fields.Nested(track_base)),

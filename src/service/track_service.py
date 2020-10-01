@@ -29,6 +29,28 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
+    def get_track_list_data(page):
+        """ Get list of track """
+        tracks, total_pages = Paginator.get_from(
+            TrackModel.query,
+            page,
+        )
+
+        try:
+            track_data = TrackService._load_datas(tracks)
+
+            return pagination_resp(
+                message="Track data sent",
+                content=track_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
     def _load_datas(track_db_obj_list):
         """ Load track's data
 

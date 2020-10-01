@@ -1,7 +1,8 @@
 from flask import current_app
 
+from src import db
 from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
-from src.model import UserModel
+from src.model import UserModel, TrackModel, MetaUserTrackModel
 
 
 class UserService:
@@ -44,6 +45,42 @@ class UserService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def give_rate(track_id, rating, user_uuid):
+        """" Give rate to a track """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Track not found!", 404)
+
+        try:
+            meta_user_track = MetaUserTrackModel(
+                track_id=track_id, user_id=user.user_id, rating=rating)
+
+            db.session.add(meta_user_track)
+            db.session.commit()
+
+            resp = message(True, "Rating given successfully")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def _load_meta_tracks(meta_user_track_db_obj_list):
+        """ Load meta_user_track's data
+
+        Parameters:
+        - List of meta_user_track db object
+        """
+        from src.schema import MetaUserTrackBase
+
+        meta_schema = MetaUserTrackBase(many=True)
+
+        return meta_schema.dump(meta_user_track_db_obj_list)
 
     @staticmethod
     def _load_datas(user_db_obj_list):

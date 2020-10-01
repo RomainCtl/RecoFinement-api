@@ -3,13 +3,18 @@ import uuid
 
 from src import db
 
-SimilarsTracksModel = db.Table("similars_track",
-                               db.Column("track_id0", db.Integer, db.ForeignKey(
-                                   "track.track_id"), primary_key=True),
-                               db.Column("track_id1", db.Integer, db.ForeignKey(
-                                   "track.track_id"), primary_key=True),
-                               db.Column("similarity", db.Float)
-                               )
+
+class SimilarsTracksModel(db.Model):
+    """
+    SimilarsTracks Model for storing similars track
+    """
+    __tablename__ = "similars_track"
+
+    track_id0 = db.Column(db.Integer, db.ForeignKey(
+        "track.track_id"), primary_key=True)
+    track_id1 = db.Column(db.Integer, db.ForeignKey(
+        "track.track_id"), primary_key=True)
+    similarity = db.Column(db.Float)
 
 
 class TrackModel(db.Model):
@@ -33,7 +38,7 @@ class TrackModel(db.Model):
     covert_art_url = db.Column(db.Text)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
-    similars = db.relationship("TrackModel", secondary=SimilarsTracksModel,
-                               primaryjoin=track_id == SimilarsTracksModel.c.track_id0,
-                               secondaryjoin=track_id == SimilarsTracksModel.c.track_id1,
+    similars = db.relationship("TrackModel", secondary=SimilarsTracksModel.__table__,
+                               primaryjoin=track_id == SimilarsTracksModel.track_id0,
+                               secondaryjoin=track_id == SimilarsTracksModel.track_id1,
                                lazy="subquery")
