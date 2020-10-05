@@ -1,7 +1,9 @@
 from flask import current_app
+from sqlalchemy import func, text
 
-from src.utils import pagination_resp, internal_err_resp, Paginator
-from src.model import TrackModel
+from src import db, settings
+from src.utils import pagination_resp, internal_err_resp, message, Paginator
+from src.model import TrackModel, MetaUserTrackModel
 from src.schemas import TrackBase
 
 
@@ -30,18 +32,19 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
-    def get_track_list_data(page):
-        """ Get list of track """
+    def get_most_popular_tracks(page):
         tracks, total_pages = Paginator.get_from(
-            TrackModel.query,
+            db.session.query(TrackModel, func.count(
+                MetaUserTrackModel.user_id).label("count")).join(MetaUserTrackModel).group_by(TrackModel).order_by(text("count DESC")),
             page,
         )
 
         try:
+            tracks = map(lambda t: t[0], tracks)
             track_data = TrackBase.loads(tracks)
 
             return pagination_resp(
-                message="Track data sent",
+                message="Most popular track data sent",
                 content=track_data,
                 page=page,
                 total_pages=total_pages
