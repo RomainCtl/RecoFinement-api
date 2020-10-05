@@ -16,4 +16,4 @@ JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 
 PORT = os.environ['SERVICE_PORT']
 
-PAGE_SIZE = 20
+PAGE_SIZE = 24

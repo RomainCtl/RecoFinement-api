@@ -2,46 +2,46 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required
 
-from src.service import TrackService
-from src.dto import TrackDto
+from src.service import BookService
+from src.dto import BookDto
 
-api = TrackDto.api
-data_resp = TrackDto.data_resp
+api = BookDto.api
+data_resp = BookDto.data_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class TrackResource(Resource):
+class BookResource(Resource):
     @api.doc(
-        "Get list of the most popular Tracks",
+        "Get list of the most popular Books",
         responses={
-            200: ("Track data successfully sent", data_resp),
+            200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Tracks """
+        """ Get list of the most popular Books """
         try:
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
-        return TrackService.get_most_popular_tracks(page)
+        return BookService.get_most_popular_books(page)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class TrackSearchResource(Resource):
+class BookSearchResource(Resource):
     @api.doc(
-        "Search tracks",
+        "Search books",
         responses={
-            200: ("Track data successfully sent", data_resp),
+            200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self, search_term):
-        """ Getlist of track's data by term """
+        """ Getlist of book's data by term """
         try:
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
-        return TrackService.search_track_data(search_term, page)
+        return BookService.search_book_data(search_term, page)

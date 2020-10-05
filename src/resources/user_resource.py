@@ -45,6 +45,131 @@ class UserSearchResource(Resource):
         return UserService.search_user_data(search_term, page)
 
 
+@api.route("/application")
+class UserApplicationResource(Resource):
+
+    app_rating = UserDto.app_rating
+
+    @api.doc(
+        "Give rate to an application",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Application not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(app_rating, validate=True)
+    def post(self):
+        """ Give rate to an application """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.rate_application(rate_data["app_id"], rate_data["rating"], user_uuid)
+
+
+@api.route("/book")
+class UserBookResource(Resource):
+
+    book_rating = UserDto.book_rating
+
+    @api.doc(
+        "Give rate to a book",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Book not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(book_rating, validate=True)
+    def post(self):
+        """ Give rate to a book """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.rate_book(rate_data["isbn"], rate_data["rating"], user_uuid)
+
+
+@api.route("/game")
+class UserGameResource(Resource):
+
+    game_rating = UserDto.game_rating
+
+    @api.doc(
+        "Give rate to a game",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Game not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(game_rating, validate=True)
+    def post(self):
+        """ Give rate to a game """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.rate_game(rate_data["game_id"], rate_data["rating"], user_uuid)
+
+
+@api.route("/movie")
+class UserMovieResource(Resource):
+
+    movie_rating = UserDto.movie_rating
+
+    @api.doc(
+        "Give rate to a movie",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Movie not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(movie_rating, validate=True)
+    def post(self):
+        """ Give rate to a movie """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.rate_movie(rate_data["movie_id"], rate_data["rating"], user_uuid)
+
+
+@api.route("/serie")
+class UserSerieResource(Resource):
+
+    serie_rating = UserDto.serie_rating
+
+    @api.doc(
+        "Give rate to a serie",
+        responses={
+            200: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Serie not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(serie_rating, validate=True)
+    def post(self):
+        """ Give rate to a serie """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        rate_data = request.get_json()
+
+        return UserService.rate_serie(rate_data["serie_id"], rate_data["rating"], user_uuid)
+
+
 @api.route("/track")
 class UserTrackResource(Resource):
 
@@ -67,4 +192,4 @@ class UserTrackResource(Resource):
         # Grab the json data
         rate_data = request.get_json()
 
-        return UserService.give_rate(rate_data["track_id"], rate_data["rating"], user_uuid)
+        return UserService.rate_track(rate_data["track_id"], rate_data["rating"], user_uuid)

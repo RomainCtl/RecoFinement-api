@@ -2,46 +2,46 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required
 
-from src.service import TrackService
-from src.dto import TrackDto
+from src.service import GameService
+from src.dto import GameDto
 
-api = TrackDto.api
-data_resp = TrackDto.data_resp
+api = GameDto.api
+data_resp = GameDto.data_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class TrackResource(Resource):
+class GameResource(Resource):
     @api.doc(
-        "Get list of the most popular Tracks",
+        "Get list of the most popular Games",
         responses={
-            200: ("Track data successfully sent", data_resp),
+            200: ("Game data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Tracks """
+        """ Get list of the most popular Games """
         try:
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
-        return TrackService.get_most_popular_tracks(page)
+        return GameService.get_most_popular_games(page)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class TrackSearchResource(Resource):
+class GameSearchResource(Resource):
     @api.doc(
-        "Search tracks",
+        "Search games",
         responses={
-            200: ("Track data successfully sent", data_resp),
+            200: ("Game data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self, search_term):
-        """ Getlist of track's data by term """
+        """ Getlist of game's data by term """
         try:
             page = int(request.args.get('page'))
         except ValueError:
             page = 1
-        return TrackService.search_track_data(search_term, page)
+        return GameService.search_game_data(search_term, page)
