@@ -80,6 +80,20 @@ class MetaUserTrackModel(db.Model):
         "rating <= 5 and rating >= 0"), default=None)
 
 
+class MetaUserSerieModel(db.Model):
+    """
+    MetaUserTrack Model for storing metadata between user and serie
+    """
+    __tablename__ = "meta_user_serie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    serie_id = db.Column(db.Integer, db.ForeignKey(
+        "serie.serie_id"), primary_key=True)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
+
+
 GroupMembersModel = db.Table("group_members",
                              db.Column("user_id", db.Integer, db.ForeignKey(
                                  "user.user_id"), primary_key=True),
@@ -112,6 +126,8 @@ class UserModel(db.Model):
         "MovieModel", secondary=MetaUserMovieModel.__table__, lazy="subquery")
     meta_user_tracks = db.relationship(
         "TrackModel", secondary=MetaUserTrackModel.__table__, lazy="subquery")
+    meta_user_series = db.relationship(
+        "SerieModel", secondary=MetaUserSerieModel.__table__, lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
