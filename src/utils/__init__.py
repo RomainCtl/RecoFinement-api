@@ -1,4 +1,5 @@
 from .dto_schema import DTOSchema
+from .sqlalchemy_auto_schema import SQLAlchemyAutoSchema
 from .paginator import Paginator
 
 

@@ -3,19 +3,20 @@ from marshmallow.validate import Regexp, Length
 
 from src import ma
 from src.model import GroupModel
-from src.utils import DTOSchema
+from src.utils import DTOSchema, SQLAlchemyAutoSchema
 
 
 class GroupMeta:
     model = GroupModel
 
 
-class GroupBase(ma.SQLAlchemyAutoSchema):
+class GroupBase(SQLAlchemyAutoSchema):
     class Meta(GroupMeta):
         pass
 
 
-class GroupObject(ma.SQLAlchemyAutoSchema):
+class GroupObject(SQLAlchemyAutoSchema):
+    invitations = ma.Nested("UserBase", many=True)
     members = ma.Nested("UserBase", many=True)
     owner = ma.Nested("UserBase")
 

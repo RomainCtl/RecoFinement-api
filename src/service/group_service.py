@@ -3,9 +3,27 @@ from flask import current_app
 from src import db
 from src.utils import err_resp, message, internal_err_resp, Paginator
 from src.model import GroupModel, UserModel
+from src.schemas import GroupObject
 
 
 class GroupService:
+    @staticmethod
+    def get_group_data(group_id):
+        """ Get group's data by id """
+        if not (group := GroupModel.query.filter_by(group_id=group_id).first()):
+            return err_resp("Group not found!", 404)
+
+        try:
+            group_data = GroupObject.load(group)
+
+            resp = message(True, "Group data sent")
+            resp["group"] = group_data
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
     @staticmethod
     def create_group(group_name, creator_uuid):
         """ Create group object """
@@ -17,7 +35,7 @@ class GroupService:
             db.session.add(user)
             db.session.commit()
 
-            group_data = GroupService._load_data(group)
+            group_data = GroupObject.load(group)
 
             resp = message(True, "Group data created")
             resp["group"] = group_data
@@ -28,28 +46,88 @@ class GroupService:
             return internal_err_resp()
 
     @staticmethod
-    def add_member(group_id, new_member_uuid, current_user_uuid):
-        """ Add member to a group """
+    def invite_user(group_id, new_member_uuid, current_user_uuid):
+        """ Invite member to a group """
         if not (group := GroupModel.query.filter_by(group_id=group_id).first()):
             return err_resp("Group not found!", 404)
 
         if str(group.owner.uuid) != current_user_uuid:
-            return err_resp("Unable to add member to a not owned group", 403)
+            return err_resp("Unable to invite member to a not owned group", 403)
 
         if not (member := UserModel.query.filter_by(uuid=new_member_uuid).first()):
             return err_resp("Member not found!", 404)
 
+        if group.invitations.filter_by(user_id=member.user_id).scalar() is not None:
+            return err_resp("Invitation already sended !", 400)
+
         try:
-            group.members.append(member)
+            group.invitations.append(member)
 
             db.session.add(group)
             db.session.commit()
 
-            group_data = GroupService._load_data(group)
+            group_data = GroupObject.load(group)
+
+            resp = message(True, "User invited to group")
+            resp["group"] = group_data
+            return resp, 200
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def accept_invitation(group_id, user_uuid, current_user_uuid):
+        """ Accept invitation """
+        if not (group := GroupModel.query.filter_by(group_id=group_id).first()):
+            return err_resp("Group not found!", 404)
+
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("Member not found!", 404)
+
+        if str(user.uuid) != current_user_uuid:
+            return err_resp("Unable to accept an invitation that is not intended to you", 403)
+
+        if group.invitations.filter_by(user_id=user.user_id).scalar() is None:
+            return err_resp("Invitation not found !", 404)
+
+        try:
+            group.invitations.remove(user)
+            group.members.append(user)
+
+            db.session.add(group)
+            db.session.commit()
+
+            group_data = GroupObject.load(group)
 
             resp = message(True, "Member add to group")
             resp["group"] = group_data
             return resp, 200
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def delete_invitation(group_id, user_uuid, current_user_uuid):
+        """ Refuse / delete invitation """
+        if not (group := GroupModel.query.filter_by(group_id=group_id).first()):
+            return err_resp("Group not found!", 404)
+
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("Member not found!", 404)
+
+        if str(user.uuid) != current_user_uuid and str(group.owner.uuid) != current_user_uuid:
+            return err_resp("Unable to delete an invitation that is not intended to you if you are not the group owner", 403)
+
+        if group.invitations.filter_by(user_id=user.user_id).scalar() is None:
+            return err_resp("Invitation not found !", 404)
+
+        try:
+            group.invitations.remove(user)
+
+            db.session.add(group)
+            db.session.commit()
+
+            return "", 204
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
@@ -75,16 +153,3 @@ class GroupService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
-
-    @staticmethod
-    def _load_data(group_db_obj):
-        """ Load group's data
-
-        Parameters:
-        - Group db object
-        """
-        from src.schemas import GroupObject
-
-        group_schema = GroupObject()
-
-        return group_schema.dump(group_db_obj)

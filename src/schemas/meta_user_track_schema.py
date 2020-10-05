@@ -1,12 +1,13 @@
 from src import ma
 
 from src.model import MetaUserTrackModel
+from src.utils import SQLAlchemyAutoSchema
 
 
 class MetaUserTrackMeta:
     model = MetaUserTrackModel
 
 
-class MetaUserTrackBase(ma.SQLAlchemyAutoSchema):
+class MetaUserTrackBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserTrackMeta):
         pass

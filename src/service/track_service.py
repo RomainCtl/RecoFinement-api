@@ -2,6 +2,7 @@ from flask import current_app
 
 from src.utils import pagination_resp, internal_err_resp, Paginator
 from src.model import TrackModel
+from src.schemas import TrackBase
 
 
 class TrackService:
@@ -15,7 +16,7 @@ class TrackService:
         )
 
         try:
-            track_data = TrackService._load_datas(tracks)
+            track_data = TrackBase.loads(tracks)
 
             return pagination_resp(
                 message="Track data sent",
@@ -37,7 +38,7 @@ class TrackService:
         )
 
         try:
-            track_data = TrackService._load_datas(tracks)
+            track_data = TrackBase.loads(tracks)
 
             return pagination_resp(
                 message="Track data sent",
@@ -49,29 +50,3 @@ class TrackService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
-
-    @staticmethod
-    def _load_datas(track_db_obj_list):
-        """ Load track's data
-
-        Parameters:
-        - List of track db object
-        """
-        from src.schemas import TrackBase
-
-        track_schema = TrackBase(many=True)
-
-        return track_schema.dump(track_db_obj_list)
-
-    @staticmethod
-    def _load_data(track_db_obj):
-        """ Load track's data
-
-        Parameters:
-        - Track db object
-        """
-        from src.schemas import TrackBase
-
-        track_schema = TrackBase()
-
-        return track_schema.dump(track_db_obj)

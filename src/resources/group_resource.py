@@ -51,31 +51,17 @@ class GroupResource(Resource):
     """ Group endpoint
     """
 
-    group_add_member = GroupDto.group_add_member
-
     @api.doc(
-        "Add user to a group",
+        "Get a specific group",
         responses={
-            201: ("Member successfully added to the group", added_success),
+            201: ("Group data successfully sended", creation_success),
             401: ("Authentication required"),
-            403: ("Unable to add a member to a not owned group!"),
-            404: ("Group or Member not found!"),
         }
     )
     @jwt_required
-    @api.expect(group_add_member, validate=True)
-    def put(self, group_id):
-        """ Add member to a group """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        group_data = request.get_json()
-
-        # Validate data
-        if (errors := group_add_member_schema.validate(group_data)):
-            return validation_error(False, errors)
-
-        return GroupService.add_member(group_id, group_data["uuid"], user_uuid)
+    def get(self, group_id):
+        """ Get a specific group """
+        return GroupService.get_group_data(group_id)
 
     @api.doc(
         "Leave group (if current user is the group owner, this group will be deleted)",
@@ -91,3 +77,71 @@ class GroupResource(Resource):
         user_uuid = get_jwt_identity()
 
         return GroupService.leave_group(group_id, user_uuid)
+
+
+@api.route("/<int:group_id>/invitations")
+class GroupInvitationsResource(Resource):
+    """ Group invitations endpoint
+    """
+
+    group_add_member = GroupDto.group_add_member
+
+    @api.doc(
+        "Invite user to a group",
+        responses={
+            201: ("Member successfully invited to the group", added_success),
+            401: ("Authentication required"),
+            403: ("Unable to invite a member to a not owned group!"),
+            404: ("Group or Member not found!"),
+        }
+    )
+    @jwt_required
+    @api.expect(group_add_member, validate=True)
+    def post(self, group_id):
+        """ Invite member to a group """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        group_data = request.get_json()
+
+        # Validate data
+        if (errors := group_add_member_schema.validate(group_data)):
+            return validation_error(False, errors)
+
+        return GroupService.invite_user(group_id, group_data["uuid"], user_uuid)
+
+
+@api.route("/<int:group_id>/invitations/<string:user_uuid>")
+class GroupInvitationsUResource(Resource):
+    """ Group invitations endpoint
+    """
+
+    @api.doc(
+        "Accept invitation to a group",
+        responses={
+            201: ("Member successfully added to the group", added_success),
+            401: ("Authentication required"),
+            404: ("Group or User or Invitation not found!"),
+        }
+    )
+    @jwt_required
+    def put(self, group_id, user_uuid):
+        """ Accept invitation to a group """
+        current_user_uuid = get_jwt_identity()
+
+        return GroupService.accept_invitation(group_id, user_uuid, current_user_uuid)
+
+    @api.doc(
+        "Delete invitation to a group",
+        responses={
+            201: ("Invitation to the group successfully deleted"),
+            401: ("Authentication required"),
+            404: ("Group or User or Invitation not found!"),
+        }
+    )
+    @jwt_required
+    def delete(self, group_id, user_uuid):
+        """ Delete invitation to a group """
+        current_user_uuid = get_jwt_identity()
+
+        return GroupService.delete_invitation(group_id, user_uuid, current_user_uuid)

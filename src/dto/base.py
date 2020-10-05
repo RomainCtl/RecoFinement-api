@@ -33,11 +33,13 @@ TrackBaseObj = Model("Track Base", {
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
     "groups": fields.List(fields.Nested(GroupBaseObj)),
+    "invitations": fields.List(fields.Nested(GroupBaseObj)),
     "owned_groups": fields.List(fields.Nested(GroupBaseObj))
 })
 
 GroupItemObj = Model.clone("Group Item", GroupBaseObj,  {
-    "members": fields.List(fields.Nested(UserBaseObj))
+    "members": fields.List(fields.Nested(UserBaseObj)),
+    "invitations": fields.List(fields.Nested(UserBaseObj))
 })
 
 # Common Object

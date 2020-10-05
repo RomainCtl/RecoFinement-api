@@ -23,7 +23,7 @@ class GroupDto:
     )
 
     added_success = api.model(
-        "Add member to group Response",
+        "Group Item Response",
         {
             **messageObj,
             "group": fields.Nested(group_item),
