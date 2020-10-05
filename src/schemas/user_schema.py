@@ -14,8 +14,10 @@ class UserBase(ma.SQLAlchemyAutoSchema):
 
 
 class UserObject(ma.SQLAlchemyAutoSchema):
-    groups = ma.Nested("GroupObject", many=True)
+    groups = ma.Nested("GroupBase", many=True)
+    invitations = ma.Nested("GroupBase", many=True)
     owned_groups = ma.Nested("GroupObject", many=True)
 
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username", "groups", "owned_groups")
+        fields = ("uuid", "email", "username", "groups",
+                  "invitations", "owned_groups")

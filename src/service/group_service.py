@@ -34,13 +34,17 @@ class GroupService:
             return err_resp("Group not found!", 404)
 
         if str(group.owner.uuid) != current_user_uuid:
-            return err_resp("Unable to add member to a not owned group", 403)
+            return err_resp("Unable to invite member to a not owned group", 403)
 
         if not (member := UserModel.query.filter_by(uuid=new_member_uuid).first()):
             return err_resp("Member not found!", 404)
 
+        if group.invitations.filter_by(user_id=member.user_id).scalar() is not None:
+            return err_resp("Invitation already sended !", 400)
+
         try:
-            group.members.append(member)
+            group.invitations.append(member)
+            # group.members.append(member)
 
             db.session.add(group)
             db.session.commit()

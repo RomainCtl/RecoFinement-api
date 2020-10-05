@@ -54,11 +54,11 @@ class GroupResource(Resource):
     group_add_member = GroupDto.group_add_member
 
     @api.doc(
-        "Add user to a group",
+        "Invite user to a group",
         responses={
-            201: ("Member successfully added to the group", added_success),
+            201: ("Member successfully invited to the group", added_success),
             401: ("Authentication required"),
-            403: ("Unable to add a member to a not owned group!"),
+            403: ("Unable to invite a member to a not owned group!"),
             404: ("Group or Member not found!"),
         }
     )

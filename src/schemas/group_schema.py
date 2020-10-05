@@ -16,6 +16,7 @@ class GroupBase(ma.SQLAlchemyAutoSchema):
 
 
 class GroupObject(ma.SQLAlchemyAutoSchema):
+    invitations = ma.Nested("UserBase", many=True)
     members = ma.Nested("UserBase", many=True)
     owner = ma.Nested("UserBase")
 
