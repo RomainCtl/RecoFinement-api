@@ -5,50 +5,65 @@ import uuid
 from src import db, bcrypt
 
 
-MetaUserBookModel = db.Table("meta_user_book",
-                             db.Column("user_id", db.Integer, db.ForeignKey(
-                                 "user.user_id"), primary_key=True),
-                             db.Column("isbn", db.String(13), db.ForeignKey(
-                                 "book.isbn"), primary_key=True),
-                             db.Column("rating", db.Integer, default=None),
-                             CheckConstraint("rating <= 5 and rating >= 0")
-                             )
+class MetaUserBookModel(db.Model):
+    """
+    MetaUserBook Model for storing metadata between user and book
+    """
+    __tablename__ = "meta_user_book"
 
-MetaUserGameModel = db.Table("meta_user_game",
-                             db.Column("user_id", db.Integer, db.ForeignKey(
-                                 "user.user_id"), primary_key=True),
-                             db.Column("game_id", db.Integer, db.ForeignKey(
-                                 "game.game_id"), primary_key=True),
-                             db.Column("purchase", db.Boolean, default=False),
-                             db.Column("hours", db.Float, default=0),
-                             db.Column("rating", db.Integer, default=None),
-                             CheckConstraint("rating <= 5 and rating >= 0")
-                             )
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    isbn = db.Column(db.String(13), db.ForeignKey(
+        "book.isbn"), primary_key=True)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
 
-MetaUserApplicationModel = db.Table("meta_user_application",
-                                    db.Column("user_id", db.Integer, db.ForeignKey(
-                                        "user.user_id"), primary_key=True),
-                                    db.Column("app_id", db.Integer, db.ForeignKey(
-                                        "application.app_id"), primary_key=True),
-                                    db.Column("review", db.Text, default=None),
-                                    db.Column("popularity", db.Float,
-                                              default=None),
-                                    db.Column("subjectivity",
-                                              db.Float, default=None),
-                                    db.Column("rating", db.Integer,
-                                              default=None),
-                                    CheckConstraint(
-                                        "rating <= 5 and rating >= 0")
-                                    )
 
-MetaUserMovieModel = db.Table("meta_user_movie",
-                              db.Column("user_id", db.Integer, db.ForeignKey(
-                                  "user.user_id"), primary_key=True),
-                              db.Column("movie_id", db.Integer, db.ForeignKey(
-                                  "movie.movie_id"), primary_key=True),
-                              db.Column("rating", db.Integer, default=None),
-                              CheckConstraint("rating <= 5 and rating >= 0")
-                              )
+class MetaUserGameModel(db.Model):
+    """
+    MetaUserGame Model for storing metadata between user and game
+    """
+    __tablename__ = "meta_user_game"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.game_id"), primary_key=True)
+    purchase = db.Column(db.Boolean, default=False)
+    hours = db.Column(db.Float, default=0)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
+
+
+class MetaUserApplicationModel(db.Model):
+    """
+    MetaUserApplication Model for storing metadata between user and application
+    """
+    __tablename__ = "meta_user_application"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    app_id = db.Column(db.Integer, db.ForeignKey(
+        "application.app_id"), primary_key=True)
+    review = db.Column(db.Text, default=None)
+    popularity = db.Column(db.Float, default=None)
+    subjectivity = db.Column(db.Float, default=None)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
+
+
+class MetaUserMovieModel(db.Model):
+    """
+    MetaUserMovie Model for storing metadata between user and movie
+    """
+    __tablename__ = "meta_user_movie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id"), primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey(
+        "movie.movie_id"), primary_key=True)
+    rating = db.Column(db.Integer, CheckConstraint(
+        "rating <= 5 and rating >= 0"), default=None)
 
 
 class MetaUserTrackModel(db.Model):
@@ -88,13 +103,13 @@ class UserModel(db.Model):
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
     meta_user_books = db.relationship(
-        "BookModel", secondary=MetaUserBookModel, lazy="subquery")
+        "BookModel", secondary=MetaUserBookModel.__table__, lazy="subquery")
     meta_user_games = db.relationship(
-        "GameModel", secondary=MetaUserGameModel, lazy="subquery")
+        "GameModel", secondary=MetaUserGameModel.__table__, lazy="subquery")
     meta_user_applications = db.relationship(
-        "ApplicationModel", secondary=MetaUserApplicationModel, lazy="subquery")
+        "ApplicationModel", secondary=MetaUserApplicationModel.__table__, lazy="subquery")
     meta_user_movies = db.relationship(
-        "MovieModel", secondary=MetaUserMovieModel, lazy="subquery")
+        "MovieModel", secondary=MetaUserMovieModel.__table__, lazy="subquery")
     meta_user_tracks = db.relationship(
         "TrackModel", secondary=MetaUserTrackModel.__table__, lazy="subquery")
 
