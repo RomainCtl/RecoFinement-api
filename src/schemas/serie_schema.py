@@ -16,5 +16,5 @@ class SerieBase(SQLAlchemyAutoSchema):
 class SerieObject(SQLAlchemyAutoSchema):
     episodes = ma.Nested("EpisodeBase", many=True)
 
-    class Meta(GroupMeta):
+    class Meta(SerieMeta):
         pass

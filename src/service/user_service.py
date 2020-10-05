@@ -11,8 +11,8 @@ class UserService:
     def search_user_data(search_term, page):
         """ Search user data by username """
         users, total_pages = Paginator.get_from(
-            UserModel.query.filter(
-                UserModel.username.ilike("%"+search_term+"%")),
+            UserModel.query.filter(UserModel.username.ilike(search_term+"%")).union(
+                UserModel.query.filter(UserModel.username.ilike("%"+search_term+"%"))),
             page,
         )
 
