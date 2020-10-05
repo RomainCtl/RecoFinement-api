@@ -20,5 +20,6 @@ api = Api(api_bp, title="RecoFinement API", description="Main routes.", security
 # API namespaces
 api.add_namespace(auth_ns)
 api.add_namespace(group_ns)
-api.add_namespace(track_ns)
 api.add_namespace(user_ns)
+
+api.add_namespace(track_ns)

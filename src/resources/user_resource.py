@@ -67,4 +67,4 @@ class UserTrackResource(Resource):
         # Grab the json data
         rate_data = request.get_json()
 
-        return UserService.give_rate(rate_data["track_id"], rate_data["rating"], user_uuid)
+        return UserService.rate_track(rate_data["track_id"], rate_data["rating"], user_uuid)
