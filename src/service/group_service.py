@@ -3,6 +3,7 @@ from flask import current_app
 from src import db
 from src.utils import err_resp, message, internal_err_resp, Paginator
 from src.model import GroupModel, UserModel
+from src.schemas import GroupObject
 
 
 class GroupService:
@@ -17,7 +18,7 @@ class GroupService:
             db.session.add(user)
             db.session.commit()
 
-            group_data = GroupService._load_data(group)
+            group_data = GroupObject.load(group)
 
             resp = message(True, "Group data created")
             resp["group"] = group_data
@@ -44,12 +45,11 @@ class GroupService:
 
         try:
             group.invitations.append(member)
-            # group.members.append(member)
 
             db.session.add(group)
             db.session.commit()
 
-            group_data = GroupService._load_data(group)
+            group_data = GroupObject.load(group)
 
             resp = message(True, "Member add to group")
             resp["group"] = group_data
@@ -79,16 +79,3 @@ class GroupService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
-
-    @staticmethod
-    def _load_data(group_db_obj):
-        """ Load group's data
-
-        Parameters:
-        - Group db object
-        """
-        from src.schemas import GroupObject
-
-        group_schema = GroupObject()
-
-        return group_schema.dump(group_db_obj)
