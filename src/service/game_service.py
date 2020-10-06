@@ -35,7 +35,7 @@ class GameService:
     def get_most_popular_games(page):
         games, total_pages = Paginator.get_from(
             db.session.query(GameModel, func.count(
-                MetaUserGameModel.user_id).label("count")).join(MetaUserGameModel).group_by(GameModel).order_by(text("count DESC")),
+                MetaUserGameModel.user_id).label("count")).outerjoin(MetaUserGameModel).group_by(GameModel.game_id).order_by(text("count DESC")),
             page,
         )
 
