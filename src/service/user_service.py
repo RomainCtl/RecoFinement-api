@@ -53,12 +53,19 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not ApplicationModel.query.filter_by(app_id=app_id).first():
+        if not (app := ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
 
         try:
             meta_user_application = MetaUserApplicationModel(
                 app_id=app_id, user_id=user.user_id, rating=rating)
+
+            # Update average rating on object
+            app.rating = app.rating or 0
+            app.reviews = app.reviews or 0
+            app.rating = (app.rating * app.reviews +
+                          rating) / (app.reviews + 1)
+            app.reviews += 1
 
             db.session.add(meta_user_application)
             db.session.commit()
@@ -76,12 +83,19 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not BookModel.query.filter_by(isbn=isbn).first():
+        if not (book := BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
 
         try:
             meta_user_book = MetaUserBookModel(
                 isbn=isbn, user_id=user.user_id, rating=rating)
+
+            # Update average rating on object
+            book.rating = book.rating or 0
+            book.rating_count = book.rating_count or 0
+            book.rating = (book.rating * book.rating_count +
+                           rating) / (book.rating_count + 1)
+            book.rating_count += 1
 
             db.session.add(meta_user_book)
             db.session.commit()
@@ -122,12 +136,19 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not MovieModel.query.filter_by(movie_id=movie_id).first():
+        if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
             return err_resp("Movie not found!", 404)
 
         try:
             meta_user_movie = MetaUserMovieModel(
                 movie_id=movie_id, user_id=user.user_id, rating=rating)
+
+            # Update average rating on object
+            movie.rating = movie.rating or 0
+            movie.rating_count = movie.rating_count or 0
+            movie.rating = (movie.rating * movie.rating_count +
+                            rating) / (movie.rating_count + 1)
+            movie.rating_count += 1
 
             db.session.add(meta_user_movie)
             db.session.commit()
@@ -145,12 +166,19 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not SerieModel.query.filter_by(serie_id=serie_id).first():
+        if not (serie := SerieModel.query.filter_by(serie_id=serie_id).first()):
             return err_resp("Serie not found!", 404)
 
         try:
             meta_user_serie = MetaUserSerieModel(
                 serie_id=serie_id, user_id=user.user_id, rating=rating)
+
+            # Update average rating on object
+            serie.rating = serie.rating or 0
+            serie.rating_count = serie.rating_count or 0
+            serie.rating = (serie.rating * serie.rating_count +
+                            rating) / (serie.rating_count + 1)
+            serie.rating_count += 1
 
             db.session.add(meta_user_serie)
             db.session.commit()
@@ -168,12 +196,19 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not TrackModel.query.filter_by(track_id=track_id).first():
+        if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)
 
         try:
             meta_user_track = MetaUserTrackModel(
                 track_id=track_id, user_id=user.user_id, rating=rating)
+
+            # Update average rating on object
+            track.rating = track.rating or 0
+            track.rating_count = track.rating_count or 0
+            track.rating = (track.rating * track.rating_count +
+                            rating) / (track.rating_count + 1)
+            track.rating_count += 1
 
             db.session.add(meta_user_track)
             db.session.commit()
