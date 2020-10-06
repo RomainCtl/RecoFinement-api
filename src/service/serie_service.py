@@ -42,7 +42,6 @@ class SerieService:
         )
 
         try:
-            series = map(lambda t: t[0], series)
             serie_data = SerieBase.loads(series)
 
             return pagination_resp(

@@ -42,7 +42,6 @@ class MovieService:
         )
 
         try:
-            movies = map(lambda t: t[0], movies)
             movie_data = MovieBase.loads(movies)
 
             return pagination_resp(
