@@ -34,13 +34,12 @@ class GameService:
     @staticmethod
     def get_most_popular_games(page):
         games, total_pages = Paginator.get_from(
-            db.session.query(GameModel, func.count(
-                MetaUserGameModel.user_id).label("count")).outerjoin(MetaUserGameModel).group_by(GameModel.game_id).order_by(text("count DESC")),
+            GameModel.query.order_by(
+                GameModel.recommendations.desc().nullslast()),
             page,
         )
 
         try:
-            games = map(lambda t: t[0], games)
             game_data = GameBase.loads(games)
 
             return pagination_resp(

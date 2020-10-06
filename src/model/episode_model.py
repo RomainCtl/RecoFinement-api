@@ -15,4 +15,6 @@ class EpisodeModel(db.Model):
     genres = db.Column(db.Text)
     season_number = db.Column(db.Integer)
     episode_number = db.Column(db.Integer)
+    rating = db.Column(db.Float)
+    rating_count = db.Column(db.Integer, default=0)
     serie_id = db.Column(db.Integer, db.ForeignKey("serie.serie_id"))

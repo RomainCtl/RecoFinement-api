@@ -19,3 +19,5 @@ class MovieModel(db.Model):
     writer = db.Column(db.String(255))
     imdbid = db.Column(db.String(255))
     tmdbid = db.Column(db.String(255))
+    rating = db.Column(db.Float)
+    rating_count = db.Column(db.Integer, default=0)

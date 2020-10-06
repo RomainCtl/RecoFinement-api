@@ -34,13 +34,12 @@ class ApplicationService:
     @staticmethod
     def get_most_popular_applications(page):
         applications, total_pages = Paginator.get_from(
-            db.session.query(ApplicationModel, func.count(
-                MetaUserApplicationModel.user_id).label("count")).outerjoin(MetaUserApplicationModel).group_by(ApplicationModel.app_id).order_by(text("count DESC")),
+            ApplicationModel.query.order_by(
+                ApplicationModel.reviews.desc().nullslast(), ApplicationModel.rating.desc().nullslast()),
             page,
         )
 
         try:
-            applications = map(lambda t: t[0], applications)
             application_data = ApplicationBase.loads(applications)
 
             return pagination_resp(

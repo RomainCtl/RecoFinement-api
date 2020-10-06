@@ -34,13 +34,14 @@ class BookService:
     @staticmethod
     def get_most_popular_books(page):
         books, total_pages = Paginator.get_from(
-            db.session.query(BookModel, func.count(
-                MetaUserBookModel.user_id).label("count")).outerjoin(MetaUserBookModel).group_by(BookModel.isbn).order_by(text("count DESC")),
+            BookModel.query.order_by(
+                BookModel.rating_count.desc().nullslast(),
+                BookModel.rating.desc().nullslast()
+            ),
             page,
         )
 
         try:
-            books = map(lambda t: t[0], books)
             book_data = BookBase.loads(books)
 
             return pagination_resp(

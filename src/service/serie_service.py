@@ -34,8 +34,10 @@ class SerieService:
     @staticmethod
     def get_most_popular_series(page):
         series, total_pages = Paginator.get_from(
-            db.session.query(SerieModel, func.count(
-                MetaUserSerieModel.user_id).label("count")).outerjoin(MetaUserSerieModel).group_by(SerieModel.serie_id).order_by(text("count DESC")),
+            SerieModel.query.order_by(
+                SerieModel.rating_count.desc().nullslast(),
+                SerieModel.rating.desc().nullslast()
+            ),
             page,
         )
 

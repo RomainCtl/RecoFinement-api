@@ -17,6 +17,8 @@ class SerieModel(db.Model):
     writers = db.Column(db.Text)
     directors = db.Column(db.Text)
     actors = db.Column(db.Text)
+    rating = db.Column(db.Float)
+    rating_count = db.Column(db.Integer, default=0)
 
     episodes = db.relationship(
         "EpisodeModel", backref="serie",  lazy="dynamic")
