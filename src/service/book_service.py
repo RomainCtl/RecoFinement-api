@@ -35,7 +35,7 @@ class BookService:
     def get_most_popular_books(page):
         books, total_pages = Paginator.get_from(
             db.session.query(BookModel, func.count(
-                MetaUserBookModel.user_id).label("count")).join(MetaUserBookModel).group_by(BookModel).order_by(text("count DESC")),
+                MetaUserBookModel.user_id).label("count")).outerjoin(MetaUserBookModel).group_by(BookModel.isbn).order_by(text("count DESC")),
             page,
         )
 

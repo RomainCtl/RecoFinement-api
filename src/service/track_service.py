@@ -35,7 +35,7 @@ class TrackService:
     def get_most_popular_tracks(page):
         tracks, total_pages = Paginator.get_from(
             db.session.query(TrackModel, func.count(
-                MetaUserTrackModel.user_id).label("count")).join(MetaUserTrackModel).group_by(TrackModel).order_by(text("count DESC")),
+                MetaUserTrackModel.user_id).label("count")).outerjoin(MetaUserTrackModel).group_by(TrackModel.track_id).order_by(text("count DESC")),
             page,
         )
 
