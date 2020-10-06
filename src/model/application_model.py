@@ -12,7 +12,7 @@ class ApplicationModel(db.Model):
     name = db.Column(db.String(255), unique=True, index=True)
     category = db.Column(db.String(255))
     rating = db.Column(db.Float)
-    reviews = db.Column(db.String(45))
+    reviews = db.Column(db.Integer)
     size = db.Column(db.String(255))
     installs = db.Column(db.String(255))
     type = db.Column(db.String(45))

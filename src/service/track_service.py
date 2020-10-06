@@ -34,13 +34,14 @@ class TrackService:
     @staticmethod
     def get_most_popular_tracks(page):
         tracks, total_pages = Paginator.get_from(
-            db.session.query(TrackModel, func.count(
-                MetaUserTrackModel.user_id).label("count")).outerjoin(MetaUserTrackModel).group_by(TrackModel.track_id).order_by(text("count DESC")),
+            TrackModel.query.order_by(
+                TrackModel.rating_count.desc().nullslast(),
+                TrackModel.rating.desc().nullslast()
+            ),
             page,
         )
 
         try:
-            tracks = map(lambda t: t[0], tracks)
             track_data = TrackBase.loads(tracks)
 
             return pagination_resp(

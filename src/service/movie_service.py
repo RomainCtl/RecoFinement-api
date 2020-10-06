@@ -34,8 +34,10 @@ class MovieService:
     @staticmethod
     def get_most_popular_movies(page):
         movies, total_pages = Paginator.get_from(
-            db.session.query(MovieModel, func.count(
-                MetaUserMovieModel.user_id).label("count")).outerjoin(MetaUserMovieModel).group_by(MovieModel.movie_id).order_by(text("count DESC")),
+            MovieModel.query.order_by(
+                MovieModel.rating_count.desc().nullslast(),
+                MovieModel.rating.desc().nullslast()
+            ),
             page,
         )
 

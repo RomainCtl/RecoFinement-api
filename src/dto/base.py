@@ -40,6 +40,8 @@ BookBaseObj = Model("Book base", {
     "image_url_s": fields.String,
     "image_url_m": fields.String,
     "image_url_l": fields.String,
+    "rating": fields.Float,
+    "rating_count": fields.Integer,
 })
 
 GameBaseObj = Model("Game base", {
@@ -53,7 +55,7 @@ GameBaseObj = Model("Game base", {
     "publishers": fields.String,
     "price": fields.String,
     "genres": fields.String,
-    "recommendations": fields.String,
+    "recommendations": fields.Integer,
     "release_date": fields.String,
 })
 
@@ -69,6 +71,8 @@ MovieBaseObj = Model("Movie base", {
     "writer": fields.String,
     "imdbid": fields.String,
     "tmdbid": fields.String,
+    "rating": fields.Float,
+    "rating_count": fields.Integer,
 })
 
 TrackBaseObj = Model("Track base", {
@@ -96,6 +100,8 @@ SerieBaseObj = Model("Serie base", {
     "writers": fields.String,
     "directors": fields.String,
     "actors": fields.String,
+    "rating": fields.Float,
+    "rating_count": fields.Integer,
 })
 
 EpisodeBaseObj = Model("Episode base", {
@@ -106,6 +112,8 @@ EpisodeBaseObj = Model("Episode base", {
     "genres": fields.String,
     "season_number": fields.Integer,
     "episode_number": fields.Integer,
+    "rating": fields.Float,
+    "rating_count": fields.Integer,
     "serie": fields.Nested(SerieBaseObj),
 })
 
