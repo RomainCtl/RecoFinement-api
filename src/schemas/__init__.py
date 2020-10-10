@@ -9,7 +9,9 @@ from .episode_schema import EpisodeBase
 from .game_schema import GameBase
 from .movie_schema import MovieBase
 from .serie_schema import SerieBase, SerieObject
-from .track_schema import TrackBase
+from .track_schema import TrackBase, TrackObject
+
+from .track_genres_schema import TrackGenresBase
 
 from .meta_user_track_schema import MetaUserTrackBase
 from .meta_user_application_schema import MetaUserApplicationBase

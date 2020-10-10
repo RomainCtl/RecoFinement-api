@@ -117,6 +117,12 @@ EpisodeBaseObj = Model("Episode base", {
     "serie": fields.Nested(SerieBaseObj),
 })
 
+TrackGenresBaseObj = Model("TrackGenres base", {
+    "track_id": fields.Integer,
+    "tag": fields.String,
+    "frequency": fields.Integer,
+})
+
 # Item object
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
@@ -132,6 +138,10 @@ GroupItemObj = Model.clone("Group Item", GroupBaseObj, {
 
 SerieItemObj = Model.clone("Serie Item", SerieBaseObj, {
     "episodes": fields.List(fields.Nested(EpisodeBaseObj)),
+})
+
+TrackItemObj = Model.clone("Track Item", TrackBaseObj, {
+    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
 })
 
 # Common Object

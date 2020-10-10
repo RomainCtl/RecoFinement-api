@@ -34,7 +34,7 @@ class TrackModel(db.Model):
     language = db.Column(db.String(45))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
-    url = db.Column(db.Text)
+    spotify_id = db.Column(db.String(45))
     covert_art_url = db.Column(db.Text)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
@@ -42,3 +42,6 @@ class TrackModel(db.Model):
                                primaryjoin=track_id == SimilarsTracksModel.track_id0,
                                secondaryjoin=track_id == SimilarsTracksModel.track_id1,
                                lazy="subquery")
+
+    genres = db.relationship(
+        "TrackGenresModel", backref="track", lazy="dynamic")
