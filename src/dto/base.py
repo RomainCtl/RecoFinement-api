@@ -73,6 +73,7 @@ MovieBaseObj = Model("Movie base", {
     "tmdbid": fields.String,
     "rating": fields.Float,
     "rating_count": fields.Integer,
+    "cover": fields.String,
 })
 
 TrackBaseObj = Model("Track base", {
