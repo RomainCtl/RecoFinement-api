@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -49,6 +49,22 @@ class BookService:
                 content=book_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_book_data(id):
+        """ Get book data by id """
+        book = BookModel.query.filter(BookModel.isbn==id)
+        try:
+            book_data = BookBase.loads(book)
+
+            return jsonify(
+                message="Book data sent",
+                content=book_data
             )
 
         except Exception as error:

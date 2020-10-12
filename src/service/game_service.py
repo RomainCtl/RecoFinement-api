@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -43,10 +43,26 @@ class GameService:
             game_data = GameBase.loads(games)
 
             return pagination_resp(
-                message="Most popular track data sent",
+                message="Most popular game data sent",
                 content=game_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_game_data(id):
+        """ Get game data by id """
+        game = GameModel.query.filter(GameModel.game_id==id)
+        try:
+            game_data = GameBase.loads(game)
+
+            return jsonify(
+                message="Game data sent",
+                content=game_data
             )
 
         except Exception as error:

@@ -45,3 +45,17 @@ class BookSearchResource(Resource):
         except ValueError:
             page = 1
         return BookService.search_book_data(search_term, page)
+
+    @api.route("/<string:bookID>")
+    class BookSearchResource(Resource):
+        @api.doc(
+            "Get book",
+            responses={
+                200: ("Book data successfully sent", data_resp),
+                401: ("Authentication required"),
+            },
+        )
+        @jwt_required
+        def get(self, bookID):
+            """ Getlist of book's data by term """
+            return BookService.get_book_data(bookID)

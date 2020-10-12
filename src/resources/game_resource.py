@@ -45,3 +45,17 @@ class GameSearchResource(Resource):
         except ValueError:
             page = 1
         return GameService.search_game_data(search_term, page)
+
+    @api.route("/<string:gameID>")
+    class GameSearchResource(Resource):
+        @api.doc(
+            "Get game",
+            responses={
+                200: ("Game data successfully sent", data_resp),
+                401: ("Authentication required"),
+            },
+        )
+        @jwt_required
+        def get(self, gameID):
+            """ Getlist of game's data by term """
+            return GameService.get_game_data(gameID)

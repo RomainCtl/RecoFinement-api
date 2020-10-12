@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -49,6 +49,22 @@ class MovieService:
                 content=movie_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_movie_data(id):
+        """ Get movie data by id """
+        movies=MovieModel.query.filter(MovieModel.movie_id==id)
+        try:
+            movie_data = MovieBase.loads(movies)
+
+            return jsonify(
+                message="Movie data sent",
+                content=movie_data
             )
 
         except Exception as error:

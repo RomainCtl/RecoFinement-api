@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -49,6 +49,22 @@ class TrackService:
                 content=track_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+    
+    @staticmethod
+    def get_track_data(id):
+        """ Get track data by id """
+        track = TrackModel.query.filter(TrackModel.track_id==id)
+        try:
+            track_data = TrackBase.loads(track)
+
+            return jsonify(
+                message="Track data sent",
+                content=track_data
             )
 
         except Exception as error:

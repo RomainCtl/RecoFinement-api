@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app,jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -47,6 +47,22 @@ class ApplicationService:
                 content=application_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_application_data(id):
+        """ Get application data by id """
+        application = ApplicationModel.query.filter(ApplicationModel.application_id==id)
+        try:
+            application_data = ApplicationBase.loads(application)
+
+            return jsonify(
+                message="Application data sent",
+                content=application_data
             )
 
         except Exception as error:

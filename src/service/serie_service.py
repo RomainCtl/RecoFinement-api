@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app,jsonify
 from sqlalchemy import func, text
 
 from src import db, settings
@@ -49,6 +49,22 @@ class SerieService:
                 content=serie_data,
                 page=page,
                 total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+    
+    @staticmethod
+    def get_serie_data(id):
+        """ Get serie data by id """
+        series=SerieModel.query.filter(SerieModel.serie_id==id)
+        try:
+            serie_data = SerieBase.loads(series)
+
+            return jsonify(
+                message="Serie data sent",
+                content=serie_data
             )
 
         except Exception as error:

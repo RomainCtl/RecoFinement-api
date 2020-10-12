@@ -45,3 +45,17 @@ class TrackSearchResource(Resource):
         except ValueError:
             page = 1
         return TrackService.search_track_data(search_term, page)
+
+@api.route("/<string:trackID>")
+class TrackSearchResource(Resource):
+    @api.doc(
+        "Get track",
+        responses={
+            200: ("Track data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self, trackID):
+        """ Getlist of track's data by term """
+        return TrackService.get_track_data(trackID)

@@ -45,3 +45,17 @@ class ApplicationSearchResource(Resource):
         except ValueError:
             page = 1
         return ApplicationService.search_application_data(search_term, page)
+
+    @api.route("/<string:applicationID>")
+    class ApplicationSearchResource(Resource):
+        @api.doc(
+            "Get application",
+            responses={
+                200: ("Application data successfully sent", data_resp),
+                401: ("Authentication required"),
+            },
+        )
+        @jwt_required
+        def get(self, applicationID):
+            """ Getlist of application's data by term """
+            return ApplicationService.get_application_data(applicationID)
