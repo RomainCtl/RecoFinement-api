@@ -21,3 +21,4 @@ class MovieModel(db.Model):
     tmdbid = db.Column(db.String(255))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
+    cover = db.Column(db.Text)

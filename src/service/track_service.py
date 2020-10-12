@@ -4,7 +4,7 @@ from sqlalchemy import func, text
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
 from src.model import TrackModel, MetaUserTrackModel
-from src.schemas import TrackBase
+from src.schemas import TrackBase, TrackObject
 
 
 class TrackService:
@@ -18,7 +18,7 @@ class TrackService:
         )
 
         try:
-            track_data = TrackBase.loads(tracks)
+            track_data = TrackObject.loads(tracks)
 
             return pagination_resp(
                 message="Track data sent",
@@ -42,7 +42,7 @@ class TrackService:
         )
 
         try:
-            track_data = TrackBase.loads(tracks)
+            track_data = TrackObject.loads(tracks)
 
             return pagination_resp(
                 message="Most popular track data sent",
