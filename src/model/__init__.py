@@ -9,3 +9,9 @@ from .serie_model import SerieModel
 from .track_model import TrackModel
 from .track_genres_model import TrackGenresModel
 from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel
+
+from .s_application_categories_model import SApplicationCategoriesModel
+from .s_game_genres import SGameGenresModel
+from .s_movie_genres_model import SMovieGenresModel
+from .s_serie_genres_model import SSerieGenresModel
+from .s_track_genres_model import STrackGenresModel

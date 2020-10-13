@@ -45,3 +45,18 @@ class SerieSearchResource(Resource):
         except ValueError:
             page = 1
         return SerieService.search_serie_data(search_term, page)
+
+
+@api.route("/genres")
+class SerieGenreResource(Resource):
+    @api.doc(
+        "Get serie genres",
+        responses={
+            200: ("Serie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    def get(self):
+        """ Get serie genres """
+        return SerieService.get_ordered_genre()

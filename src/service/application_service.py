@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import ApplicationModel, MetaUserApplicationModel
-from src.schemas import ApplicationBase
+from src.model import ApplicationModel, MetaUserApplicationModel, SApplicationCategoriesModel
+from src.schemas import ApplicationBase, SApplicationCategoriesBase
 
 
 class ApplicationService:
@@ -48,6 +48,22 @@ class ApplicationService:
                 page=page,
                 total_pages=total_pages
             )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_ordered_categories():
+        categories = SApplicationCategoriesModel.query.order_by(
+            SApplicationCategoriesModel.count.desc()).all()
+
+        try:
+            categories_data = SApplicationCategoriesBase.loads(categories)
+
+            resp = message(True, "Application categories data sent")
+            resp["application_categories"] = categories_data
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)
