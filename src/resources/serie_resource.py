@@ -52,7 +52,7 @@ class SerieGenreResource(Resource):
     @api.doc(
         "Get serie genres",
         responses={
-            200: ("Serie data successfully sent", data_resp),
+            200: ("Serie data successfully sent"),
             401: ("Authentication required"),
         }
     )

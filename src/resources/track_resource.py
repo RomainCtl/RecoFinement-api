@@ -46,12 +46,13 @@ class TrackSearchResource(Resource):
             page = 1
         return TrackService.search_track_data(search_term, page)
 
+
 @api.route("/genres")
 class TrackGenresResource(Resource):
     @api.doc(
         "Get track genres",
         responses={
-            200: ("Track data successfully sent", data_resp),
+            200: ("Track data successfully sent"),
             401: ("Authentication required"),
         },
     )
