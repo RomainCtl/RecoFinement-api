@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import MovieModel, MetaUserMovieModel
-from src.schemas import MovieBase
+from src.model import MovieModel, MetaUserMovieModel, SMovieGenresModel
+from src.schemas import MovieBase, SMovieGenresBase
 
 
 class MovieService:
@@ -50,6 +50,22 @@ class MovieService:
                 page=page,
                 total_pages=total_pages
             )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_ordered_genre(self):
+        genres = SMovieGenresModel.query.order_by(
+            SMovieGenresModel.count.desc()).all()
+
+        try:
+            genres_data = SMovieGenresBase.loads(genres)
+
+            resp = message(True, "Movie genres data sent")
+            resp["movie_genres"] = genres_data
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)

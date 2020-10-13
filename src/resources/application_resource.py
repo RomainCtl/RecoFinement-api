@@ -45,3 +45,18 @@ class ApplicationSearchResource(Resource):
         except ValueError:
             page = 1
         return ApplicationService.search_application_data(search_term, page)
+
+
+@api.route("/categories")
+class ApplicationCategoriesResource(Resource):
+    @api.doc(
+        "Get application categories",
+        responses={
+            200: ("Application categories data successfully sent"),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get application categories """
+        return ApplicationService.get_ordered_categories()

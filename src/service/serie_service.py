@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import SerieModel, MetaUserSerieModel
-from src.schemas import SerieBase
+from src.model import SerieModel, MetaUserSerieModel, SSerieGenresModel
+from src.schemas import SerieBase, SSerieGenresBase
 
 
 class SerieService:
@@ -50,6 +50,22 @@ class SerieService:
                 page=page,
                 total_pages=total_pages
             )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_ordered_genre():
+        genres = SSerieGenresModel.query.order_by(
+            SSerieGenresModel.count.desc()).all()
+
+        try:
+            genres_data = SSerieGenresBase.loads(genres)
+
+            resp = message(True, "Serie genres data sent")
+            resp["serie_genres"] = genres_data
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)

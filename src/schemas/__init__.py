@@ -19,3 +19,9 @@ from .meta_user_book_schema import MetaUserBookBase
 from .meta_user_game_schema import MetaUserGameBase
 from .meta_user_movie_schema import MetaUserMovieBase
 from .meta_user_serie_schema import MetaUserSerieBase
+
+from .s_application_categories_schema import SApplicationCategoriesBase
+from .s_game_genres_schema import SGameGenresBase
+from .s_movie_genres_schema import SMovieGenresBase
+from .s_serie_genres_schema import SSerieGenresBase
+from .s_track_genres_schema import STrackGenresBase

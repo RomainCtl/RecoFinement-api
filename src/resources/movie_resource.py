@@ -45,3 +45,18 @@ class MovieSearchResource(Resource):
         except ValueError:
             page = 1
         return MovieService.search_movie_data(search_term, page)
+
+
+@api.route("/genres")
+class MovieGenresResource(Resource):
+    @api.doc(
+        "Get movie genres",
+        responses={
+            200: ("Movie genres data successfully sent"),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get movie genres """
+        return MovieService.get_ordered_genre()
