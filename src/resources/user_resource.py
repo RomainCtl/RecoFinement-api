@@ -218,3 +218,23 @@ class UserGenreResource(Resource):
         data = request.get_json()
 
         return UserService.like_genre(data["genre_id"], user_uuid)
+
+    @api.doc(
+        "Unlike a genre",
+        responses={
+            201: ("Successfully send"),
+            400: ("You didn't like this genre"),
+            401: ("Authentication required"),
+            404: "User or Genre not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(like_genre, validate=True)
+    def delete(self):
+        """ Unlike a genre """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return UserService.unlike_genre(data["genre_id"], user_uuid)

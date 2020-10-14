@@ -240,3 +240,27 @@ class UserService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def unlike_genre(genre_id, user_uuid):
+        """" Unlike a genre """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
+            return err_resp("Genre not found!", 404)
+
+        if genre not in user.liked_genres:
+            return err_resp("You didn't like this genre", 400)
+
+        try:
+            user.liked_genres.remove(genre)
+
+            db.session.add(user)
+            db.session.commit()
+
+            resp = message(True, "User liked this genre")
+            return resp, 201
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
