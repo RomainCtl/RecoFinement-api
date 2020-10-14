@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import TrackModel, MetaUserTrackModel, STrackGenresModel
-from src.schemas import TrackBase, TrackObject, STrackGenresBase
+from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType
+from src.schemas import TrackBase, TrackObject, GenreBase
 
 
 class TrackService:
@@ -57,11 +57,11 @@ class TrackService:
 
     @staticmethod
     def get_ordered_genre():
-        genres = STrackGenresModel.query.order_by(
-            STrackGenresModel.count.desc()).all()
+        genres = GenreModel.query.filter_by(
+            content_type=ContentType.TRACK).order_by(GenreModel.count.desc()).all()
 
         try:
-            genres_data = STrackGenresBase.loads(genres)
+            genres_data = GenreBase.loads(genres)
 
             resp = message(True, "track genres data sent")
             resp["track_genres"] = genres_data
