@@ -78,3 +78,10 @@ class UserDto:
             "rating": fields.Integer(min=0, max=5, required=True),
         }
     )
+
+    like_genre = api.model(
+        "Like Genre",
+        {
+            "genre_id": fields.Integer(required=True),
+        }
+    )

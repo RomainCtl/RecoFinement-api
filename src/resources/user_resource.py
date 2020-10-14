@@ -193,3 +193,28 @@ class UserTrackResource(Resource):
         rate_data = request.get_json()
 
         return UserService.rate_track(rate_data["track_id"], rate_data["rating"], user_uuid)
+
+
+@api.route("/genre")
+class UserGenreResource(Resource):
+
+    like_genre = UserDto.like_genre
+
+    @api.doc(
+        "Like a genre",
+        responses={
+            201: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User or Genre not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(like_genre, validate=True)
+    def post(self):
+        """ Like a genre """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return UserService.like_genre(data["genre_id"], user_uuid)
