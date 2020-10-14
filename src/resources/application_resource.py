@@ -47,16 +47,16 @@ class ApplicationSearchResource(Resource):
         return ApplicationService.search_application_data(search_term, page)
 
 
-@api.route("/categories")
-class ApplicationCategoriesResource(Resource):
+@api.route("/genres")
+class ApplicatioGenresResource(Resource):
     @api.doc(
-        "Get application categories",
+        "Get application genres",
         responses={
-            200: ("Application categories data successfully sent"),
+            200: ("Application genres data successfully sent"),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self):
-        """ Get application categories """
-        return ApplicationService.get_ordered_categories()
+        """ Get application genres """
+        return ApplicationService.get_ordered_genres()

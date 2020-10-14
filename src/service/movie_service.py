@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import MovieModel, MetaUserMovieModel, SMovieGenresModel
-from src.schemas import MovieBase, SMovieGenresBase
+from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType
+from src.schemas import MovieBase, GenreBase
 
 
 class MovieService:
@@ -57,11 +57,11 @@ class MovieService:
 
     @staticmethod
     def get_ordered_genre(self):
-        genres = SMovieGenresModel.query.order_by(
-            SMovieGenresModel.count.desc()).all()
+        genres = GenreModel.query.filter_by(
+            content_type=ContentType.MOVIE).order_by(GenreModel.count.desc()).all()
 
         try:
-            genres_data = SMovieGenresBase.loads(genres)
+            genres_data = GenreBase.loads(genres)
 
             resp = message(True, "Movie genres data sent")
             resp["movie_genres"] = genres_data

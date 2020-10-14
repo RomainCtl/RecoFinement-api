@@ -101,6 +101,13 @@ GroupMembersModel = db.Table("group_members",
                                  "group.group_id"), primary_key=True)
                              )
 
+LikedGenreModel = db.Table("liked_genres",
+                           db.Column("user_id", db.Integer, db.ForeignKey(
+                               "user.user_id"), primary_key=True),
+                           db.Column("genre_id", db.Integer, db.ForeignKey(
+                               "genre.genre_id"), primary_key=True)
+                           )
+
 
 class UserModel(db.Model):
     """
@@ -133,6 +140,9 @@ class UserModel(db.Model):
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
     owned_groups = db.relationship(
         "GroupModel", backref="owner", lazy='dynamic')
+
+    liked_genres = db.relationship(
+        "GenreModel", secondary=LikedGenreModel, lazy="dynamic")
 
     @property
     def password(self):

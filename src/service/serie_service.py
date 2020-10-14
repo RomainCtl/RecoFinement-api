@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import SerieModel, MetaUserSerieModel, SSerieGenresModel
-from src.schemas import SerieBase, SSerieGenresBase
+from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType
+from src.schemas import SerieBase, GenreBase
 
 
 class SerieService:
@@ -57,11 +57,11 @@ class SerieService:
 
     @staticmethod
     def get_ordered_genre():
-        genres = SSerieGenresModel.query.order_by(
-            SSerieGenresModel.count.desc()).all()
+        genres = GenreModel.query.filter_by(
+            content_type=ContentType.SERIE).order_by(GenreModel.count.desc()).all()
 
         try:
-            genres_data = SSerieGenresBase.loads(genres)
+            genres_data = GenreBase.loads(genres)
 
             resp = message(True, "Serie genres data sent")
             resp["serie_genres"] = genres_data

@@ -3,8 +3,8 @@ from sqlalchemy import func, text
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import GameModel, MetaUserGameModel, SGameGenresModel
-from src.schemas import GameBase, SGameGenresBase
+from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType
+from src.schemas import GameBase, GenreBase
 
 
 class GameService:
@@ -55,11 +55,11 @@ class GameService:
 
     @staticmethod
     def get_ordered_genre():
-        genres = SGameGenresModel.query.order_by(
-            SGameGenresModel.count.desc()).all()
+        genres = GenreModel.query.filter_by(
+            content_type=ContentType.GAME).order_by(GenreModel.count.desc()).all()
 
         try:
-            genres_data = SGameGenresBase.loads(genres)
+            genres_data = GenreBase.loads(genres)
 
             resp = message(True, "Game genres data sent")
             resp["game_genres"] = genres_data
