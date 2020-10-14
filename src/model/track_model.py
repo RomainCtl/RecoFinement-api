@@ -31,7 +31,6 @@ class TrackModel(db.Model):
     release = db.Column(db.String(255))
     track_mmid = db.Column(db.String(45))
     recording_mbid = db.Column(UUID(as_uuid=True))
-    language = db.Column(db.String(45))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
     spotify_id = db.Column(db.String(45))

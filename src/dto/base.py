@@ -84,7 +84,6 @@ TrackBaseObj = Model("Track base", {
     "release": fields.String,
     "track_mmid": fields.String,
     "recording_mbid": fields.String,
-    "language": fields.String,
     "rating": fields.Float,
     "rating_count": fields.Integer,
     "url": fields.String,
