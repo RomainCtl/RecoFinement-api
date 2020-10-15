@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import UserBaseObj, GroupBaseObj, UserItemObj, messageObj, paginationObj
+from .base import UserBaseObj, GroupBaseObj, UserItemObj, messageObj, paginationObj, GenreBaseObj
 
 
 class UserDto:
@@ -12,6 +12,9 @@ class UserDto:
 
     api.models[UserItemObj.name] = UserItemObj
     user_item = UserItemObj
+
+    api.models[GenreBaseObj.name] = GenreBaseObj
+    genre_base = GenreBaseObj
 
     # Responses
     data_resp = api.clone(

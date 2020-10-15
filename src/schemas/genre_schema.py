@@ -12,11 +12,8 @@ class GenreMeta:
 class GenreBase(SQLAlchemyAutoSchema):
     content_type = fields.Method("get_content_type")
 
-    def get_content_type(self, obj):
-        return obj.content_type.value
-
     class Meta(GenreMeta):
-        pass
+        fields = ("genre_id", "name", "count")
 
 
 class GenreObject(SQLAlchemyAutoSchema):

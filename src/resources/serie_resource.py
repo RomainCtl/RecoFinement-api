@@ -7,6 +7,7 @@ from src.dto import SerieDto
 
 api = SerieDto.api
 data_resp = SerieDto.data_resp
+genres_resp = SerieDto.genres_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class SerieGenreResource(Resource):
     @api.doc(
         "Get serie genres",
         responses={
-            200: ("Serie data successfully sent"),
+            200: ("Serie data successfully sent", genres_resp),
             401: ("Authentication required"),
         }
     )

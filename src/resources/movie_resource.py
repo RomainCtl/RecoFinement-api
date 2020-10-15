@@ -7,6 +7,7 @@ from src.dto import MovieDto
 
 api = MovieDto.api
 data_resp = MovieDto.data_resp
+genres_resp = MovieDto.genres_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class MovieGenresResource(Resource):
     @api.doc(
         "Get movie genres",
         responses={
-            200: ("Movie genres data successfully sent"),
+            200: ("Movie genres data successfully sent", genres_resp),
             401: ("Authentication required"),
         },
     )

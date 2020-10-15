@@ -7,6 +7,7 @@ from src.dto import ApplicationDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
+genres_resp = ApplicationDto.genres_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class ApplicatioGenresResource(Resource):
     @api.doc(
         "Get application genres",
         responses={
-            200: ("Application genres data successfully sent"),
+            200: ("Application genres data successfully sent", genres_resp),
             401: ("Authentication required"),
         },
     )

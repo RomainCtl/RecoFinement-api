@@ -10,7 +10,7 @@ class ApplicationModel(db.Model):
     app_id = db.Column(db.Integer, primary_key=True,
                        autoincrement=True, index=True)
     name = db.Column(db.String(255), unique=True, index=True)
-    category = db.Column(db.String(255))
+    genre_id = db.Column(db.Integer, db.ForeignKey("genre.genre_id"))
     rating = db.Column(db.Float)
     reviews = db.Column(db.Integer)
     size = db.Column(db.String(255))

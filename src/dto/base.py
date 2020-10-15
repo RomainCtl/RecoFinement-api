@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields, Model
 
-# Base  objects
+# Base objects
 
 UserBaseObj = Model("User Base", {
     "uuid": fields.String,
@@ -14,10 +14,16 @@ GroupBaseObj = Model("Group base", {
     "owner": fields.Nested(UserBaseObj)
 })
 
+GenreBaseObj = Model("Genre base", {
+    "genre_id": fields.Integer,
+    "name": fields.String,
+    "count": fields.Integer,
+})
+
 ApplicationBaseObj = Model("Application base", {
     "app_id": fields.Integer,
     "name": fields.String,
-    "category": fields.String,
+    "genre": fields.Nested(GenreBaseObj),
     "rating": fields.Float,
     "reviews": fields.String,
     "size": fields.String,
