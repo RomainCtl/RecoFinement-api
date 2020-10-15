@@ -64,7 +64,7 @@ class SerieService:
             genres_data = GenreBase.loads(genres)
 
             resp = message(True, "Serie genres data sent")
-            resp["serie_genres"] = genres_data
+            resp["content"] = genres_data
             return resp, 200
 
         except Exception as error:

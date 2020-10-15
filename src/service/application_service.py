@@ -62,7 +62,7 @@ class ApplicationService:
             genres_data = GenreBase.loads(genres)
 
             resp = message(True, "Application genres data sent")
-            resp["application_genres"] = genres_data
+            resp["content"] = genres_data
             return resp, 200
 
         except Exception as error:

@@ -7,6 +7,7 @@ from src.dto import GameDto
 
 api = GameDto.api
 data_resp = GameDto.data_resp
+genres_resp = GameDto.genres_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class GameGenresResource(Resource):
     @api.doc(
         "Get game genres",
         responses={
-            200: ("Game genres data successfully sent"),
+            200: ("Game genres data successfully sent", genres_resp),
             401: ("Authentication required"),
         },
     )

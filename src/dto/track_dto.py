@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import TrackBaseObj, TrackItemObj, paginationObj, TrackGenresBaseObj
+from .base import TrackBaseObj, TrackItemObj, paginationObj, TrackGenresBaseObj, GenreBaseObj, messageObj
 
 
 class TrackDto:
@@ -16,6 +16,9 @@ class TrackDto:
     api.models[TrackGenresBaseObj.name] = TrackGenresBaseObj
     track_genres_base = TrackGenresBaseObj
 
+    api.models[GenreBaseObj.name] = GenreBaseObj
+    genre_base = GenreBaseObj
+
     # Responses
     data_resp = api.clone(
         "Track list Data Response",
@@ -23,4 +26,12 @@ class TrackDto:
         {
             "content": fields.List(fields.Nested(track_item)),
         },
+    )
+
+    genres_resp = api.clone(
+        "Track genres Data Response",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(genre_base))
+        }
     )

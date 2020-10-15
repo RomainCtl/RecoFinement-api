@@ -64,7 +64,7 @@ class TrackService:
             genres_data = GenreBase.loads(genres)
 
             resp = message(True, "track genres data sent")
-            resp["track_genres"] = genres_data
+            resp["content"] = genres_data
             return resp, 200
 
         except Exception as error:

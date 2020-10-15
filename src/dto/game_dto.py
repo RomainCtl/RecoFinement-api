@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import GameBaseObj, paginationObj
+from .base import GameBaseObj, paginationObj, GenreBaseObj, messageObj
 
 
 class GameDto:
@@ -10,6 +10,9 @@ class GameDto:
     api.models[GameBaseObj.name] = GameBaseObj
     game_base = GameBaseObj
 
+    api.models[GenreBaseObj.name] = GenreBaseObj
+    genre_base = GenreBaseObj
+
     # Responses
     data_resp = api.clone(
         "Game list Data Response",
@@ -17,4 +20,12 @@ class GameDto:
         {
             "content": fields.List(fields.Nested(game_base)),
         },
+    )
+
+    genres_resp = api.clone(
+        "Game genres Data Response",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(genre_base))
+        }
     )

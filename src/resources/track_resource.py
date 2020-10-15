@@ -7,6 +7,7 @@ from src.dto import TrackDto
 
 api = TrackDto.api
 data_resp = TrackDto.data_resp
+genres_resp = TrackDto.genres_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class TrackGenresResource(Resource):
     @api.doc(
         "Get track genres",
         responses={
-            200: ("Track data successfully sent"),
+            200: ("Track data successfully sent", genres_resp),
             401: ("Authentication required"),
         },
     )
