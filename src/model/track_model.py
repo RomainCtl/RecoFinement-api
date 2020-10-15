@@ -3,6 +3,13 @@ import uuid
 
 from src import db
 
+TrackGenresModel = db.Table("track_genres",
+                            db.Column("track_id", db.Integer, db.ForeignKey(
+                                "track.track_id"), primary_key=True),
+                            db.Column("genre_id", db.Integer, db.ForeignKey(
+                                "genre.genre_id"), primary_key=True)
+                            )
+
 
 class SimilarsTracksModel(db.Model):
     """
@@ -43,4 +50,4 @@ class TrackModel(db.Model):
                                lazy="subquery")
 
     genres = db.relationship(
-        "TrackGenresModel", backref="track", lazy="dynamic")
+        "GenreModel", secondary=TrackGenresModel, lazy="dynamic")

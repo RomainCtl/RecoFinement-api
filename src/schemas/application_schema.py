@@ -9,7 +9,7 @@ class ApplicationMeta:
 
 
 class ApplicationBase(SQLAlchemyAutoSchema):
-    genre = ma.Nested("GenreBase")
+    categorie = ma.Nested("GenreBase")
 
     class Meta(ApplicationMeta):
         pass

@@ -10,8 +10,6 @@ class GenreMeta:
 
 
 class GenreBase(SQLAlchemyAutoSchema):
-    content_type = fields.Method("get_content_type")
-
     class Meta(GenreMeta):
         fields = ("genre_id", "name", "count")
 

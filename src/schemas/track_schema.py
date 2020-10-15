@@ -14,7 +14,7 @@ class TrackBase(SQLAlchemyAutoSchema):
 
 
 class TrackObject(SQLAlchemyAutoSchema):
-    genres = ma.Nested("TrackGenresBase", many=True)
+    genres = ma.Nested("GenreBase", many=True)
 
     class Meta(TrackMeta):
         fields = ("track_id", "title", "year", "artist_name", "release", "track_mmid",

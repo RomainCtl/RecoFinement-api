@@ -11,8 +11,6 @@ from .movie_schema import MovieBase
 from .serie_schema import SerieBase, SerieObject
 from .track_schema import TrackBase, TrackObject
 
-from .track_genres_schema import TrackGenresBase
-
 from .genre_schema import GenreBase, GenreObject
 
 from .meta_user_track_schema import MetaUserTrackBase

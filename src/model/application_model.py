@@ -18,7 +18,8 @@ class ApplicationModel(db.Model):
     type = db.Column(db.String(45))
     price = db.Column(db.String(45))
     content_rating = db.Column(db.String(255))
-    genres = db.Column(db.String(255))
     last_updated = db.Column(db.String(255))
     current_version = db.Column(db.String(255))
     android_version = db.Column(db.String(255))
+
+    categorie = db.relationship("GenreModel", lazy=True)

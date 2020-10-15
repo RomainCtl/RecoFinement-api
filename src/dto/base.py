@@ -23,7 +23,7 @@ GenreBaseObj = Model("Genre base", {
 ApplicationBaseObj = Model("Application base", {
     "app_id": fields.Integer,
     "name": fields.String,
-    "genre": fields.Nested(GenreBaseObj),
+    "categorie": fields.Nested(GenreBaseObj),
     "rating": fields.Float,
     "reviews": fields.String,
     "size": fields.String,
@@ -31,7 +31,6 @@ ApplicationBaseObj = Model("Application base", {
     "type": fields.String,
     "price": fields.String,
     "content_rating": fields.String,
-    "genres": fields.String,
     "last_updated": fields.String,
     "current_version": fields.String,
     "android_version": fields.String,
