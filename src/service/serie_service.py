@@ -4,7 +4,7 @@ from sqlalchemy import func, text
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
 from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType
-from src.schemas import SerieBase, GenreBase
+from src.schemas import SerieBase, SerieItem, GenreBase
 
 
 class SerieService:
@@ -42,7 +42,7 @@ class SerieService:
         )
 
         try:
-            serie_data = SerieBase.loads(series)
+            serie_data = SerieItem.loads(series)
 
             return pagination_resp(
                 message="Most popular serie data sent",

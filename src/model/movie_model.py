@@ -1,5 +1,12 @@
 from src import db
 
+MovieGenresModel = db.Table("movie_genres",
+                            db.Column("movie_id", db.Integer, db.ForeignKey(
+                                "movie.movie_id"), primary_key=True),
+                            db.Column("genre_id", db.Integer, db.ForeignKey(
+                                "genre.genre_id"), primary_key=True)
+                            )
+
 
 class MovieModel(db.Model):
     """
@@ -10,7 +17,6 @@ class MovieModel(db.Model):
     movie_id = db.Column(db.Integer, primary_key=True,
                          autoincrement=True, index=True)
     title = db.Column(db.String(255), index=True)
-    genres = db.Column(db.String(255))
     language = db.Column(db.String(255))
     actors = db.Column(db.String(255))
     year = db.Column(db.String(255))
@@ -22,3 +28,6 @@ class MovieModel(db.Model):
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
     cover = db.Column(db.Text)
+
+    genres = db.relationship(
+        "GenreModel", secondary=MovieGenresModel, lazy="dynamic")

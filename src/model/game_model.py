@@ -1,5 +1,12 @@
 from src import db
 
+GameGenresModel = db.Table("game_genres",
+                           db.Column("game_id", db.Integer, db.ForeignKey(
+                               "game.game_id"), primary_key=True),
+                           db.Column("genre_id", db.Integer, db.ForeignKey(
+                               "genre.genre_id"), primary_key=True)
+                           )
+
 
 class GameModel(db.Model):
     """
@@ -17,6 +24,8 @@ class GameModel(db.Model):
     developers = db.Column(db.String(255))
     publishers = db.Column(db.String(255))
     price = db.Column(db.String(255))
-    genres = db.Column(db.String(255))
     recommendations = db.Column(db.Integer)
     release_date = db.Column(db.String(255))
+
+    genres = db.relationship(
+        "GenreModel", secondary=GameGenresModel, lazy="dynamic")

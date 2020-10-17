@@ -4,7 +4,7 @@ from sqlalchemy import func, text
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
 from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType
-from src.schemas import GameBase, GenreBase
+from src.schemas import GameBase, GameObject, GenreBase
 
 
 class GameService:
@@ -40,7 +40,7 @@ class GameService:
         )
 
         try:
-            game_data = GameBase.loads(games)
+            game_data = GameObject.loads(games)
 
             return pagination_resp(
                 message="Most popular track data sent",

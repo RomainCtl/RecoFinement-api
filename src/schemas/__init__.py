@@ -6,9 +6,9 @@ from .user_schema import UserBase, UserObject
 from .application_schema import ApplicationBase
 from .book_schema import BookBase
 from .episode_schema import EpisodeBase
-from .game_schema import GameBase
-from .movie_schema import MovieBase
-from .serie_schema import SerieBase, SerieObject
+from .game_schema import GameBase, GameObject
+from .movie_schema import MovieBase, MovieObject
+from .serie_schema import SerieBase, SerieItem, SerieObject
 from .track_schema import TrackBase, TrackObject
 
 from .genre_schema import GenreBase, GenreObject

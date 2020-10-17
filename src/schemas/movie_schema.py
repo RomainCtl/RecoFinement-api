@@ -11,3 +11,10 @@ class MovieMeta:
 class MovieBase(SQLAlchemyAutoSchema):
     class Meta(MovieMeta):
         pass
+
+
+class MovieObject(SQLAlchemyAutoSchema):
+    genres = ma.Nested("GenreBase", many=True)
+
+    class Meta(MovieMeta):
+        pass

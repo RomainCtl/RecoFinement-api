@@ -59,7 +59,6 @@ GameBaseObj = Model("Game base", {
     "developers": fields.String,
     "publishers": fields.String,
     "price": fields.String,
-    "genres": fields.String,
     "recommendations": fields.Integer,
     "release_date": fields.String,
 })
@@ -67,7 +66,6 @@ GameBaseObj = Model("Game base", {
 MovieBaseObj = Model("Movie base", {
     "movie_id": fields.Integer,
     "title": fields.String,
-    "genres": fields.String,
     "language": fields.String,
     "actors": fields.String,
     "year": fields.String,
@@ -101,7 +99,6 @@ SerieBaseObj = Model("Serie base", {
     "title": fields.String,
     "start_year": fields.Integer,
     "end_year": fields.Integer,
-    "genres": fields.String,
     "writers": fields.String,
     "directors": fields.String,
     "actors": fields.String,
@@ -128,6 +125,24 @@ TrackGenresBaseObj = Model("TrackGenres base", {
     "frequency": fields.Integer,
 })
 
+MovieGenresBaseObj = Model("MovieGenres base", {
+    "movie_id": fields.Integer,
+    "tag": fields.String,
+    "frequency": fields.Integer,
+})
+
+SerieGenresBaseObj = Model("SerieGenres base", {
+    "serie_id": fields.Integer,
+    "tag": fields.String,
+    "frequency": fields.Integer,
+})
+
+GameGenresBaseObj = Model("GameGenres base", {
+    "game_id": fields.Integer,
+    "tag": fields.String,
+    "frequency": fields.Integer,
+})
+
 # Item object
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
@@ -142,10 +157,22 @@ GroupItemObj = Model.clone("Group Item", GroupBaseObj, {
 })
 
 SerieItemObj = Model.clone("Serie Item", SerieBaseObj, {
+    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+})
+
+SerieItemObj2 = Model.clone("Serie Item 2", SerieItemObj, {
     "episodes": fields.List(fields.Nested(EpisodeBaseObj)),
 })
 
 TrackItemObj = Model.clone("Track Item", TrackBaseObj, {
+    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+})
+
+MovieItemObj = Model.clone("Movie Item", TrackBaseObj, {
+    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+})
+
+GameItemObj = Model.clone("Game Item", TrackBaseObj, {
     "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
 })
 
