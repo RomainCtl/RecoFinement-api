@@ -61,6 +61,9 @@ test: ## Run all unit tests
 db-update: ## Update database to the last migration
 	$(PIPENV) run flask db upgrade
 
+db-downgrade: ## Update database to the previous migration
+	$(PIPENV) run flask db downgrade
+
 db-migration: ## Create new migration after modifying structur of database in models(make db-migration version="add Test table")
 	$(if $(version), , $(error Require 'version' argument. Ex: #> make db-migration version="add Test table"))
 	$(PIPENV) run flask db migrate -m "$(version)"

@@ -4,7 +4,7 @@ from sqlalchemy import func, text
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator
 from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType
-from src.schemas import MovieBase, GenreBase
+from src.schemas import MovieBase, MovieObject, GenreBase
 
 
 class MovieService:
@@ -42,7 +42,7 @@ class MovieService:
         )
 
         try:
-            movie_data = MovieBase.loads(movies)
+            movie_data = MovieObject.loads(movies)
 
             return pagination_resp(
                 message="Most popular movie data sent",

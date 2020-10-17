@@ -13,8 +13,16 @@ class SerieBase(SQLAlchemyAutoSchema):
         pass
 
 
+class SerieItem(SQLAlchemyAutoSchema):
+    genres = ma.Nested("GenreBase", many=True)
+
+    class Meta(SerieMeta):
+        pass
+
+
 class SerieObject(SQLAlchemyAutoSchema):
     episodes = ma.Nested("EpisodeBase", many=True)
+    genres = ma.Nested("GenreBase", many=True)
 
     class Meta(SerieMeta):
         pass
