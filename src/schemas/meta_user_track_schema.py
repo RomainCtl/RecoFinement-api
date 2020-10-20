@@ -10,4 +10,4 @@ class MetaUserTrackMeta:
 
 class MetaUserTrackBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserTrackMeta):
-        pass
+        fields = ["rating", "play_count"]

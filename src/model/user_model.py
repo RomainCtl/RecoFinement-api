@@ -17,6 +17,8 @@ class MetaUserBookModel(db.Model):
         "book.isbn"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    purchase = db.Column(db.Boolean, default=False)
+    review_see_count = db.Column(db.Integer, default=0)
 
 
 class MetaUserGameModel(db.Model):
@@ -33,6 +35,7 @@ class MetaUserGameModel(db.Model):
     hours = db.Column(db.Float, default=0)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    review_see_count = db.Column(db.Integer, default=0)
 
 
 class MetaUserApplicationModel(db.Model):
@@ -50,6 +53,8 @@ class MetaUserApplicationModel(db.Model):
     subjectivity = db.Column(db.Float, default=None)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    review_see_count = db.Column(db.Integer, default=0)
+    downloaded = db.Column(db.Boolean, default=False)
 
 
 class MetaUserMovieModel(db.Model):
@@ -64,6 +69,8 @@ class MetaUserMovieModel(db.Model):
         "movie.movie_id"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    watch_count = db.Column(db.Integer, default=0)
+    review_see_count = db.Column(db.Integer, default=0)
 
 
 class MetaUserTrackModel(db.Model):
@@ -78,6 +85,8 @@ class MetaUserTrackModel(db.Model):
         "track.track_id"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    play_count = db.Column(db.Integer, default=0)
+    review_see_count = db.Column(db.Integer, default=0)
 
 
 class MetaUserSerieModel(db.Model):
@@ -92,6 +101,8 @@ class MetaUserSerieModel(db.Model):
         "serie.serie_id"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
+    num_watched_episodes = db.Column(db.Integer, default=0)
+    review_see_count = db.Column(db.Integer, default=0)
 
 
 GroupMembersModel = db.Table("group_members",

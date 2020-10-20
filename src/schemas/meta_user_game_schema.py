@@ -10,4 +10,4 @@ class MetaUserGameMeta:
 
 class MetaUserGameBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserGameMeta):
-        pass
+        fields = ["purchase", "rating", "hours"]

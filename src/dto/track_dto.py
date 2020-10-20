@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import TrackBaseObj, TrackItemObj, paginationObj, TrackGenresBaseObj, GenreBaseObj, messageObj
+from .base import TrackBaseObj, TrackItemObj, paginationObj, TrackGenresBaseObj, GenreBaseObj, messageObj, MetaUserTrackBaseObj
 
 
 class TrackDto:
@@ -19,6 +19,9 @@ class TrackDto:
     api.models[GenreBaseObj.name] = GenreBaseObj
     genre_base = GenreBaseObj
 
+    api.models[MetaUserTrackBaseObj.name] = MetaUserTrackBaseObj
+    meta_user_track_base = MetaUserTrackBaseObj
+
     # Responses
     data_resp = api.clone(
         "Track list Data Response",
@@ -33,5 +36,22 @@ class TrackDto:
         messageObj,
         {
             "content": fields.List(fields.Nested(genre_base))
+        }
+    )
+
+    meta_resp = api.clone(
+        "MetaUserTrack Data Response",
+        messageObj,
+        {
+            "content": fields.Nested(meta_user_track_base)
+        }
+    )
+
+    # Excepted data
+    track_meta = api.model(
+        "TrackMetaExpected",
+        {
+            "additional_play_count": fields.Integer(min=1),
+            "rating": fields.Integer(min=0, max=5),
         }
     )
