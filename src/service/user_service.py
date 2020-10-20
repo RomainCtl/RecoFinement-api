@@ -2,7 +2,7 @@ from flask import current_app
 
 from src import db
 from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
-from src.model import UserModel, ApplicationModel, BookModel, GameModel, MovieModel, SerieModel, TrackModel, MetaUserApplicationModel, MetaUserBookModel, MetaUserGameModel, MetaUserMovieModel, MetaUserSerieModel, MetaUserTrackModel, GenreModel
+from src.model import UserModel, GenreModel
 from src.schemas import UserBase, UserObject, GenreBase
 
 
