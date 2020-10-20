@@ -10,4 +10,4 @@ class MetaUserApplicationMeta:
 
 class MetaUserApplicationBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserApplicationMeta):
-        fields = ["review", "rating"]
+        fields = ["review", "rating", "downloaded"]

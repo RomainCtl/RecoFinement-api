@@ -143,6 +143,38 @@ GameGenresBaseObj = Model("GameGenres base", {
     "frequency": fields.Integer,
 })
 
+MetaUserApplicationBaseObj = Model("MetaUserApplication base", {
+    "review": fields.String,
+    "rating": fields.Integer,
+    "downloaded": fields.Boolean,
+})
+
+MetaUserBookBaseObj = Model("MetaUserBook base", {
+    "rating": fields.Integer,
+    "purchase": fields.Boolean,
+})
+
+MetaUserGameBaseObj = Model("MetaUserGame base", {
+    "rating": fields.Integer,
+    "purchase": fields.Boolean,
+    "hours": fields.Integer,
+})
+
+MetaUserMovieBaseObj = Model("MetaUserMovie base", {
+    "rating": fields.Integer,
+    "watch_count": fields.Integer,
+})
+
+MetaUserSerieBaseObj = Model("MetaUserSerie base", {
+    "rating": fields.Integer,
+    "num_watched_episodes": fields.Integer,
+})
+
+MetaUserTrackBaseObj = Model("MetaUserTrack base", {
+    "rating": fields.Integer,
+    "play_count": fields.Integer,
+})
+
 # Item object
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {

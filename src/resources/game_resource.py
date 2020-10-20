@@ -8,6 +8,7 @@ from src.dto import GameDto
 api = GameDto.api
 data_resp = GameDto.data_resp
 genres_resp = GameDto.genres_resp
+meta_resp = GameDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +69,7 @@ class GameMetaResource(Resource):
     @api.doc(
         "Get game-user (connected user) meta",
         responses={
-            200: ("Game-User meta data successfully sent"),
+            200: ("Game-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )

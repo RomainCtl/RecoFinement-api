@@ -7,6 +7,7 @@ from src.dto import BookDto
 
 api = BookDto.api
 data_resp = BookDto.data_resp
+meta_resp = BookDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -52,7 +53,7 @@ class bookMetaResource(Resource):
     @api.doc(
         "Get book-user (connected user) meta",
         responses={
-            200: ("Book-User meta data successfully sent"),
+            200: ("Book-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )

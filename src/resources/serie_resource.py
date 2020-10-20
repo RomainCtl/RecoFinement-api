@@ -8,6 +8,7 @@ from src.dto import SerieDto
 api = SerieDto.api
 data_resp = SerieDto.data_resp
 genres_resp = SerieDto.genres_resp
+meta_resp = SerieDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +69,7 @@ class SerieMetaResource(Resource):
     @api.doc(
         "Get serie-user (connected user) meta",
         responses={
-            200: ("Serie-User meta data successfully sent"),
+            200: ("Serie-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )

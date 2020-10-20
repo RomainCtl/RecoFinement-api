@@ -8,6 +8,7 @@ from src.dto import TrackDto
 api = TrackDto.api
 data_resp = TrackDto.data_resp
 genres_resp = TrackDto.genres_resp
+meta_resp = TrackDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +69,7 @@ class TrackMetaResource(Resource):
     @api.doc(
         "Get track-user (connected user) meta",
         responses={
-            200: ("Track-User meta data successfully sent"),
+            200: ("Track-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )

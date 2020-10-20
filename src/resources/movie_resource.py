@@ -8,6 +8,7 @@ from src.dto import MovieDto
 api = MovieDto.api
 data_resp = MovieDto.data_resp
 genres_resp = MovieDto.genres_resp
+meta_resp = MovieDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +69,7 @@ class MovieMetaResource(Resource):
     @api.doc(
         "Get movie-user (connected user) meta",
         responses={
-            200: ("Movie-User meta data successfully sent"),
+            200: ("Movie-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )

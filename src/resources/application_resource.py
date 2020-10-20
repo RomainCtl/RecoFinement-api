@@ -8,6 +8,7 @@ from src.dto import ApplicationDto
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
 genres_resp = ApplicationDto.genres_resp
+meta_resp = ApplicationDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +69,7 @@ class ApplicationMetaResource(Resource):
     @api.doc(
         "Get application-user (connected user) meta",
         responses={
-            201: ("Track-User meta data successfully sent"),
+            200: ("Track-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )
