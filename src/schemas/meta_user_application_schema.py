@@ -10,4 +10,4 @@ class MetaUserApplicationMeta:
 
 class MetaUserApplicationBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserApplicationMeta):
-        pass
+        fields = ["review", "rating"]

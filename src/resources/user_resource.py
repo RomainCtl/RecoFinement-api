@@ -46,6 +46,7 @@ class UserSearchResource(Resource):
 
 
 @api.route("/application")
+@api.deprecated
 class UserApplicationResource(Resource):
 
     app_rating = UserDto.app_rating
@@ -62,12 +63,7 @@ class UserApplicationResource(Resource):
     @api.expect(app_rating, validate=True)
     def post(self):
         """ Give rate to an application """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        rate_data = request.get_json()
-
-        return UserService.rate_application(rate_data["app_id"], rate_data["rating"], user_uuid)
+        return {}
 
 
 @api.route("/book")

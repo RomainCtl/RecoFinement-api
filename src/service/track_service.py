@@ -82,6 +82,11 @@ class TrackService:
                 meta_user_track = MetaUserTrackModel(
                     track_id=track_id, user_id=user.user_id)
 
+            # Increment meta see
+            meta_user_track.review_see_count += 1
+            db.session.add(meta_user_track)
+            db.session.commit()
+
             meta_user_track_data = MetaUserTrackBase.load(meta_user_track)
 
             resp = message(True, "Meta successfully sent")

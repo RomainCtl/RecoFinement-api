@@ -30,3 +30,13 @@ class ApplicationDto:
             "content": fields.List(fields.Nested(genre_base))
         }
     )
+
+    # Excepted data
+    application_meta = api.model(
+        "ApplicationMetaExpected",
+        {
+            "review": fields.String,
+            "rating": fields.Integer(min=0, max=5),
+            "downloaded": fields.Boolean,
+        }
+    )

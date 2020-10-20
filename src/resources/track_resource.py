@@ -91,7 +91,7 @@ class TrackMetaResource(Resource):
     )
     @jwt_required
     @api.expect(track_meta, validate=True)
-    def put(self, track_id):
+    def patch(self, track_id):
         """ Update track-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
