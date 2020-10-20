@@ -48,36 +48,6 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def rate_book(isbn, rating, user_uuid):
-        """" Give rate to a book """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        if not (book := BookModel.query.filter_by(isbn=isbn).first()):
-            return err_resp("Book not found!", 404)
-
-        try:
-            meta_user_book = MetaUserBookModel(
-                isbn=isbn, user_id=user.user_id, rating=rating)
-
-            # Update average rating on object
-            book.rating = book.rating or 0
-            book.rating_count = book.rating_count or 0
-            book.rating = (book.rating * book.rating_count +
-                           rating) / (book.rating_count + 1)
-            book.rating_count += 1
-
-            db.session.add(meta_user_book)
-            db.session.commit()
-
-            resp = message(True, "Rating given successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
     def rate_game(game_id, rating, user_uuid):
         """" Give rate to a game """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
