@@ -196,12 +196,27 @@ class UserTrackResource(Resource):
 
 
 @api.route("/genre")
-class UserGenreResource(Resource):
-
-    like_genre = UserDto.like_genre
-
+class UserGenresResource(Resource):
     @api.doc(
-        "Like a genre",
+        "Get liked genres (connected user)",
+        responses={
+            201: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    @jwt_required
+    def get(self):
+        """ Get liked genres (connected user) """
+        user_uuid = get_jwt_identity()
+
+        return UserService.get_genres(user_uuid)
+
+
+@api.route("/genre/<int:genre_id>")
+class UserGenreResource(Resource):
+    @api.doc(
+        "Like a genre (connected user)",
         responses={
             201: ("Successfully send"),
             401: ("Authentication required"),
@@ -209,18 +224,14 @@ class UserGenreResource(Resource):
         }
     )
     @jwt_required
-    @api.expect(like_genre, validate=True)
-    def post(self):
-        """ Like a genre """
+    def put(self, genre_id):
+        """ Like a genre (connected user) """
         user_uuid = get_jwt_identity()
 
-        # Grab the json data
-        data = request.get_json()
-
-        return UserService.like_genre(data["genre_id"], user_uuid)
+        return UserService.like_genre(genre_id, user_uuid)
 
     @api.doc(
-        "Unlike a genre",
+        "Unlike a genre (connected user)",
         responses={
             201: ("Successfully send"),
             400: ("You didn't like this genre"),
@@ -229,12 +240,8 @@ class UserGenreResource(Resource):
         }
     )
     @jwt_required
-    @api.expect(like_genre, validate=True)
-    def delete(self):
-        """ Unlike a genre """
+    def delete(self, genre_id):
+        """ Unlike a genre (connected user) """
         user_uuid = get_jwt_identity()
 
-        # Grab the json data
-        data = request.get_json()
-
-        return UserService.unlike_genre(data["genre_id"], user_uuid)
+        return UserService.unlike_genre(genre_id, user_uuid)
