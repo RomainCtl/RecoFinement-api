@@ -3,7 +3,7 @@ from flask import current_app
 from src import db
 from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
 from src.model import UserModel, ApplicationModel, BookModel, GameModel, MovieModel, SerieModel, TrackModel, MetaUserApplicationModel, MetaUserBookModel, MetaUserGameModel, MetaUserMovieModel, MetaUserSerieModel, MetaUserTrackModel, GenreModel
-from src.schemas import UserBase, UserObject
+from src.schemas import UserBase, UserObject, GenreBase
 
 
 class UserService:
@@ -156,6 +156,22 @@ class UserService:
             resp = message(True, "Rating given successfully")
             return resp, 201
 
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_genres(user_uuid):
+        """ Get user liked genre list """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            genres_data = GenreBase.loads(user.liked_genres)
+
+            resp = message(True, "User liked genre sent")
+            resp["content"] = genres_data
+            return resp, 201
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
