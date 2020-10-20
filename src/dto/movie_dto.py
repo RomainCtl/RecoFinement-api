@@ -29,3 +29,12 @@ class MovieDto:
             "content": fields.List(fields.Nested(genre_base))
         }
     )
+
+    # Excepted data
+    movie_meta = api.model(
+        "MovieMetaExpected",
+        {
+            "watch_count": fields.Integer(min=1),
+            "rating": fields.Integer(min=0, max=5),
+        }
+    )

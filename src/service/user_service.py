@@ -48,36 +48,6 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def rate_movie(movie_id, rating, user_uuid):
-        """" Give rate to a movie """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
-            return err_resp("Movie not found!", 404)
-
-        try:
-            meta_user_movie = MetaUserMovieModel(
-                movie_id=movie_id, user_id=user.user_id, rating=rating)
-
-            # Update average rating on object
-            movie.rating = movie.rating or 0
-            movie.rating_count = movie.rating_count or 0
-            movie.rating = (movie.rating * movie.rating_count +
-                            rating) / (movie.rating_count + 1)
-            movie.rating_count += 1
-
-            db.session.add(meta_user_movie)
-            db.session.commit()
-
-            resp = message(True, "Rating given successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
     def rate_serie(serie_id, rating, user_uuid):
         """" Give rate to a serie """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):

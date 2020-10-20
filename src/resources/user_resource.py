@@ -48,19 +48,6 @@ class UserSearchResource(Resource):
 @api.route("/application")
 @api.deprecated
 class UserApplicationResource(Resource):
-
-    app_rating = UserDto.app_rating
-
-    @api.doc(
-        "Give rate to an application",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Application not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(app_rating, validate=True)
     def post(self):
         """ Give rate to an application """
         return {}
@@ -69,19 +56,6 @@ class UserApplicationResource(Resource):
 @api.route("/book")
 @api.deprecated
 class UserBookResource(Resource):
-
-    book_rating = UserDto.book_rating
-
-    @api.doc(
-        "Give rate to a book",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Book not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(book_rating, validate=True)
     def post(self):
         """ Give rate to a book """
         return {}
@@ -90,47 +64,17 @@ class UserBookResource(Resource):
 @api.route("/game")
 @api.deprecated
 class UserGameResource(Resource):
-
-    game_rating = UserDto.game_rating
-
-    @api.doc(
-        "Give rate to a game",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Game not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(game_rating, validate=True)
     def post(self):
         """ Give rate to a game """
         return {}
 
 
 @api.route("/movie")
+@api.deprecated
 class UserMovieResource(Resource):
-
-    movie_rating = UserDto.movie_rating
-
-    @api.doc(
-        "Give rate to a movie",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Movie not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(movie_rating, validate=True)
     def post(self):
         """ Give rate to a movie """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        rate_data = request.get_json()
-
-        return UserService.rate_movie(rate_data["movie_id"], rate_data["rating"], user_uuid)
+        return {}
 
 
 @api.route("/serie")
@@ -161,19 +105,6 @@ class UserSerieResource(Resource):
 @api.route("/track")
 @api.deprecated
 class UserTrackResource(Resource):
-
-    track_rating = UserDto.track_rating
-
-    @api.doc(
-        "Give rate to a track",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Track not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(track_rating, validate=True)
     def post(self):
         """ Give rate to a track """
         return {}
