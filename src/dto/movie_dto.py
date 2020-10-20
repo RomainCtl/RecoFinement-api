@@ -34,7 +34,7 @@ class MovieDto:
     movie_meta = api.model(
         "MovieMetaExpected",
         {
-            "watch_count": fields.Integer(min=1),
+            "additional_watch_count": fields.Integer(min=1),
             "rating": fields.Integer(min=0, max=5),
         }
     )

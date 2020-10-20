@@ -35,7 +35,7 @@ class GameDto:
         "GameMetaExpected",
         {
             "purchase": fields.Boolean,
-            "hours": fields.Integer(min=0),
+            "additional_hours": fields.Integer(min=0),
             "rating": fields.Integer(min=0, max=5),
         }
     )

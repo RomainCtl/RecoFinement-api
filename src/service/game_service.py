@@ -97,7 +97,7 @@ class GameService:
 
     @staticmethod
     def update_meta(user_uuid, game_id, data):
-        """ Update 'hours' or/and 'purchase' or/and 'rating' """
+        """ Update 'additional_hours' or/and 'purchase' or/and 'rating' """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -120,8 +120,8 @@ class GameService:
                 game.rating_count = count
 
                 meta_user_game.rating = data["rating"]
-            if 'hours' in data:
-                meta_user_game.hours += data['hours']
+            if 'additional_hours' in data:
+                meta_user_game.hours += data['additional_hours']
             if 'purchase' in data:
                 meta_user_game.purchase = data['purchase']
 

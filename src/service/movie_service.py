@@ -99,12 +99,12 @@ class MovieService:
 
     @staticmethod
     def update_meta(user_uuid, movie_id, data):
-        """ Updta 'watch_count' or/and update 'rating' """
+        """ Updta 'additional_watch_count' or/and update 'rating' """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
         if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
-            return err_resp("Track not found!", 404)
+            return err_resp("Movie not found!", 404)
 
         try:
             if not (meta_user_movie := MetaUserMovieModel.query.filter_by(user_id=user.user_id, movie_id=movie_id).first()):
@@ -122,8 +122,8 @@ class MovieService:
                 movie.rating_count = count
 
                 meta_user_movie.rating = data["rating"]
-            if 'watch_count' in data:
-                meta_user_movie.watch_count += data['watch_count']
+            if 'additional_watch_count' in data:
+                meta_user_movie.watch_count += data['additional_watch_count']
 
             db.session.add(meta_user_movie)
             db.session.commit()
