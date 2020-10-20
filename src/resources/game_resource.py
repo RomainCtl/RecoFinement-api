@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import GameService
 from src.dto import GameDto
@@ -61,3 +61,41 @@ class GameGenresResource(Resource):
     def get(self):
         """ Get game genres """
         return GameService.get_ordered_genre()
+
+
+@api.route("/<int:game_id>/meta")
+class GameMetaResource(Resource):
+    @api.doc(
+        "Get game-user (connected user) meta",
+        responses={
+            200: ("Game-User meta data successfully sent"),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    def get(self, game_id):
+        """ Get track-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        return GameService.get_meta(user_uuid, game_id)
+
+    game_meta = GameDto.game_meta
+
+    @api.doc(
+        "Update game-user (connected user) meta",
+        responses={
+            201: ("Game-User meta data successfully sent"),
+            401: ("Authentication required"),
+            404: "User or Game not found!",
+        },
+    )
+    @jwt_required
+    @api.expect(game_meta, validate=True)
+    def patch(self, game_id):
+        """ Update game-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return GameService.update_meta(user_uuid, game_id, data)

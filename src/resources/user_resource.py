@@ -88,6 +88,7 @@ class UserBookResource(Resource):
 
 
 @api.route("/game")
+@api.deprecated
 class UserGameResource(Resource):
 
     game_rating = UserDto.game_rating
@@ -104,12 +105,7 @@ class UserGameResource(Resource):
     @api.expect(game_rating, validate=True)
     def post(self):
         """ Give rate to a game """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        rate_data = request.get_json()
-
-        return UserService.rate_game(rate_data["game_id"], rate_data["rating"], user_uuid)
+        return {}
 
 
 @api.route("/movie")

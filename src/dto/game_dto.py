@@ -29,3 +29,13 @@ class GameDto:
             "content": fields.List(fields.Nested(genre_base))
         }
     )
+
+    # Excepted data
+    game_meta = api.model(
+        "GameMetaExpected",
+        {
+            "purchase": fields.Boolean,
+            "hours": fields.Integer(min=0),
+            "rating": fields.Integer(min=0, max=5),
+        }
+    )
