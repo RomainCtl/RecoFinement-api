@@ -32,12 +32,3 @@ class UserDto:
             "content": fields.List(fields.Nested(user_base))
         }
     )
-
-    # Excepted data
-    serie_rating = api.model(
-        "Rating Serie",
-        {
-            "serie_id": fields.Integer(required=True),
-            "rating": fields.Integer(min=0, max=5, required=True),
-        }
-    )

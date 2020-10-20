@@ -10,4 +10,4 @@ class MetaUserSerieMeta:
 
 class MetaUserSerieBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserSerieMeta):
-        pass
+        fields = ["rating", "num_watched_episodes"]

@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import SerieService
 from src.dto import SerieDto
@@ -61,3 +61,41 @@ class SerieGenreResource(Resource):
     def get(self):
         """ Get serie genres """
         return SerieService.get_ordered_genre()
+
+
+@api.route("/<int:serie_id>/meta")
+class SerieMetaResource(Resource):
+    @api.doc(
+        "Get serie-user (connected user) meta",
+        responses={
+            200: ("Serie-User meta data successfully sent"),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    def get(self, serie_id):
+        """ Get serie-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        return SerieService.get_meta(user_uuid, serie_id)
+
+    serie_meta = SerieDto.serie_meta
+
+    @api.doc(
+        "Update serie-user (connected user) meta",
+        responses={
+            201: ("Serie-User meta data successfully sent"),
+            401: ("Authentication required"),
+            404: "User or Serie not found!",
+        },
+    )
+    @jwt_required
+    @api.expect(serie_meta, validate=True)
+    def patch(self, serie_id):
+        """ Update serie-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return SerieService.update_meta(user_uuid, serie_id, data)

@@ -40,3 +40,12 @@ class SerieDto:
             "content": fields.List(fields.Nested(genre_base))
         }
     )
+
+    # Excepted data
+    serie_meta = api.model(
+        "SeireMetaExpected",
+        {
+            "num_watched_episodes": fields.Integer(min=1),
+            "rating": fields.Integer(min=0, max=5),
+        }
+    )

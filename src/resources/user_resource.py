@@ -78,28 +78,11 @@ class UserMovieResource(Resource):
 
 
 @api.route("/serie")
+@api.deprecated
 class UserSerieResource(Resource):
-
-    serie_rating = UserDto.serie_rating
-
-    @api.doc(
-        "Give rate to a serie",
-        responses={
-            200: ("Successfully send"),
-            401: ("Authentication required"),
-            404: "User or Serie not found!",
-        }
-    )
-    @jwt_required
-    @api.expect(serie_rating, validate=True)
     def post(self):
         """ Give rate to a serie """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        rate_data = request.get_json()
-
-        return UserService.rate_serie(rate_data["serie_id"], rate_data["rating"], user_uuid)
+        return {}
 
 
 @api.route("/track")

@@ -48,36 +48,6 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def rate_serie(serie_id, rating, user_uuid):
-        """" Give rate to a serie """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        if not (serie := SerieModel.query.filter_by(serie_id=serie_id).first()):
-            return err_resp("Serie not found!", 404)
-
-        try:
-            meta_user_serie = MetaUserSerieModel(
-                serie_id=serie_id, user_id=user.user_id, rating=rating)
-
-            # Update average rating on object
-            serie.rating = serie.rating or 0
-            serie.rating_count = serie.rating_count or 0
-            serie.rating = (serie.rating * serie.rating_count +
-                            rating) / (serie.rating_count + 1)
-            serie.rating_count += 1
-
-            db.session.add(meta_user_serie)
-            db.session.commit()
-
-            resp = message(True, "Rating given successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
     def get_genres(user_uuid):
         """ Get user liked genre list """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
