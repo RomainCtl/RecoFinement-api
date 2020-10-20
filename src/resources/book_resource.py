@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import BookService
 from src.dto import BookDto
@@ -45,3 +45,41 @@ class BookSearchResource(Resource):
         except ValueError:
             page = 1
         return BookService.search_book_data(search_term, page)
+
+
+@api.route("/<string:isbn>/meta")
+class bookMetaResource(Resource):
+    @api.doc(
+        "Get book-user (connected user) meta",
+        responses={
+            200: ("Book-User meta data successfully sent"),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    def get(self, isbn):
+        """ Get book-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        return BookService.get_meta(user_uuid, isbn)
+
+    book_meta = BookDto.book_meta
+
+    @api.doc(
+        "Update book-user (connected user) meta",
+        responses={
+            201: ("Book-User meta data successfully sent"),
+            401: ("Authentication required"),
+            404: "User or Book not found!",
+        },
+    )
+    @jwt_required
+    @api.expect(book_meta, validate=True)
+    def patch(self, isbn):
+        """ Update book-user (connected user) meta """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return BookService.update_meta(user_uuid, isbn, data)

@@ -18,3 +18,12 @@ class BookDto:
             "content": fields.List(fields.Nested(book_base)),
         },
     )
+
+    # Excepted data
+    book_meta = api.model(
+        "BookMetaExpected",
+        {
+            "purchase": fields.Boolean,
+            "rating": fields.Integer(min=0, max=5),
+        }
+    )

@@ -78,7 +78,7 @@ class ApplicationService:
         try:
             if not (meta_user_application := MetaUserApplicationModel.query.filter_by(user_id=user.user_id, app_id=app_id).first()):
                 meta_user_application = MetaUserApplicationModel(
-                    app_id=app_id, user_id=user.user_id)
+                    app_id=app_id, user_id=user.user_id, review_see_count=0)
 
             # Increment meta see
             meta_user_application.review_see_count += 1
