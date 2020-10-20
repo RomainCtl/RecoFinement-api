@@ -191,36 +191,6 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def rate_track(track_id, rating, user_uuid):
-        """" Give rate to a track """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
-            return err_resp("Track not found!", 404)
-
-        try:
-            meta_user_track = MetaUserTrackModel(
-                track_id=track_id, user_id=user.user_id, rating=rating)
-
-            # Update average rating on object
-            track.rating = track.rating or 0
-            track.rating_count = track.rating_count or 0
-            track.rating = (track.rating * track.rating_count +
-                            rating) / (track.rating_count + 1)
-            track.rating_count += 1
-
-            db.session.add(meta_user_track)
-            db.session.commit()
-
-            resp = message(True, "Rating given successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
     def like_genre(genre_id, user_uuid):
         """" Like a genre """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):

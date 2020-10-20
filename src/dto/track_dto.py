@@ -35,3 +35,12 @@ class TrackDto:
             "content": fields.List(fields.Nested(genre_base))
         }
     )
+
+    # Excepted data
+    track_meta = api.model(
+        "TrackMetaExpected",
+        {
+            "additional_play_count": fields.Integer(min=1),
+            "rating": fields.Integer(min=0, max=5),
+        }
+    )

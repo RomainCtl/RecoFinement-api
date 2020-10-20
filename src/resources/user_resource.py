@@ -171,6 +171,7 @@ class UserSerieResource(Resource):
 
 
 @api.route("/track")
+@api.deprecated
 class UserTrackResource(Resource):
 
     track_rating = UserDto.track_rating
@@ -187,12 +188,7 @@ class UserTrackResource(Resource):
     @api.expect(track_rating, validate=True)
     def post(self):
         """ Give rate to a track """
-        user_uuid = get_jwt_identity()
-
-        # Grab the json data
-        rate_data = request.get_json()
-
-        return UserService.rate_track(rate_data["track_id"], rate_data["rating"], user_uuid)
+        return {}
 
 
 @api.route("/genre")
