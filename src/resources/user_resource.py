@@ -25,6 +25,71 @@ class UserResource(Resource):
         """ Get a specific user's data by their uuid """
         return UserService.get_user_data(uuid)
 
+@api.route("/username")
+class UserResource(Resource):
+    @api.doc(
+        "Update a specific username",
+        responses={
+            200: ("Username successfully updated", data_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def patch(self):
+        """ Update a specific username's data by their uuid """
+        user_uuid = get_jwt_identity()
+        data=request.get_json()
+        return UserService.update_username(user_uuid,data['username'])
+    
+@api.route("/password")
+class UserResource(Resource):
+    @api.doc(
+        "Update a specific user password",
+        responses={
+            200: ("User password successfully updated", data_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def patch(self):
+        """ Update a specific user's password by their uuid """
+        user_uuid = get_jwt_identity()
+        data=request.get_json()
+        return UserService.update_password(user_uuid,data['password'])
+
+@api.route("/delete")
+class UserResource(Resource):
+    @api.doc(
+        "Delete a specific user account",
+        responses={
+            200: ("User account successfully deleted", data_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def delete(self):
+        """ Delete a specific user's account by their uuid """
+        user_uuid = get_jwt_identity()
+        return UserService.delete_account(user_uuid)
+
+@api.route("/password/forgot")
+class UserResource(Resource):
+    @api.doc(
+        "Send a specific token by email to reset user password",
+        responses={
+            200: ("Email successfully sent", data_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def post(self):
+        """ Delete a specific user's account by their uuid """
+        data=request.get_json()
+        return UserService.forgot_password(data['email'])
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class UserSearchResource(Resource):
@@ -40,7 +105,7 @@ class UserSearchResource(Resource):
         """ Get list of track's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError,TypeError):
             page = 1
         return UserService.search_user_data(search_term, page)
 
@@ -223,7 +288,6 @@ class UserGenreResource(Resource):
         "Unlike a genre",
         responses={
             201: ("Successfully send"),
-            400: ("You didn't like this genre"),
             401: ("Authentication required"),
             404: "User or Genre not found!",
         }
@@ -238,3 +302,19 @@ class UserGenreResource(Resource):
         data = request.get_json()
 
         return UserService.unlike_genre(data["genre_id"], user_uuid)
+
+    @api.doc(
+        "Liked genres",
+        responses={
+            201: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    @jwt_required
+    @api.expect(like_genre, validate=True)
+    def get(self):
+        """ Liked genres """
+        user_uuid = get_jwt_identity()
+
+        return UserService.liked_genres(user_uuid)

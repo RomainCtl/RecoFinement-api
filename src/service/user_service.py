@@ -221,6 +221,20 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
+    def liked_genres(user_uuid):
+        """" Get liked genre """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            resp = message(True, "User liked genre")
+            resp['liked']=user.liked_genres
+            return resp, 201
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
     def like_genre(genre_id, user_uuid):
         """" Like a genre """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
@@ -264,3 +278,81 @@ class UserService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+    
+    @staticmethod
+    def update_username(user_uuid,username):
+        """" Update username """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            #user_model = UserModel(user_id=user.user_id,username=username)
+
+            user.username= username
+
+            db.session.add(user)
+            db.session.commit()
+
+            resp = message(True, "Username updated successfully")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+    
+    @staticmethod
+    def update_password(user_uuid,password):
+        """" Update user password """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            user.password=password
+
+            db.session.add(user)
+            db.session.commit()
+
+            resp = message(True, "User password updated successfully")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+    
+    @staticmethod
+    def delete_account(user_uuid):
+        """" Delete user account """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            UserModel.query.filter_by(uuid=user_uuid).delete()
+
+            db.session.commit()
+
+            resp = message(True, "User account deleted successfully")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+    
+    @staticmethod
+    def forgot_password(user_email):
+        """" Forgot user password """
+
+        if not (user := UserModel.query.filter_by(email=user_email).first()):
+            return err_resp("User email not found!", 404)
+
+        try:
+            
+            #TODO 
+
+            resp = message(True, "Recovery password email sent successfully")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    
