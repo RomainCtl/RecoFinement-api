@@ -121,7 +121,7 @@ class GroupInvitationsUResource(Resource):
         responses={
             201: ("Member successfully added to the group", added_success),
             401: ("Authentication required"),
-            403: ("Unable to accept an invitation that is not intended to you")
+            403: ("Unable to accept an invitation that is not intended to you"),
             404: ("Group or User or Invitation not found!"),
         }
     )
@@ -137,7 +137,7 @@ class GroupInvitationsUResource(Resource):
         responses={
             201: ("Invitation to the group successfully deleted"),
             401: ("Authentication required"),
-            403: ("Unable to delete an invitation that is not intended to you if you are not the group owner")
+            403: ("Unable to delete an invitation that is not intended to you if you are not the group owner"),
             404: ("Group or User or Invitation not found!"),
         }
     )

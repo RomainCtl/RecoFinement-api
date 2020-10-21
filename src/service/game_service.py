@@ -2,7 +2,7 @@ from flask import current_app
 from sqlalchemy import func, text
 
 from src import db, settings
-from src.utils import pagination_resp, internal_err_resp, message, Paginator
+from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType, UserModel
 from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase
 

@@ -25,7 +25,7 @@ class SerieResource(Resource):
         """ Get list of the most popular Series """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return SerieService.get_most_popular_series(page)
 
@@ -44,7 +44,7 @@ class SerieSearchResource(Resource):
         """ Getlist of serie's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return SerieService.search_serie_data(search_term, page)
 

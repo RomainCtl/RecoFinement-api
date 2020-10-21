@@ -40,7 +40,7 @@ class UserSearchResource(Resource):
         """ Get list of track's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return UserService.search_user_data(search_term, page)
 

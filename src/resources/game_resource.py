@@ -25,7 +25,7 @@ class GameResource(Resource):
         """ Get list of the most popular Games """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return GameService.get_most_popular_games(page)
 
@@ -44,7 +44,7 @@ class GameSearchResource(Resource):
         """ Getlist of game's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return GameService.search_game_data(search_term, page)
 

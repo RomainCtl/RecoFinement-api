@@ -25,7 +25,7 @@ class ApplicationResource(Resource):
         """ Get list of the most popular Applications """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return ApplicationService.get_most_popular_applications(page)
 
@@ -44,7 +44,7 @@ class ApplicationSearchResource(Resource):
         """ Getlist of application's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return ApplicationService.search_application_data(search_term, page)
 

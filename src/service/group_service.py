@@ -1,7 +1,7 @@
 from flask import current_app
 
 from src import db
-from src.utils import err_resp, message, internal_err_resp, Paginator
+from src.utils import err_resp, message, internal_err_resp, Paginator, err_resp
 from src.model import GroupModel, UserModel
 from src.schemas import GroupObject
 

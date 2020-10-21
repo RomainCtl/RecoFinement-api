@@ -25,7 +25,7 @@ class TrackResource(Resource):
         """ Get list of the most popular Tracks """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return TrackService.get_most_popular_tracks(page)
 
@@ -44,7 +44,7 @@ class TrackSearchResource(Resource):
         """ Getlist of track's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return TrackService.search_track_data(search_term, page)
 

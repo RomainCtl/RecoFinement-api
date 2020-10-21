@@ -2,7 +2,7 @@ from flask import current_app
 from sqlalchemy import func, text
 
 from src import db, settings
-from src.utils import pagination_resp, internal_err_resp, message, Paginator
+from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel
 from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase
 
@@ -56,7 +56,7 @@ class MovieService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre(self):
+    def get_ordered_genre():
         genres = GenreModel.query.filter_by(
             content_type=ContentType.MOVIE).order_by(GenreModel.count.desc()).all()
 

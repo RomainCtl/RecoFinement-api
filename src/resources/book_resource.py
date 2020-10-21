@@ -24,7 +24,7 @@ class BookResource(Resource):
         """ Get list of the most popular Books """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return BookService.get_most_popular_books(page)
 
@@ -43,7 +43,7 @@ class BookSearchResource(Resource):
         """ Getlist of book's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return BookService.search_book_data(search_term, page)
 

@@ -25,7 +25,7 @@ class MovieResource(Resource):
         """ Get list of the most popular Movies """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return MovieService.get_most_popular_movies(page)
 
@@ -44,7 +44,7 @@ class MovieSearchResource(Resource):
         """ Getlist of movie's data by term """
         try:
             page = int(request.args.get('page'))
-        except ValueError:
+        except (ValueError, TypeError):
             page = 1
         return MovieService.search_movie_data(search_term, page)
 
