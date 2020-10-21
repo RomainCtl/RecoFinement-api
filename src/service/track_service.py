@@ -1,5 +1,6 @@
 from flask import current_app
 from sqlalchemy import func, text
+from datetime import datetime
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
@@ -124,6 +125,7 @@ class TrackService:
                 meta_user_track.rating = data["rating"]
             if 'additional_play_count' in data:
                 meta_user_track.play_count += data['additional_play_count']
+                meta_user_track.last_played_date = datetime.now()
 
             db.session.add(meta_user_track)
             db.session.commit()

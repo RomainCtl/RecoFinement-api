@@ -173,6 +173,7 @@ MetaUserSerieBaseObj = Model("MetaUserSerie base", {
 MetaUserTrackBaseObj = Model("MetaUserTrack base", {
     "rating": fields.Integer,
     "play_count": fields.Integer,
+    "last_played_date": fields.DateTime
 })
 
 # Item object
