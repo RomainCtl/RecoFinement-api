@@ -22,6 +22,11 @@ class TrackDto:
     api.models[MetaUserTrackBaseObj.name] = MetaUserTrackBaseObj
     meta_user_track_base = MetaUserTrackBaseObj
 
+    track_history = api.model("TrackHistory", {
+        "last_played_date": fields.DateTime,
+        "track": fields.Nested(track_item)
+    })
+
     # Responses
     data_resp = api.clone(
         "Track list Data Response",
@@ -44,6 +49,14 @@ class TrackDto:
         messageObj,
         {
             "content": fields.Nested(meta_user_track_base)
+        }
+    )
+
+    history_resp = api.clone(
+        "TrackListenedHistory Data Response",
+        paginationObj,
+        {
+            "content": fields.List(fields.Nested(track_history))
         }
     )
 

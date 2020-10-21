@@ -10,4 +10,4 @@ class MetaUserTrackMeta:
 
 class MetaUserTrackBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserTrackMeta):
-        fields = ["rating", "play_count"]
+        fields = ["rating", "play_count", "last_played_date"]

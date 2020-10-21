@@ -87,6 +87,7 @@ class MetaUserTrackModel(db.Model):
         "rating <= 5 and rating >= 0"), default=None)
     play_count = db.Column(db.Integer, default=0)
     review_see_count = db.Column(db.Integer, default=0)
+    last_played_date = db.Column(db.DateTime, default=None)
 
 
 class MetaUserSerieModel(db.Model):
