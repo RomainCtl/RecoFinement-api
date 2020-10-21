@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, and_
 from datetime import datetime
 
 from src import db, settings
@@ -133,6 +133,39 @@ class TrackService:
             resp = message(True, "Meta successfully updated")
             return resp, 201
 
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_history(user_uuid, page):
+        """ Get the history of listened track """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        datas, total_pages = Paginator.get_from(
+            db.session.query(MetaUserTrackModel, TrackModel)
+            .select_from(MetaUserTrackModel)
+            .outerjoin(TrackModel, TrackModel.track_id == MetaUserTrackModel.track_id)
+            .filter(and_(MetaUserTrackModel.user_id == user.user_id, MetaUserTrackModel.last_played_date != None))
+            .order_by(
+                MetaUserTrackModel.last_played_date.desc()
+            ),
+            page,
+        )
+
+        try:
+            history_data = list(map(lambda x: {
+                                "last_played_date": MetaUserTrackBase.load(x[0])["last_played_date"],
+                                "track": TrackObject.load(x[1])
+                                }, datas))
+
+            return pagination_resp(
+                message="History of listened track data successfully updated",
+                content=history_data,
+                page=page,
+                total_pages=total_pages
+            )
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
