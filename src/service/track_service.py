@@ -2,9 +2,9 @@ from flask import current_app
 from sqlalchemy import func, text
 
 from src import db, settings
-from src.utils import pagination_resp, internal_err_resp, message, Paginator
-from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType
-from src.schemas import TrackBase, TrackObject, GenreBase
+from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
+from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel
+from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase
 
 
 class TrackService:
@@ -66,6 +66,70 @@ class TrackService:
             resp = message(True, "track genres data sent")
             resp["content"] = genres_data
             return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_meta(user_uuid, track_id):
+        """ Get specific 'meta_user_track' data """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            if not (meta_user_track := MetaUserTrackModel.query.filter_by(user_id=user.user_id, track_id=track_id).first()):
+                meta_user_track = MetaUserTrackModel(
+                    track_id=track_id, user_id=user.user_id, review_see_count=0)
+
+            # Increment meta see
+            meta_user_track.review_see_count += 1
+            db.session.add(meta_user_track)
+            db.session.commit()
+
+            meta_user_track_data = MetaUserTrackBase.load(meta_user_track)
+
+            resp = message(True, "Meta successfully sent")
+            resp["content"] = meta_user_track_data
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def update_meta(user_uuid, track_id, data):
+        """ Add 'additional_play_count' to 'play_count' or/and update 'rating' """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Track not found!", 404)
+
+        try:
+            if not (meta_user_track := MetaUserTrackModel.query.filter_by(user_id=user.user_id, track_id=track_id).first()):
+                meta_user_track = MetaUserTrackModel(
+                    track_id=track_id, user_id=user.user_id)
+
+            if 'rating' in data:
+                # Update average rating on object
+                track.rating = track.rating or 0
+                track.rating_count = track.rating_count or 0
+                count = track.rating_count + \
+                    (1 if meta_user_track.rating is None else 0)
+                track.rating = (track.rating * track.rating_count - (
+                    meta_user_track.rating if meta_user_track.rating is not None else 0) + data["rating"]) / count
+                track.rating_count = count
+
+                meta_user_track.rating = data["rating"]
+            if 'additional_play_count' in data:
+                meta_user_track.play_count += data['additional_play_count']
+
+            db.session.add(meta_user_track)
+            db.session.commit()
+
+            resp = message(True, "Meta successfully updated")
+            return resp, 201
 
         except Exception as error:
             current_app.logger.error(error)

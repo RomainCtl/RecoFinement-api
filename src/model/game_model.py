@@ -26,6 +26,8 @@ class GameModel(db.Model):
     price = db.Column(db.String(255))
     recommendations = db.Column(db.Integer)
     release_date = db.Column(db.String(255))
+    rating = db.Column(db.Float)
+    rating_count = db.Column(db.Integer, default=0)
 
     genres = db.relationship(
         "GenreModel", secondary=GameGenresModel, lazy="dynamic")

@@ -10,4 +10,4 @@ class MetaUserBookMeta:
 
 class MetaUserBookBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserBookMeta):
-        pass
+        fields = ["purchase", "rating"]

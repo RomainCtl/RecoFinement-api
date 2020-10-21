@@ -10,4 +10,4 @@ class MetaUserMovieMeta:
 
 class MetaUserMovieBase(SQLAlchemyAutoSchema):
     class Meta(MetaUserMovieModel):
-        pass
+        fields = ["rating", "watch_count"]
