@@ -10,10 +10,10 @@ from src.schemas import ApplicationBase, GenreBase, MetaUserApplicationBase
 class ApplicationService:
     @staticmethod
     def search_application_data(search_term, page):
-        """ Search application data by title """
+        """ Search application data by name """
         applications, total_pages = Paginator.get_from(
-            ApplicationModel.query.filter(ApplicationModel.title.ilike(search_term+"%")).union(
-                ApplicationModel.query.filter(ApplicationModel.title.ilike("%"+search_term+"%"))),
+            ApplicationModel.query.filter(ApplicationModel.name.ilike(search_term+"%")).union(
+                ApplicationModel.query.filter(ApplicationModel.name.ilike("%"+search_term+"%"))),
             page,
         )
 
