@@ -9,6 +9,7 @@ api = TrackDto.api
 data_resp = TrackDto.data_resp
 genres_resp = TrackDto.genres_resp
 meta_resp = TrackDto.meta_resp
+history_resp = TrackDto.history_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -100,3 +101,26 @@ class TrackMetaResource(Resource):
         data = request.get_json()
 
         return TrackService.update_meta(user_uuid, track_id, data)
+
+
+@api.route("/history", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class TrackHistoryResource(Resource):
+    @api.doc(
+        "Get the history of listened track",
+        responses={
+            200: ("History of listened track data successfully sent", history_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get the history of listened """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+
+        return TrackService.get_history(user_uuid, page)
