@@ -1,8 +1,9 @@
 import os
 import datetime
-from dotenv import load_dotenv
+#! TODO check if it's working on Windows (without load_dotenv)
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'postgresql://' + \
