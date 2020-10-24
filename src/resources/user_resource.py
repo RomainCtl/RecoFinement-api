@@ -39,10 +39,8 @@ class UserResource(Resource):
         """ Delete a specific user's account by their uuid """
         user_uuid = get_jwt_identity()
         return UserService.delete_account(user_uuid, uuid)
-
-
-@api.route("/username")
-class UserUsernameResource(Resource):
+    
+    user_data=UserDto.user_data
     @api.doc(
         "Update a specific username",
         responses={
@@ -52,46 +50,11 @@ class UserUsernameResource(Resource):
         },
     )
     @jwt_required
-    def patch(self):
-        """ Update a specific username's data by their uuid """
+    @api.expect(user_data, validate=True)
+    def patch(self,uuid):
         user_uuid = get_jwt_identity()
         data = request.get_json()
-        return UserService.update_username(user_uuid, data['username'])
-
-
-@api.route("/password")
-class UserPasswordResource(Resource):
-    @api.doc(
-        "Update a specific user password",
-        responses={
-            200: ("User password successfully updated", data_resp),
-            401: ("Authentication required"),
-            404: "User not found!",
-        },
-    )
-    @jwt_required
-    def patch(self):
-        """ Update a specific user's password by their uuid """
-        user_uuid = get_jwt_identity()
-        data = request.get_json()
-        return UserService.update_password(user_uuid, data['password'])
-
-
-@api.route("/password/forgot")
-class UserPasswordRecoverResource(Resource):
-    @api.doc(
-        "Send a specific token by email to reset user password",
-        responses={
-            200: ("Email successfully sent", data_resp),
-            401: ("Authentication required"),
-            404: "User not found!",
-        },
-    )
-    @jwt_required
-    def post(self):
-        """ Delete a specific user's account by their uuid """
-        data = request.get_json()
-        return UserService.forgot_password(data['email'])
+        return UserService.update_user_data(user_uuid,uuid, data)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

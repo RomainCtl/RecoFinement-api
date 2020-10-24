@@ -1,8 +1,11 @@
 from flask import current_app, jsonify, make_response
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, decode_token
+
+import datetime
+
 
 from src import db
-from src.utils import message, err_resp, internal_err_resp, validation_error
+from src.utils import message, err_resp, internal_err_resp, validation_error, mailjet
 from src.model import UserModel, RevokedTokenModel
 from src.schemas import UserBase
 
@@ -97,6 +100,59 @@ class AuthService:
             db.session.commit()
 
             return resp
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def forget(email,url):
+        try:
+            # Fetch user data
+            if not (user := UserModel.query.filter_by(email=email).first()):
+                pass
+
+            expires = datetime.timedelta(hours=24)
+            reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
+            
+            user.reset_password_token=reset_token
+            resp = make_response("Something went wrong while sending the password reset email",400)
+            if (mailjet.sendForget(user,url))=="error":
+                return resp
+
+            db.session.add(user)
+            db.session.commit()
+            resp = message(True, "If your account exist, you will find an email to recover your password in your mailbox")
+
+            return resp
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def reset(data,url):
+        
+        reset_token = data['reset_password_token']
+        password = data['password']
+        uuid = decode_token(reset_token)['identity']
+        print(uuid)
+        try:
+            # Fetch user data
+            if not (user := UserModel.query.filter_by(uuid=uuid).first()):
+                return err_resp(
+                    "User token not found.",
+                    401,
+                )
+            
+            user.password=password
+            resp = make_response("Something went wrong while sending the password reset confirmation email",400)
+            if (mailjet.sendReset(user,url)) =="error":
+                return resp
+            
+            db.session.add(user)
+            db.session.commit()
+            resp = message(True, "Password reset successfully")
+            return resp, 201
+
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()

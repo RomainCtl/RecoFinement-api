@@ -32,3 +32,14 @@ class UserDto:
             "content": fields.List(fields.Nested(user_base))
         }
     )
+
+    #Expected data
+
+    user_data = api.model(
+        "UserDataExpected",
+        {
+            "username":fields.String(min=4,max=15),
+            "password":fields.String(min=8, max=128),
+            "email":fields.String(min=5,max=64)
+        },
+    )

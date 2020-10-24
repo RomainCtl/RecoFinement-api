@@ -37,3 +37,18 @@ class AuthDto:
             "password": fields.String(required=True),
         },
     )
+
+    auth_forgot = api.model(
+        "Forgot password",
+        {
+            "email": fields.String(required=True)
+        },
+    )
+
+    auth_reset = api.model(
+        "Reset password",
+        {
+            "reset_password_token": fields.String(required=True),
+            "password":fields.String(required=True)
+        },
+    )

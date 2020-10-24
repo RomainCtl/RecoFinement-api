@@ -1,6 +1,7 @@
 from .dto_schema import DTOSchema
 from .sqlalchemy_auto_schema import SQLAlchemyAutoSchema
 from .paginator import Paginator
+from .mailjet import sendForget, sendReset
 
 
 def message(status, message):

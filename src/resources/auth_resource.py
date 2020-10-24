@@ -91,3 +91,51 @@ class AuthLogout(Resource):
         token = get_raw_jwt()
 
         return AuthService.logout(token)
+
+@api.route("/forget")
+class AuthForgotPassword(Resource):
+    auth_forgot=AuthDto.auth_forgot
+    """ User password forgot """
+    @api.doc(
+        "Auth password forgot",
+        responses={
+            204: ("Successfully reset mail sent."),
+        },
+    )
+    @api.expect(auth_forgot, validate=True)
+    def post(self):
+        """ User password forgot """
+        """
+        /**
+        * TODO: change url to ui url reset page
+        */
+        """
+        #url = request.host_url + 'reset/'
+        url = "http://localhost:4200/recofinement/reset"
+
+        data=request.get_json()
+        return AuthService.forget(data['email'],url)
+
+@api.route("/reset")
+class AuthResetPassword(Resource):
+    auth_reset=AuthDto.auth_reset
+    """ User password reset """
+    @api.doc(
+        "Auth password reset",
+        responses={
+            204: ("Successfully reset password"),
+        },
+    )
+    @api.expect(auth_reset, validate=True)
+    def post(self):
+        """ User password reset"""
+        """
+        /**
+        * TODO: change url to ui url login
+        */
+        """
+        #url = request.host_url
+        url = "http://localhost:4200/recofinement/"
+        data = request.get_json()
+        return AuthService.reset(data,url)
+        

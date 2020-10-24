@@ -109,37 +109,26 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def update_username(user_uuid, username):
-        """" Update username """
+    def update_user_data(user_uuid,connected_user_uuid, data):
+        """" Update user data username - email - password """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        try:
-            user.username = username
+        if user_uuid != connected_user_uuid:
+            return err_resp("Unable to delete an account which is not your's", 403)
 
+        try:
+            if 'username' in data.keys():
+                user.username = data['username']
+            if 'password' in data.keys():
+                user.password= data['password']
+            if 'email' in data.keys():
+                user.email= data['email']
+            
             db.session.add(user)
             db.session.commit()
 
-            resp = message(True, "Username updated successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
-    def update_password(user_uuid, password):
-        """" Update user password """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        try:
-            user.password = password
-
-            db.session.add(user)
-            db.session.commit()
-
-            resp = message(True, "User password updated successfully")
+            resp = message(True, "Userdata updated successfully")
             return resp, 201
 
         except Exception as error:
@@ -161,22 +150,6 @@ class UserService:
             db.session.commit()
 
             resp = message(True, "User account deleted successfully")
-            return resp, 201
-
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
-    def forgot_password(user_email):
-        """" Forgot user password """
-        try:
-            if (user := UserModel.query.filter_by(email=user_email).first()):
-                # TODO
-                pass
-
-            resp = message(
-                True, "If your account exist, you will find an email to recover your password in your mailbox")
             return resp, 201
 
         except Exception as error:
