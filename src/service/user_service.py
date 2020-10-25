@@ -128,7 +128,7 @@ class UserService:
             db.session.add(user)
             db.session.commit()
 
-            resp = message(True, "Userdata updated successfully")
+            resp = message(True, "User updated successfully")
             return resp, 201
 
         except Exception as error:

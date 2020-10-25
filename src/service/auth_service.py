@@ -108,19 +108,17 @@ class AuthService:
     def forget(email,url):
         try:
             # Fetch user data
-            if not (user := UserModel.query.filter_by(email=email).first()):
-                pass
+            if user := UserModel.query.filter_by(email=email).first():
 
-            expires = datetime.timedelta(hours=24)
-            reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
+                expires = datetime.timedelta(hours=24)
+                reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
+                
+                user.reset_password_token=reset_token
+                mailjet.sendForget(user,url)
+                
+                db.session.add(user)
+                db.session.commit()
             
-            user.reset_password_token=reset_token
-            resp = make_response("Something went wrong while sending the password reset email",400)
-            if (mailjet.sendForget(user,url))=="error":
-                return resp
-
-            db.session.add(user)
-            db.session.commit()
             resp = message(True, "If your account exist, you will find an email to recover your password in your mailbox")
 
             return resp
@@ -134,24 +132,22 @@ class AuthService:
         reset_token = data['reset_password_token']
         password = data['password']
         uuid = decode_token(reset_token)['identity']
-        print(uuid)
         try:
             # Fetch user data
             if not (user := UserModel.query.filter_by(uuid=uuid).first()):
                 return err_resp(
-                    "User token not found.",
+                    "Invalid token.",
                     401,
                 )
             
             user.password=password
-            resp = make_response("Something went wrong while sending the password reset confirmation email",400)
-            if (mailjet.sendReset(user,url)) =="error":
-                return resp
+            if (mailjet.sendReset(user,url) == "error"):
+                return make_response("Something went wrong while sending the password reset confirmation email",400)
             
             db.session.add(user)
             db.session.commit()
             resp = message(True, "Password reset successfully")
-            return resp, 201
+            return resp
 
         except Exception as error:
             current_app.logger.error(error)

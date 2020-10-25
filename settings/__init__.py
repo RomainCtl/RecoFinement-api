@@ -1,6 +1,8 @@
 import os
 import datetime
 from dotenv import load_dotenv
+from mailjet_rest import Client
+
 
 load_dotenv()
 
@@ -17,3 +19,8 @@ JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 PORT = os.environ['SERVICE_PORT']
 
 PAGE_SIZE = 24
+
+API_KEY = os.environ['MJ_APIKEY_PUBLIC']
+API_SECRET = os.environ['MJ_APIKEY_PRIVATE']
+MAILJET = Client(auth=(API_KEY, API_SECRET), version='v3.1')
+FROM_EMAIL="advise.ly1@gmail.com"

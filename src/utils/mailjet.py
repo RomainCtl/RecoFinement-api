@@ -2,18 +2,16 @@
 from mailjet_rest import Client
 import os
 from flask import current_app
+from settings import API_KEY,API_SECRET,MAILJET,FROM_EMAIL
 
-api_key = os.environ['MJ_APIKEY_PUBLIC']
-api_secret = os.environ['MJ_APIKEY_PRIVATE']
-mailjet = Client(auth=(api_key, api_secret), version='v3.1')
-from_email="advise.ly1@gmail.com"
+
 
 def sendForget(user,url):
     data = {
     'Messages': [
         {
         "From": {
-            "Email": from_email,
+            "Email": FROM_EMAIL,
             "Name": "Advise Ly"
         },
         "To": [
@@ -32,7 +30,7 @@ def sendForget(user,url):
         },      
     ],
     }
-    result = mailjet.send.create(data=data)
+    result = MAILJET.send.create(data=data)
     return result.status_code
 
 def sendReset(user,url):
@@ -41,7 +39,7 @@ def sendReset(user,url):
     'Messages': [
         {
         "From": {
-            "Email": from_email,
+            "Email": FROM_EMAIL,
             "Name": "Advisely"
         },
         "To": [
@@ -60,6 +58,5 @@ def sendReset(user,url):
         },      
     ],
     }
-    result = mailjet.send.create(data=data)
+    result = MAILJET.send.create(data=data)
     return result.status_code
-    
