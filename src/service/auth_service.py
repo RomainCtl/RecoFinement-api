@@ -8,6 +8,7 @@ from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error, mailjet
 from src.model import UserModel, RevokedTokenModel
 from src.schemas import UserBase
+from settings import URL_FRONT
 
 user_base = UserBase()
 
@@ -74,7 +75,8 @@ class AuthService:
 
             # Commit changes to DB
             db.session.commit()
-
+            # Send welcome email
+            mailjet.sendNewAccount(new_user,URL_FRONT)
             # Create an access token
             access_token = create_access_token(identity=new_user.uuid)
 
@@ -114,7 +116,7 @@ class AuthService:
                 reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
                 
                 user.reset_password_token=reset_token
-                mailjet.sendForget(user,url)
+                mailjet.sendForget(user,URL_FRONT+"reset")
                 
                 db.session.add(user)
                 db.session.commit()
@@ -141,7 +143,7 @@ class AuthService:
                 )
             
             user.password=password
-            if (mailjet.sendReset(user,url) == "error"):
+            if (mailjet.sendReset(user,URL_FRONT) == "error"):
                 return make_response("Something went wrong while sending the password reset confirmation email",400)
             
             db.session.add(user)

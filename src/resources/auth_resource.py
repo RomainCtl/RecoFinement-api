@@ -105,16 +105,8 @@ class AuthForgotPassword(Resource):
     @api.expect(auth_forgot, validate=True)
     def post(self):
         """ User password forgot """
-        """
-        /**
-        * TODO: change url to ui url reset page
-        */
-        """
-        #url = request.host_url + 'reset/'
-        url = "http://localhost:4200/recofinement/reset"
-
         data=request.get_json()
-        return AuthService.forget(data['email'],url)
+        return AuthService.forget(data['email'])
 
 @api.route("/reset")
 class AuthResetPassword(Resource):
@@ -129,13 +121,6 @@ class AuthResetPassword(Resource):
     @api.expect(auth_reset, validate=True)
     def post(self):
         """ User password reset"""
-        """
-        /**
-        * TODO: change url to ui url login
-        */
-        """
-        #url = request.host_url
-        url = "http://localhost:4200/recofinement/"
         data = request.get_json()
-        return AuthService.reset(data,url)
+        return AuthService.reset(data)
         

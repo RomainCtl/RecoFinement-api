@@ -12,7 +12,7 @@ def sendForget(user,url):
         {
         "From": {
             "Email": FROM_EMAIL,
-            "Name": "Advise Ly"
+            "Name": "Advisely"
         },
         "To": [
             {
@@ -54,6 +54,34 @@ def sendReset(user,url):
             "firstname":user.username,
             "resetUrl":url,
             "subject":"[RecoFinement] Successful reset password"
+        }
+        },      
+    ],
+    }
+    result = MAILJET.send.create(data=data)
+    return result.status_code
+
+def sendNewAccount(user,url):
+    
+    data = {
+    'Messages': [
+        {
+        "From": {
+            "Email": FROM_EMAIL,
+            "Name": "Advisely"
+        },
+        "To": [
+            {
+            "Email": user.email,
+            "Name": user.username
+            }
+        ],
+        "TemplateID": 1112887,
+		"TemplateLanguage": True,
+        "Variables":{
+            "firstname":user.username,
+            "resetUrl":url,
+            "subject":"Welcome to RecoFinement "
         }
         },      
     ],

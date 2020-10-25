@@ -24,3 +24,4 @@ API_KEY = os.environ['MJ_APIKEY_PUBLIC']
 API_SECRET = os.environ['MJ_APIKEY_PRIVATE']
 MAILJET = Client(auth=(API_KEY, API_SECRET), version='v3.1')
 FROM_EMAIL="advise.ly1@gmail.com"
+URL_FRONT=os.environ['URL_FRONT']
