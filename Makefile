@@ -27,7 +27,7 @@ PYTEST = $(PYTHON) -m pytest
 # -----------------------------------------------------------------------------
 # include env
 
--include ______aa.env
+-include .env
 export
 
 # ========================================================
@@ -68,21 +68,6 @@ db-migration: ## Create new migration after modifying structur of database in mo
 	$(if $(version), , $(error Require 'version' argument. Ex: #> make db-migration version="add Test table"))
 	$(PIPENV) run flask db migrate -m "$(version)"
 
-
-build:
-	docker-compose build
-
-start: build
-	docker-compose up -d
-
-logs:
-	docker-compose logs -f
-
-stop:
-	docker-compose stop
-
-rm: stop
-	docker-compose rm -f -v
 
 # --------------------------------------------------------
 ##@ Commons Git tasks
