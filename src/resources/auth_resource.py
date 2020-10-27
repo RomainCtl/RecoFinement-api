@@ -102,6 +102,7 @@ class AuthForgotPassword(Resource):
             204: ("Successfully reset mail sent."),
         },
     )
+    @api.doc(security=None)
     @api.expect(auth_forgot, validate=True)
     def post(self):
         """ User password forgot """
@@ -118,6 +119,7 @@ class AuthResetPassword(Resource):
             204: ("Successfully reset password"),
         },
     )
+    @api.doc(security=None)
     @api.expect(auth_reset, validate=True)
     def post(self):
         """ User password reset"""

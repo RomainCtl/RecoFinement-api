@@ -107,7 +107,7 @@ class AuthService:
             return internal_err_resp()
 
     @staticmethod
-    def forget(email,url):
+    def forget(email):
         try:
             # Fetch user data
             if user := UserModel.query.filter_by(email=email).first():
@@ -129,7 +129,7 @@ class AuthService:
             return internal_err_resp()
 
     @staticmethod
-    def reset(data,url):
+    def reset(data):
         
         reset_token = data['reset_password_token']
         password = data['password']
