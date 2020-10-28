@@ -1,7 +1,7 @@
-from .auth_schema import LoginSchema, RegisterSchema
+from .auth_schema import LoginSchema, RegisterSchema, ResetSchema, ForgetSchema
 
 from .group_schema import GroupBase, GroupObject, GroupCreateSchema, GroupAddMemberSchema
-from .user_schema import UserBase, UserObject
+from .user_schema import UserBase, UserObject, UpdateUserDataSchema
 
 from .application_schema import ApplicationBase
 from .book_schema import BookBase

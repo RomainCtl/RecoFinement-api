@@ -7,13 +7,15 @@ from src.utils import validation_error
 # Auth modules
 from src.service import AuthService
 from src.dto import AuthDto
-from src.schemas import LoginSchema, RegisterSchema
+from src.schemas import LoginSchema, RegisterSchema, ResetSchema, ForgetSchema
 
 api = AuthDto.api
 auth_success = AuthDto.auth_success
 
 login_schema = LoginSchema()
 register_schema = RegisterSchema()
+reset_schema = ResetSchema()
+forget_schema = ForgetSchema()
 
 
 @api.route("/login")
@@ -107,6 +109,9 @@ class AuthForgotPassword(Resource):
     def post(self):
         """ User password forgot """
         data=request.get_json()
+        # Validate data
+        if (errors := forget_schema.validate(data)):
+            return validation_error(False, errors)
         return AuthService.forget(data['email'])
 
 @api.route("/reset")
@@ -124,5 +129,8 @@ class AuthResetPassword(Resource):
     def post(self):
         """ User password reset"""
         data = request.get_json()
+        # Validate data
+        if (errors := reset_schema.validate(data)):
+            return validation_error(False, errors)
         return AuthService.reset(data)
         

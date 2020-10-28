@@ -5,10 +5,14 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from src.service import UserService
 from src.dto import UserDto
 
+from src.schemas import UpdateUserDataSchema
+from src.utils import validation_error
+
+
 api = UserDto.api
 data_resp = UserDto.data_resp
 search_data_resp = UserDto.search_data_resp
-
+update_schema = UpdateUserDataSchema()
 
 @api.route("/<string:uuid>")
 class UserResource(Resource):
@@ -54,6 +58,9 @@ class UserResource(Resource):
     def patch(self,uuid):
         user_uuid = get_jwt_identity()
         data = request.get_json()
+        # Validate data
+        if (errors := update_schema.validate(data)):
+            return validation_error(False, errors)
         return UserService.update_user_data(user_uuid,uuid, data)
 
 
@@ -173,3 +180,20 @@ class UserGenreResource(Resource):
         user_uuid = get_jwt_identity()
 
         return UserService.unlike_genre(genre_id, user_uuid)
+
+@api.route("/spotify")
+class UserGenresResource(Resource):
+    @api.doc(
+        "Oauth2 Spotify",
+        responses={
+            201: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    @jwt_required
+    def get(self):
+        """ Get liked genres (connected user) """
+        user_uuid = get_jwt_identity()
+
+        return UserService.get_spotify_oauth(user_uuid)
