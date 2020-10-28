@@ -110,7 +110,7 @@ class TrackService:
         try:
             if not (meta_user_track := MetaUserTrackModel.query.filter_by(user_id=user.user_id, track_id=track_id).first()):
                 meta_user_track = MetaUserTrackModel(
-                    track_id=track_id, user_id=user.user_id)
+                    track_id=track_id, user_id=user.user_id, play_count=0)
 
             if 'rating' in data:
                 # Update average rating on object

@@ -109,7 +109,7 @@ class SerieService:
         try:
             if not (meta_user_serie := MetaUserSerieModel.query.filter_by(user_id=user.user_id, serie_id=serie_id).first()):
                 meta_user_serie = MetaUserSerieModel(
-                    serie_id=serie_id, user_id=user.user_id)
+                    serie_id=serie_id, user_id=user.user_id, num_watched_episodes=0)
 
             if 'rating' in data:
                 # Update average rating on object

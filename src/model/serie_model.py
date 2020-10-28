@@ -25,6 +25,7 @@ class SerieModel(db.Model):
     actors = db.Column(db.Text)
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
+    cover = db.Column(db.Text)
 
     genres = db.relationship(
         "GenreModel", secondary=SerieGenresModel, lazy="dynamic")
