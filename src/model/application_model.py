@@ -22,5 +22,6 @@ class ApplicationModel(db.Model):
     current_version = db.Column(db.String(255))
     android_version = db.Column(db.String(255))
     cover = db.Column(db.Text)
+    popularity_score = db.Column(db.Float, default=0)
 
     categorie = db.relationship("GenreModel", lazy=True)

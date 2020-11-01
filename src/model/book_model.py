@@ -18,3 +18,4 @@ class BookModel(db.Model):
     image_url_l = db.Column(db.String(255))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
+    popularity_score = db.Column(db.Float, default=0)
