@@ -5,7 +5,6 @@ from src.utils import err_resp, message, pagination_resp, internal_err_resp, Pag
 from src.model import UserModel, GenreModel
 from src.schemas import UserBase, UserObject, GenreBase
 
-
 class UserService:
     @staticmethod
     def search_user_data(search_term, page):
@@ -152,22 +151,6 @@ class UserService:
             resp = message(True, "User account deleted successfully")
             return resp, 201
 
-        except Exception as error:
-            current_app.logger.error(error)
-            return internal_err_resp()
-
-    @staticmethod
-    def get_spotify_oauth(user_uuid):
-        """ Get user liked genre list """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
-            return err_resp("User not found!", 404)
-
-        try:
-            genres_data = GenreBase.loads(user.liked_genres)
-
-            resp = message(True, "User liked genre sent")
-            resp["content"] = genres_data
-            return resp, 201
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()

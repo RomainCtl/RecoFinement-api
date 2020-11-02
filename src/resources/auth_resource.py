@@ -1,11 +1,12 @@
-from flask import request
+from flask import request,current_app
 from flask_restx import Resource
 from flask_jwt_extended import get_raw_jwt, jwt_required
+import asyncio
 
 from src.utils import validation_error
 
 # Auth modules
-from src.service import AuthService
+from src.service import AuthService, ExternalService
 from src.dto import AuthDto
 from src.schemas import LoginSchema, RegisterSchema, ResetSchema, ForgetSchema
 
@@ -44,7 +45,12 @@ class AuthLogin(Resource):
         if (errors := login_schema.validate(login_data)):
             return validation_error(False, errors)
 
-        return AuthService.login(login_data)
+        res,code = AuthService.login(login_data)
+        #current_app.logger.info('before get spotify data')
+        
+        ExternalService.get_spotify_data(res['user']['uuid'])
+        
+        return res,code 
 
 
 @api.route("/register")
@@ -83,7 +89,7 @@ class AuthLogout(Resource):
     @api.doc(
         "Auth logout",
         responses={
-            204: ("Successfully logout user."),
+            204: (""),
             401: ("Authentication required"),
         },
     )

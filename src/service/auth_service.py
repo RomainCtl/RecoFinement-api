@@ -3,7 +3,6 @@ from flask_jwt_extended import create_access_token, set_access_cookies, decode_t
 
 import datetime
 
-
 from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error, mailjet
 from src.model import UserModel, RevokedTokenModel
@@ -115,11 +114,11 @@ class AuthService:
                 expires = datetime.timedelta(hours=24)
                 reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
                 
-                user.reset_password_token=reset_token
+                #user.reset_password_token=reset_token
                 mailjet.sendForget(user,URL_FRONT+"reset")
                 
-                db.session.add(user)
-                db.session.commit()
+                ''' db.session.add(user)
+                db.session.commit() '''
             
             resp = message(True, "If your account exist, you will find an email to recover your password in your mailbox")
 

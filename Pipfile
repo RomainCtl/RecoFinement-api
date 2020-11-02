@@ -21,7 +21,8 @@ pytest-flask = "*"
 flask-restx = "*"
 flask-bcrypt = "*"
 flask-jwt-extended = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
+mailjet-rest = "*"
 
 [requires]
 python_version = "3.8"
