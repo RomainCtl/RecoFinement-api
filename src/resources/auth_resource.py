@@ -2,6 +2,7 @@ from flask import request,current_app
 from flask_restx import Resource
 from flask_jwt_extended import get_raw_jwt, jwt_required
 import asyncio
+from threading import Thread
 
 from src.utils import validation_error
 
@@ -47,8 +48,9 @@ class AuthLogin(Resource):
 
         res,code = AuthService.login(login_data)
         #current_app.logger.info('before get spotify data')
-        
-        ExternalService.get_spotify_data(res['user']['uuid'])
+        thread = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
+        thread.daemon = True
+        thread.start()
         
         return res,code 
 
