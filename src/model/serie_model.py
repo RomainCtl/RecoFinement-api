@@ -8,6 +8,19 @@ SerieGenresModel = db.Table("serie_genres",
                             )
 
 
+class SimilarsSeriesModel(db.Model):
+    """
+    SimilarsSeries Model for storing similars Serie
+    """
+    __tablename__ = "similars_serie"
+
+    serie_id0 = db.Column(db.Integer, db.ForeignKey(
+        "serie.serie_id"), primary_key=True)
+    serie_id1 = db.Column(db.Integer, db.ForeignKey(
+        "serie.serie_id"), primary_key=True)
+    similarity = db.Column(db.Float)
+
+
 class SerieModel(db.Model):
     """
     Serie Model for storing serie related details
@@ -33,3 +46,8 @@ class SerieModel(db.Model):
 
     episodes = db.relationship(
         "EpisodeModel", backref="serie",  lazy="dynamic")
+
+    similars = db.relationship("SerieModel", secondary=SimilarsSeriesModel.__table__,
+                               primaryjoin=serie_id == SimilarsSeriesModel.serie_id0,
+                               secondaryjoin=serie_id == SimilarsSeriesModel.serie_id1,
+                               lazy="subquery")

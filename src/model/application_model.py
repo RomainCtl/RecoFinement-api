@@ -1,6 +1,19 @@
 from src import db
 
 
+class SimilarsApplicationsModel(db.Model):
+    """
+    SimilarsApplications Model for storing similars app
+    """
+    __tablename__ = "similars_application"
+
+    app_id0 = db.Column(db.Integer, db.ForeignKey(
+        "application.app_id"), primary_key=True)
+    app_id1 = db.Column(db.Integer, db.ForeignKey(
+        "application.app_id"), primary_key=True)
+    similarity = db.Column(db.Float)
+
+
 class ApplicationModel(db.Model):
     """
     Application Model for storing application related details
@@ -25,3 +38,7 @@ class ApplicationModel(db.Model):
     popularity_score = db.Column(db.Float, default=0)
 
     categorie = db.relationship("GenreModel", lazy=True)
+
+    similars = db.relationship("ApplicationModel", secondary=SimilarsApplicationsModel.__table__,
+                               primaryjoin=app_id == SimilarsApplicationsModel.app_id0,
+                               secondaryjoin=app_id == SimilarsApplicationsModel.app_id1, lazy="subquery")
