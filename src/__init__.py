@@ -1,6 +1,6 @@
 from flask import Flask
 
-from src.addons import db, ma, migrate, cors, bcrypt, jwt
+from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid
 import settings
 
 
@@ -19,6 +19,7 @@ def create_app():
     bcrypt.init_app(app)
     cors.init_app(app, resources={r"*": {"origins": "*"}})
     migrate.init_app(app, db=db)
+    flask_uuid.init_app(app)
 
     # JWT overrided method
     from .model import RevokedTokenModel

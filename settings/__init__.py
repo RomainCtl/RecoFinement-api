@@ -1,10 +1,7 @@
 import os
 import datetime
-from dotenv import load_dotenv
 from mailjet_rest import Client
 
-
-load_dotenv()
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'postgresql://' + \
@@ -20,14 +17,14 @@ PORT = os.environ['SERVICE_PORT']
 
 PAGE_SIZE = 24
 
-#MAILJET
+# MAILJET
 API_KEY = os.environ['MJ_APIKEY_PUBLIC']
 API_SECRET = os.environ['MJ_APIKEY_PRIVATE']
 MAILJET = Client(auth=(API_KEY, API_SECRET), version='v3.1')
-FROM_EMAIL="advise.ly1@gmail.com"
-URL_FRONT=os.environ['URL_FRONT']
+FROM_EMAIL = "advise.ly1@gmail.com"
+URL_FRONT = os.environ['URL_FRONT']
 
-#SPOTIFY
+# SPOTIFY
 SPOTIFY_PROVIDER = "https://accounts.spotify.com/authorize"
 SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']

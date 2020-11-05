@@ -10,10 +10,10 @@ from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase
 class GameService:
     @staticmethod
     def search_game_data(search_term, page):
-        """ Search game data by title """
+        """ Search game data by name """
         games, total_pages = Paginator.get_from(
-            GameModel.query.filter(GameModel.title.ilike(search_term+"%")).union(
-                GameModel.query.filter(GameModel.title.ilike("%"+search_term+"%"))),
+            GameModel.query.filter(GameModel.name.ilike(search_term+"%")).union(
+                GameModel.query.filter(GameModel.name.ilike("%"+search_term+"%"))),
             page,
         )
 

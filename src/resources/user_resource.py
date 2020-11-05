@@ -14,7 +14,7 @@ data_resp = UserDto.data_resp
 search_data_resp = UserDto.search_data_resp
 update_schema = UpdateUserDataSchema()
 
-@api.route("/<string:uuid>")
+@api.route("/<uuid:uuid>")
 class UserResource(Resource):
     @api.doc(
         "Get a specific user",

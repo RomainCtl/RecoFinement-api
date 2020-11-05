@@ -21,5 +21,6 @@ class ApplicationModel(db.Model):
     last_updated = db.Column(db.String(255))
     current_version = db.Column(db.String(255))
     android_version = db.Column(db.String(255))
+    cover = db.Column(db.Text)
 
     categorie = db.relationship("GenreModel", lazy=True)
