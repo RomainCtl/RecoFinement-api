@@ -45,13 +45,12 @@ class ExternalSpotifyCallbackResource(Resource):
     )
     @api.expect(oauth_external, validate=True)
     @jwt_required
-    #@api.doc(security=None)
     def post(self):
         """ Get access and refresh tokens """
         data = request.get_json()
-        csrf = data['state']#request.args.get('state')
-        user_uuid = get_jwt_identity() #decode_token(csrf)['identity']
-        code = data['code'] #request.args.get('code')
+        csrf = data['state']
+        user_uuid = get_jwt_identity()
+        code = data['code']
 
         res = ExternalService.spotify_callback(csrf, code, user_uuid)
         thread = Thread(target=ExternalService.get_spotify_data, args=(

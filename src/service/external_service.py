@@ -90,7 +90,7 @@ class ExternalService:
                             new_track = TrackModel(
                                 artist_name=" & ".join(line['artist_name']),
                                 title=line['title'],
-                                year=line['year'].split("-")[0],
+                                year=line['year'].split("-")[0] if line['year'] is not None else '',
                                 release=line['release'],
                                 spotify_id=line['spotify_id'],
                                 covert_art_url=line['cover_art_url']
