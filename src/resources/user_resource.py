@@ -14,6 +14,7 @@ data_resp = UserDto.data_resp
 search_data_resp = UserDto.search_data_resp
 update_schema = UpdateUserDataSchema()
 
+
 @api.route("/<uuid:uuid>")
 class UserResource(Resource):
     @api.doc(
@@ -42,26 +43,28 @@ class UserResource(Resource):
     def delete(self, uuid):
         """ Delete a specific user's account by their uuid """
         user_uuid = get_jwt_identity()
-        return UserService.delete_account(user_uuid, uuid)
-    
-    user_data=UserDto.user_data
+        return UserService.delete_account(uuid, user_uuid)
+
+    user_data = UserDto.user_data
+
     @api.doc(
         "Update a specific username",
         responses={
             200: ("Username successfully updated", data_resp),
             401: ("Authentication required"),
+            403: ("Unable to update an account which is not your's"),
             404: "User not found!",
         },
     )
     @jwt_required
     @api.expect(user_data, validate=True)
-    def patch(self,uuid):
+    def patch(self, uuid):
         user_uuid = get_jwt_identity()
         data = request.get_json()
         # Validate data
         if (errors := update_schema.validate(data)):
             return validation_error(False, errors)
-        return UserService.update_user_data(user_uuid,uuid, data)
+        return UserService.update_user_data(uuid, user_uuid, data)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -81,54 +84,6 @@ class UserSearchResource(Resource):
         except (ValueError, TypeError):
             page = 1
         return UserService.search_user_data(search_term, page)
-
-
-@api.route("/application")
-@api.deprecated
-class UserApplicationResource(Resource):
-    def post(self):
-        """ Give rate to an application """
-        return {}
-
-
-@api.route("/book")
-@api.deprecated
-class UserBookResource(Resource):
-    def post(self):
-        """ Give rate to a book """
-        return {}
-
-
-@api.route("/game")
-@api.deprecated
-class UserGameResource(Resource):
-    def post(self):
-        """ Give rate to a game """
-        return {}
-
-
-@api.route("/movie")
-@api.deprecated
-class UserMovieResource(Resource):
-    def post(self):
-        """ Give rate to a movie """
-        return {}
-
-
-@api.route("/serie")
-@api.deprecated
-class UserSerieResource(Resource):
-    def post(self):
-        """ Give rate to a serie """
-        return {}
-
-
-@api.route("/track")
-@api.deprecated
-class UserTrackResource(Resource):
-    def post(self):
-        """ Give rate to a track """
-        return {}
 
 
 @api.route("/genre")

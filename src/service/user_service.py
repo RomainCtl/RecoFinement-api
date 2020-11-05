@@ -5,6 +5,7 @@ from src.utils import err_resp, message, pagination_resp, internal_err_resp, Pag
 from src.model import UserModel, GenreModel
 from src.schemas import UserBase, UserObject, GenreBase
 
+
 class UserService:
     @staticmethod
     def search_user_data(search_term, page):
@@ -108,22 +109,22 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def update_user_data(user_uuid,connected_user_uuid, data):
+    def update_user_data(user_uuid, connected_user_uuid, data):
         """" Update user data username - email - password """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if user_uuid != connected_user_uuid:
-            return err_resp("Unable to delete an account which is not your's", 403)
+        if str(user_uuid) != connected_user_uuid:
+            return err_resp("Unable to update an account which is not your's", 403)
 
         try:
             if 'username' in data.keys():
                 user.username = data['username']
             if 'password' in data.keys():
-                user.password= data['password']
+                user.password = data['password']
             if 'email' in data.keys():
-                user.email= data['email']
-            
+                user.email = data['email']
+
             db.session.add(user)
             db.session.commit()
 
@@ -140,7 +141,7 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if user_uuid != connected_user_uuid:
+        if str(user_uuid) != connected_user_uuid:
             return err_resp("Unable to delete an account which is not your's", 403)
 
         try:
