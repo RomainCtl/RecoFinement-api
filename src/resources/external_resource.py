@@ -34,7 +34,7 @@ class ExternalSpotifyResource(Resource):
 
 @api.route("/spotify/callback")
 class ExternalSpotifyCallbackResource(Resource):
-    #oauth_external = ExternalDto.oauth_callback # TODO when front is done
+    oauth_external = ExternalDto.oauth_callback 
     @api.doc(
         "Spotify Oauth2 Callback",
         responses={
@@ -43,18 +43,19 @@ class ExternalSpotifyCallbackResource(Resource):
             404: "User not found!",
         }
     )
-    
-    #@api.expect(oauth_external, validate=True) # TODO when front is done
-    #@jwt_required
-    @api.doc(security=None)# TODO mettre jwt_required lorsque le front est fait
-    def get(self):
+    @api.expect(oauth_external, validate=True)
+    @jwt_required
+    #@api.doc(security=None)
+    def post(self):
         """ Get access and refresh tokens """
-        csrf = request.args.get('state')
-        user_uuid = decode_token(csrf)['identity']# TODO change after front done  : get_jwt_identity()
-        code = request.args.get('code') # TODO wait  front  -> receive "code" in json
-        
-        res = ExternalService.spotify_callback(csrf,code,user_uuid)
-        thread = Thread(target=ExternalService.get_spotify_data, args=(user_uuid,current_app._get_current_object()))
+        data = request.get_json()
+        csrf = data['state']#request.args.get('state')
+        user_uuid = get_jwt_identity() #decode_token(csrf)['identity']
+        code = data['code'] #request.args.get('code')
+
+        res = ExternalService.spotify_callback(csrf, code, user_uuid)
+        thread = Thread(target=ExternalService.get_spotify_data, args=(
+            user_uuid, current_app._get_current_object()))
         thread.daemon = True
         thread.start()
         return res
