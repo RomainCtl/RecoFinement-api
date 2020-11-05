@@ -42,7 +42,7 @@ class ExternalService:
             return validation_error(False, "Spotify Oauth is already done.")
         try:
             token_info = Spotify.get_tokens(code)
-            print(token_info)
+            
             new_external = ExternalModel(
                 service_name= 'Spotify',
                 user_id = user.user_id,
@@ -90,7 +90,7 @@ class ExternalService:
                             new_track = TrackModel(
                                 artist_name=" & ".join(line['artist_name']),
                                 title=line['title'],
-                                year=line['year'].split("-")[0] if line['year'] is not None else '',
+                                year=line['year'].split("-")[0] if line['year'] is not None else None,
                                 release=line['release'],
                                 spotify_id=line['spotify_id'],
                                 covert_art_url=line['cover_art_url']
