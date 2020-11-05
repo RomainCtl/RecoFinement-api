@@ -8,6 +8,19 @@ GameGenresModel = db.Table("game_genres",
                            )
 
 
+class SimilarsGamesModel(db.Model):
+    """
+    SimilarsGames Model for storing similars Game
+    """
+    __tablename__ = "similars_game"
+
+    game_id0 = db.Column(db.Integer, db.ForeignKey(
+        "game.game_id"), primary_key=True)
+    game_id1 = db.Column(db.Integer, db.ForeignKey(
+        "game.game_id"), primary_key=True)
+    similarity = db.Column(db.Float)
+
+
 class GameModel(db.Model):
     """
     Game Model for storing game related details
@@ -28,6 +41,12 @@ class GameModel(db.Model):
     release_date = db.Column(db.String(255))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
+    popularity_score = db.Column(db.Float, default=0)
 
     genres = db.relationship(
         "GenreModel", secondary=GameGenresModel, lazy="dynamic")
+
+    similars = db.relationship("GameModel", secondary=SimilarsGamesModel.__table__,
+                               primaryjoin=game_id == SimilarsGamesModel.game_id0,
+                               secondaryjoin=game_id == SimilarsGamesModel.game_id1,
+                               lazy="subquery")

@@ -1,6 +1,19 @@
 from src import db
 
 
+class SimilarsBooksModel(db.Model):
+    """
+    SimilarsBooks Model for storing similars Book
+    """
+    __tablename__ = "similars_book"
+
+    isbn0 = db.Column(db.String(13), db.ForeignKey(
+        "book.isbn"), primary_key=True)
+    isbn1 = db.Column(db.String(13), db.ForeignKey(
+        "book.isbn"), primary_key=True)
+    similarity = db.Column(db.Float)
+
+
 class BookModel(db.Model):
     """
     Book Model for storing book related details
@@ -18,3 +31,9 @@ class BookModel(db.Model):
     image_url_l = db.Column(db.String(255))
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
+    popularity_score = db.Column(db.Float, default=0)
+
+    similars = db.relationship("BookModel", secondary=SimilarsBooksModel.__table__,
+                               primaryjoin=isbn == SimilarsBooksModel.isbn0,
+                               secondaryjoin=isbn == SimilarsBooksModel.isbn1,
+                               lazy="subquery")

@@ -33,9 +33,11 @@ class GameService:
 
     @staticmethod
     def get_most_popular_games(page):
+        # NOTE we do not have any rating for game (cold start), so we use 'recommendations' field instead of 'popularity_score' that is computed by 'reco_engine' service
         games, total_pages = Paginator.get_from(
             GameModel.query.order_by(
-                GameModel.recommendations.desc().nullslast()),
+                GameModel.recommendations.desc().nullslast()
+            ),
             page,
         )
 
