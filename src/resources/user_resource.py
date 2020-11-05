@@ -2,12 +2,17 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.service import UserService
+from src.service import UserService, ExternalService
 from src.dto import UserDto
+
+from src.schemas import UpdateUserDataSchema
+from src.utils import validation_error
+
 
 api = UserDto.api
 data_resp = UserDto.data_resp
 search_data_resp = UserDto.search_data_resp
+update_schema = UpdateUserDataSchema()
 
 
 @api.route("/<uuid:uuid>")
@@ -24,6 +29,42 @@ class UserResource(Resource):
     def get(self, uuid):
         """ Get a specific user's data by their uuid """
         return UserService.get_user_data(uuid)
+
+    @api.doc(
+        "Delete a specific user account",
+        responses={
+            200: ("User account successfully deleted", data_resp),
+            401: ("Authentication required"),
+            403: ("Unable to delete an account which is not your's"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def delete(self, uuid):
+        """ Delete a specific user's account by their uuid """
+        user_uuid = get_jwt_identity()
+        return UserService.delete_account(uuid, user_uuid)
+
+    user_data = UserDto.user_data
+
+    @api.doc(
+        "Update a specific username",
+        responses={
+            200: ("Username successfully updated", data_resp),
+            401: ("Authentication required"),
+            403: ("Unable to update an account which is not your's"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    @api.expect(user_data, validate=True)
+    def patch(self, uuid):
+        user_uuid = get_jwt_identity()
+        data = request.get_json()
+        # Validate data
+        if (errors := update_schema.validate(data)):
+            return validation_error(False, errors)
+        return UserService.update_user_data(uuid, user_uuid, data)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -43,54 +84,6 @@ class UserSearchResource(Resource):
         except (ValueError, TypeError):
             page = 1
         return UserService.search_user_data(search_term, page)
-
-
-@api.route("/application")
-@api.deprecated
-class UserApplicationResource(Resource):
-    def post(self):
-        """ Give rate to an application """
-        return {}
-
-
-@api.route("/book")
-@api.deprecated
-class UserBookResource(Resource):
-    def post(self):
-        """ Give rate to a book """
-        return {}
-
-
-@api.route("/game")
-@api.deprecated
-class UserGameResource(Resource):
-    def post(self):
-        """ Give rate to a game """
-        return {}
-
-
-@api.route("/movie")
-@api.deprecated
-class UserMovieResource(Resource):
-    def post(self):
-        """ Give rate to a movie """
-        return {}
-
-
-@api.route("/serie")
-@api.deprecated
-class UserSerieResource(Resource):
-    def post(self):
-        """ Give rate to a serie """
-        return {}
-
-
-@api.route("/track")
-@api.deprecated
-class UserTrackResource(Resource):
-    def post(self):
-        """ Give rate to a track """
-        return {}
 
 
 @api.route("/genre")
@@ -132,7 +125,6 @@ class UserGenreResource(Resource):
         "Unlike a genre (connected user)",
         responses={
             201: ("Successfully send"),
-            400: ("You didn't like this genre"),
             401: ("Authentication required"),
             404: "User or Genre not found!",
         }
