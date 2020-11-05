@@ -1,6 +1,8 @@
 from .dto_schema import DTOSchema
 from .sqlalchemy_auto_schema import SQLAlchemyAutoSchema
 from .paginator import Paginator
+from .mailjet import sendForget, sendReset, sendNewAccount
+from .spotify import Spotify
 
 
 def message(status, message):

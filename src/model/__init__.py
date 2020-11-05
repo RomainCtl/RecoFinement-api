@@ -9,3 +9,4 @@ from .revokedtoken_model import RevokedTokenModel
 from .serie_model import SerieModel
 from .track_model import TrackModel
 from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel
+from .external_model import ExternalModel

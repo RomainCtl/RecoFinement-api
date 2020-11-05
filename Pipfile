@@ -24,6 +24,7 @@ flask-jwt-extended = "*"
 psycopg2 = "*"
 gunicorn = "*"
 flask-uuid = "*"
+mailjet-rest = "*"
 
 [requires]
 python_version = "3.8"
