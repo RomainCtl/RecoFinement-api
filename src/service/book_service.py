@@ -34,9 +34,8 @@ class BookService:
     @staticmethod
     def get_most_popular_books(page):
         books, total_pages = Paginator.get_from(
-            BookModel.query.order_by(
-                BookModel.rating_count.desc().nullslast(),
-                BookModel.rating.desc().nullslast()
+            BookModel.query.filter(BookModel.popularity_score != None).order_by(
+                BookModel.popularity_score.desc().nullslast(),
             ),
             page,
         )
