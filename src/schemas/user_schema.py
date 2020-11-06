@@ -8,6 +8,12 @@ from src.utils import SQLAlchemyAutoSchema, DTOSchema
 from marshmallow import fields
 from marshmallow.validate import Regexp, Length, Email
 
+# Validations with Marshmallow
+from marshmallow import fields
+from marshmallow.validate import Regexp, Length, Email
+
+from src.utils import DTOSchema
+
 
 class UserMeta:
     model = UserModel
@@ -36,7 +42,6 @@ class UpdateUserDataSchema(DTOSchema):
     - Username (Str)
     - Password (Str)
     """
-
     email = fields.Email(validate=[Length(min=5, max=64)])
     username = fields.Str(
         validate=[

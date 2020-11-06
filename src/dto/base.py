@@ -15,6 +15,12 @@ ExternalBaseObj = Model("External service Base", {
     "user_id": fields.Integer
 })
 
+ExternalBaseObj = Model("External service Base", {
+    "service_id" :  fields.Integer,
+    "service_name" : fields.String,
+    "user_id" : fields.Integer
+})
+
 GroupBaseObj = Model("Group base", {
     "group_id": fields.Integer,
     "name": fields.String,

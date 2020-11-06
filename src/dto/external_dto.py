@@ -2,6 +2,7 @@ from flask_restx import Namespace, fields
 from .base import ExternalBaseObj, messageObj
 
 
+
 class ExternalDto:
     api = Namespace(
         "external", description="External services related operations.")
@@ -20,7 +21,6 @@ class ExternalDto:
     )
 
     # Expected data
-
     oauth_callback = api.model(
         "ExternalDataExpected",
         {

@@ -34,7 +34,6 @@ class UserDto:
     )
 
     # Expected data
-
     user_data = api.model(
         "UserDataExpected",
         {
