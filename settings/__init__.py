@@ -32,3 +32,15 @@ SPOTIFY_REDIRECT_URI = 'http://localhost:4040/api/external/spotify/callback'
 SPOTIFY_URL_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_SCOPE = 'user-library-read user-top-read playlist-read-private user-read-recently-played'
 SPOTIFY_USER_URL = 'https://api.spotify.com/v1/me/'
+<<<<<<< Updated upstream
+=======
+
+# TMDB
+TMDB_PROVIDER = "https://api.themoviedb.org/4/auth/request_token"
+TMDB_USER_APPROVAL = "https://www.themoviedb.org/auth/access?request_token="
+TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN']
+TMDB_REDIRECT_URI = 'http://localhost:4040/api/external/TMDB/callback'
+TMDB_URL_TOKEN = "https://accounts.TMDB.com/api/token"
+TMDB_SCOPE = 'user-library-read user-top-read playlist-read-private user-read-recently-played'
+TMDB_USER_URL = 'https://api.themoviedb.org/4/'
+>>>>>>> Stashed changes

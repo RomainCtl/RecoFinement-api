@@ -1,4 +1,4 @@
-from src.utils import err_resp, message, internal_err_resp, Spotify, validation_error
+from src.utils import err_resp, message, internal_err_resp, Spotify, TMDB, validation_error
 from src.model import UserModel, ExternalModel, TrackModel, MetaUserTrackModel
 from src import db
 from flask import current_app
@@ -117,3 +117,21 @@ class ExternalService:
             except Exception as error:
                 current_app.logger.error(error)
                 return internal_err_resp()
+
+    @staticmethod
+    def get_tmdb_oauth(user_uuid):
+        """ Get TMDB oauth url """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        
+        try:
+            if (external := ExternalModel.query.filter_by(user_id=user.user_id).first()) is None:
+                resp = message(True, "TMDB oauth url sent")
+                resp["tmdb_url"] = TMDB.oauth_url()
+            else:
+                resp = message(True, "TMDB is already linked")
+                resp["tmdb_url"] = 'linked'
+            return resp, 201
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()

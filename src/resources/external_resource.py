@@ -61,3 +61,23 @@ class ExternalSpotifyCallbackResource(Resource):
         thread.daemon = True
         thread.start()
         return res
+<<<<<<< Updated upstream
+=======
+
+@api.route("/tmdb")
+class ExternalSpotifyResource(Resource):
+    @api.doc(
+        "Oauth2 tmdb",
+        responses={
+            201: ("Successfully send", oauth_external),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    @jwt_required
+    def get(self):
+        """ Get oauth tmdb """
+        user_uuid = get_jwt_identity()
+
+        return ExternalService.get_spotify_oauth(user_uuid)
+>>>>>>> Stashed changes
