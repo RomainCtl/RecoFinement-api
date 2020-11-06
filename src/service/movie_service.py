@@ -34,9 +34,8 @@ class MovieService:
     @staticmethod
     def get_most_popular_movies(page):
         movies, total_pages = Paginator.get_from(
-            MovieModel.query.order_by(
-                MovieModel.rating_count.desc().nullslast(),
-                MovieModel.rating.desc().nullslast()
+            MovieModel.query.filter(MovieModel.popularity_score != None).order_by(
+                MovieModel.popularity_score.desc().nullslast()
             ),
             page,
         )

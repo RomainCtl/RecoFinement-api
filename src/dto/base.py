@@ -6,6 +6,13 @@ UserBaseObj = Model("User Base", {
     "uuid": fields.String,
     "email": fields.String,
     "username": fields.String,
+    "preferences_defined": fields.Boolean,
+})
+
+ExternalBaseObj = Model("External service Base", {
+    "service_id":  fields.Integer,
+    "service_name": fields.String,
+    "user_id": fields.Integer
 })
 
 ExternalBaseObj = Model("External service Base", {

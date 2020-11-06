@@ -67,6 +67,25 @@ class UserResource(Resource):
         return UserService.update_user_data(uuid, user_uuid, data)
 
 
+@api.route("/preferences_defined")
+class UserResource(Resource):
+    @api.doc(
+        "Set preferences defined to true",
+        responses={
+            201: ("User data successfully sent"),
+            401: ("Authentication required"),
+            403: ("Unable to update an account which is not your's"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def put(self):
+        """ Set preferences defined to true """
+        user_uuid = get_jwt_identity()
+
+        return UserService.set_preferences_defined(user_uuid)
+
+
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class UserSearchResource(Resource):
     @api.doc(

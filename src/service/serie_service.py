@@ -34,9 +34,8 @@ class SerieService:
     @staticmethod
     def get_most_popular_series(page):
         series, total_pages = Paginator.get_from(
-            SerieModel.query.order_by(
-                SerieModel.rating_count.desc().nullslast(),
-                SerieModel.rating.desc().nullslast()
+            SerieModel.query.filter(SerieModel.popularity_score != None).order_by(
+                SerieModel.popularity_score.desc().nullslast()
             ),
             page,
         )

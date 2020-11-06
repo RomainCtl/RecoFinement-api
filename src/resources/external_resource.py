@@ -2,18 +2,16 @@ from flask import request, current_app
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, decode_token
 
-import asyncio
 from threading import Thread
 
 # External service modules
 from src.service import ExternalService
 from src.dto import ExternalDto
-
-#from src.schemas import UpdateExternalDataSchema
 from src.utils import validation_error
 
 api = ExternalDto.api
 oauth_external = ExternalDto.oauth_url
+
 
 @api.route("/spotify")
 class ExternalSpotifyResource(Resource):
@@ -32,9 +30,10 @@ class ExternalSpotifyResource(Resource):
 
         return ExternalService.get_spotify_oauth(user_uuid)
 
+
 @api.route("/spotify/callback")
 class ExternalSpotifyCallbackResource(Resource):
-    oauth_external = ExternalDto.oauth_callback 
+    # oauth_external = ExternalDto.oauth_callback # TODO when front is done
     @api.doc(
         "Spotify Oauth2 Callback",
         responses={
@@ -58,4 +57,3 @@ class ExternalSpotifyCallbackResource(Resource):
         thread.daemon = True
         thread.start()
         return res
-
