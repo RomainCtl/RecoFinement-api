@@ -48,7 +48,7 @@ class ExternalSpotifyCallbackResource(Resource):
         """ Get access and refresh tokens """
         data = request.get_json()
         if "error" in data.keys():
-            return err_resp("Spotify oauth canceled", 210)
+            return err_resp("Spotify oauth canceled", 200)
         
         csrf = data['state']
         user_uuid = get_jwt_identity()
