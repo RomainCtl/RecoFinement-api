@@ -1,22 +1,24 @@
-from settings import SPOTIFY_PROVIDER, TMDB_PROVIDER, TMDB_CLIENT_TOKEN, TMDB_REDIRECT_URI, TMDB_URL_TOKEN, TMDB_SCOPE, TMDB_USER_URL,TMDB_USER_APPROVAL
+from settings import TMDB_PROVIDER, TMDB_CLIENT_TOKEN, TMDB_REDIRECT_URI, TMDB_URL_TOKEN, TMDB_SCOPE, TMDB_USER_URL,TMDB_USER_APPROVAL
 from urllib.parse import urlencode
 import base64
 import requests
 from flask_jwt_extended import create_access_token, set_access_cookies, decode_token
 
-class TMDB :
+class TMDB : 
     @staticmethod
     def oauth_url():
-        payload = {
-            "redirect_to" : "http://localhost:4200/recofinement"
-        }
-        headers = {
-        'content-type': "application/json;charset=utf-8",
-        'authorization': "Bearer "+ TMDB_CLIENT_TOKEN
-        }
-        response = requests.post(SPOTIFY_PROVIDER, data=payload, headers=headers)
-        print("response {}".format(response))
-        resquest_token = response.text['request_token']
+        
+        response = requests.get(TMDB_PROVIDER,params={"api_key":TMDB_CLIENT_TOKEN})
+        request_token = response.json()['request_token']
                     
-        url = TMDB_USER_APPROVAL + resquest_token
-        return url
+        return  TMDB_USER_APPROVAL+request_token+"?redirect_to="+TMDB_REDIRECT_URI
+    
+    @staticmethod
+    def get_tokens(request_token):
+
+        payload = {
+            "request_token" : request_token
+        }       
+        response = requests.post(TMDB_URL_TOKEN+TMDB_CLIENT_TOKEN, data=payload)
+
+        return response.json()

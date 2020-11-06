@@ -135,3 +135,35 @@ class ExternalService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def tmdb_callback(request_token,approved, user_uuid):
+        """ Store tmdb access """
+        if approved != "true":
+            return err_resp("oatuh not allowed by user!", 201)
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        # Check if the email is taken
+        if ExternalModel.query.filter_by(user_id=user.user_id).first() is not None:
+            return validation_error(False, "tmdb Oauth is already done.")
+        try:
+            token_info = TMDB.get_tokens(request_token)
+            print(token_info)
+
+            new_external = ExternalModel(
+                service_name='TMDB',
+                user_id=user.user_id,
+                access_token=token_info['session_id'],
+            )
+
+            db.session.add(new_external)
+            db.session.flush()
+
+            # Commit changes to DB
+            db.session.commit()
+
+            resp = message(True, "TMDB token stored")
+            return resp, 201
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()

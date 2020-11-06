@@ -63,7 +63,7 @@ class ExternalSpotifyCallbackResource(Resource):
         return res
 
 @api.route("/tmdb")
-class ExternalSpotifyResource(Resource):
+class ExternalTmdbResource(Resource):
     @api.doc(
         "Oauth2 tmdb",
         responses={
@@ -77,4 +77,33 @@ class ExternalSpotifyResource(Resource):
         """ Get oauth tmdb """
         user_uuid = get_jwt_identity()
 
-        return ExternalService.get_spotify_oauth(user_uuid)
+        return ExternalService.get_tmdb_oauth(user_uuid)
+
+@api.route("/tmdb/callback")
+class ExternalTmdbCallbackResource(Resource):
+    oauth_external = ExternalDto.oauth_callback # TODO when front is done
+    @api.doc(
+        "tmdb Oauth2 Callback",
+        responses={
+            201: ("Successfully received callback"),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    
+    @api.expect(oauth_external, validate=True) # TODO when front is done
+    @jwt_required
+    def post(self):
+        """ Get access and refresh tokens """
+        user_uuid = get_jwt_identity()
+
+        data=request.get_json() # ! front {"approved" :"true"} or {"denied": "true"} convet to {"approved": "true/false"}
+        approved = data["approved"]
+        request_token = data['request_token']
+
+        res = ExternalService.tmdb_callback(request_token,approved, user_uuid)
+        """ thread = Thread(target=ExternalService.get_tmdb_data, args=(
+            user_uuid, current_app._get_current_object()))
+        thread.daemon = True
+        thread.start() """
+        return res

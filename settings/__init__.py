@@ -34,10 +34,10 @@ SPOTIFY_SCOPE = 'user-library-read user-top-read playlist-read-private user-read
 SPOTIFY_USER_URL = 'https://api.spotify.com/v1/me/'
 
 # TMDB
-TMDB_PROVIDER = "https://api.themoviedb.org/4/auth/request_token"
-TMDB_USER_APPROVAL = "https://www.themoviedb.org/auth/access?request_token="
-TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN']
-TMDB_REDIRECT_URI = 'http://localhost:4040/api/external/TMDB/callback'
-TMDB_URL_TOKEN = "https://accounts.TMDB.com/api/token"
+TMDB_PROVIDER = "https://api.themoviedb.org/3/authentication/token/new"
+TMDB_USER_APPROVAL = "https://www.themoviedb.org/authenticate/"
+TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN_V3']
+TMDB_REDIRECT_URI = 'http://localhost:4040/api/external/tmdb/callback'
+TMDB_URL_TOKEN = "https://api.themoviedb.org/3/authentication/session/new?api_key="
 TMDB_SCOPE = 'user-library-read user-top-read playlist-read-private user-read-recently-played'
 TMDB_USER_URL = 'https://api.themoviedb.org/4/'
