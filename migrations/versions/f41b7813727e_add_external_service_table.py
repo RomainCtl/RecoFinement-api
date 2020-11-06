@@ -1,8 +1,8 @@
 """add external service table
 
-Revision ID: f2964286631a
-Revises: d14fb14bfba2
-Create Date: 2020-11-05 14:50:49.790384
+Revision ID: f41b7813727e
+Revises: 1335a93c29c9
+Create Date: 2020-11-06 09:47:28.366465
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f2964286631a'
-down_revision = 'd14fb14bfba2'
+revision = 'f41b7813727e'
+down_revision = '1335a93c29c9'
 branch_labels = None
 depends_on = None
 

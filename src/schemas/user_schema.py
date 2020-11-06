@@ -2,13 +2,11 @@
 from src import ma
 
 from src.model import UserModel
-from src.utils import SQLAlchemyAutoSchema
+from src.utils import SQLAlchemyAutoSchema, DTOSchema
 
 # Validations with Marshmallow
 from marshmallow import fields
 from marshmallow.validate import Regexp, Length, Email
-
-from src.utils import DTOSchema
 
 
 class UserMeta:
@@ -17,7 +15,7 @@ class UserMeta:
 
 class UserBase(SQLAlchemyAutoSchema):
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username")
+        fields = ("uuid", "email", "username", "preferences_defined")
 
 
 class UserObject(SQLAlchemyAutoSchema):
@@ -26,8 +24,9 @@ class UserObject(SQLAlchemyAutoSchema):
     owned_groups = ma.Nested("GroupBase", many=True)
 
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username", "groups",
-                  "invitations", "owned_groups")
+        fields = ("uuid", "email", "username", "preferences_defined",
+                  "groups", "invitations", "owned_groups")
+
 
 class UpdateUserDataSchema(DTOSchema):
     """ /auth/register [POST]
@@ -38,7 +37,7 @@ class UpdateUserDataSchema(DTOSchema):
     - Password (Str)
     """
 
-    email = fields.Email(validate=[Length(min=5,max=64)])
+    email = fields.Email(validate=[Length(min=5, max=64)])
     username = fields.Str(
         validate=[
             Length(min=4, max=15),
