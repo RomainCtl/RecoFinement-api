@@ -61,8 +61,6 @@ class ExternalSpotifyCallbackResource(Resource):
         thread.daemon = True
         thread.start()
         return res
-<<<<<<< Updated upstream
-=======
 
 @api.route("/tmdb")
 class ExternalSpotifyResource(Resource):
@@ -80,4 +78,3 @@ class ExternalSpotifyResource(Resource):
         user_uuid = get_jwt_identity()
 
         return ExternalService.get_spotify_oauth(user_uuid)
->>>>>>> Stashed changes

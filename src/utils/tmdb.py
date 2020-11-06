@@ -15,7 +15,7 @@ class TMDB :
         'authorization': "Bearer "+ TMDB_CLIENT_TOKEN
         }
         response = requests.post(SPOTIFY_PROVIDER, data=payload, headers=headers)
-        print(response)
+        print("response {}".format(response))
         resquest_token = response.text['request_token']
                     
         url = TMDB_USER_APPROVAL + resquest_token
