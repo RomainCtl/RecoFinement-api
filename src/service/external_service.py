@@ -167,3 +167,19 @@ class ExternalService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+        
+    @staticmethod
+    def get_tmdb_data(user_uuid, app):
+        """ Get tmdb data :  """
+        with app.app_context():
+            if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+                return err_resp("User not found!", 404)
+            if not (external := ExternalModel.query.filter_by(user_id=user.user_id).first()):
+                return err_resp("External service not found!", 404)
+            try:
+                # TODO get token
+                TMDB.get_account_id()
+
+            except Exception as error:
+                current_app.logger.error(error)
+                return internal_err_resp()

@@ -22,3 +22,11 @@ class TMDB :
         response = requests.post(TMDB_URL_TOKEN+TMDB_CLIENT_TOKEN, data=payload)
 
         return response.json()
+    
+    @staticmethod
+    def get_account_id(session_id):
+        params= {
+            "api_key" : TMDB_CLIENT_TOKEN,
+            "session_id" : session_id
+            }
+        return requests.get(TMDB_USER_URL+"account",params=params)
