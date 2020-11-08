@@ -8,7 +8,7 @@ from threading import Thread
 from src.service import ExternalService
 from src.dto import ExternalDto
 
-from src.utils import validation_error
+from src.utils import validation_error, err_resp
 
 api = ExternalDto.api
 oauth_external = ExternalDto.oauth_url
@@ -96,14 +96,16 @@ class ExternalTmdbCallbackResource(Resource):
     def post(self):
         """ Get access and refresh tokens """
         user_uuid = get_jwt_identity()
-
+        
         data=request.get_json() # ! front {"approved" :"true"} or {"denied": "true"} convet to {"approved": "true/false"}
+        if 'denied' in data.keys():
+            return err_resp("Authorization denied", 200)
         approved = data["approved"]
         request_token = data['request_token']
 
         res = ExternalService.tmdb_callback(request_token,approved, user_uuid)
-        """ thread = Thread(target=ExternalService.get_tmdb_data, args=(
+        thread = Thread(target=ExternalService.get_tmdb_data, args=(
             user_uuid, current_app._get_current_object()))
         thread.daemon = True
-        thread.start() """
+        thread.start()
         return res
