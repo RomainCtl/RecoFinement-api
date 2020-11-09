@@ -1,11 +1,12 @@
 from flask import current_app
+from sqlalchemy.orm import subqueryload
 import requests
 
 from src import db
 from settings import ENGINE_APIKEY, ENGINE_URL
 from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
 from src.model import UserModel, GenreModel
-from src.schemas import UserBase, UserObject, GenreBase
+from src.schemas import UserBase, UserObject, UserFullObject, GenreBase
 
 
 class UserService:
@@ -42,6 +43,23 @@ class UserService:
             user_data = UserObject.load(user)
 
             resp = message(True, "User data sent")
+            resp["user"] = user_data
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def export_all_user_data(uuid):
+        """ Get user's data by uuid """
+        if not (user := UserModel.query.filter_by(uuid=uuid).first()):
+            return err_resp("User not found!", 404)
+
+        try:
+            user_data = UserFullObject.load(user)
+
+            resp = message(True, "User data exported")
             resp["user"] = user_data
             return resp, 200
 
