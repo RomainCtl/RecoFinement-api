@@ -24,7 +24,9 @@ class ExternalDto:
     oauth_callback = api.model(
         "ExternalDataExpected",
         {
-            "state": fields.String(min=10, max=350),
+            "state": fields.String(min=10,max=350),
             "code": fields.String(min=10, max=350),
+            "request_token" : fields.String(min=10, max=350),
+            "approved" : fields.String(min=4, max=5),
         },
     )

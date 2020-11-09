@@ -46,15 +46,17 @@ class AuthLogin(Resource):
         if (errors := login_schema.validate(login_data)):
             return validation_error(False, errors)
 
-        res, code = AuthService.login(login_data)
+        res,code = AuthService.login(login_data)
 
-        if res['status']:
-            thread = Thread(target=ExternalService.get_spotify_data, args=(
-                res['user']['uuid'], current_app._get_current_object()))
-            thread.daemon = True
-            thread.start()
-
-        return res, code
+        if res['status']: 
+            thread_spotify = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
+            thread_spotify.daemon = True
+            thread_spotify.start()
+            thread_tmdb = Thread(target=ExternalService.get_tmdb_data, args=(res['user']['uuid'],current_app._get_current_object()))
+            thread_tmdb.daemon = True
+            thread_tmdb.start()
+        
+        return res,code 
 
 
 @api.route("/register")

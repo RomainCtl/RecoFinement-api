@@ -3,6 +3,7 @@ from .sqlalchemy_auto_schema import SQLAlchemyAutoSchema
 from .paginator import Paginator
 from .mailjet import sendForget, sendReset, sendNewAccount
 from .spotify import Spotify
+from .tmdb import TMDB
 
 
 def message(status, message):
