@@ -12,9 +12,9 @@ class MetaUserBookModel(db.Model):
     __tablename__ = "meta_user_book"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     isbn = db.Column(db.String(13), db.ForeignKey(
-        "book.isbn"), primary_key=True)
+        "book.isbn", ondelete="CASCADE"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
     purchase = db.Column(db.Boolean, default=False)
@@ -28,9 +28,9 @@ class MetaUserGameModel(db.Model):
     __tablename__ = "meta_user_game"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     game_id = db.Column(db.Integer, db.ForeignKey(
-        "game.game_id"), primary_key=True)
+        "game.game_id", ondelete="CASCADE"), primary_key=True)
     purchase = db.Column(db.Boolean, default=False)
     hours = db.Column(db.Float, default=0)
     rating = db.Column(db.Integer, CheckConstraint(
@@ -45,9 +45,9 @@ class MetaUserApplicationModel(db.Model):
     __tablename__ = "meta_user_application"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     app_id = db.Column(db.Integer, db.ForeignKey(
-        "application.app_id"), primary_key=True)
+        "application.app_id", ondelete="CASCADE"), primary_key=True)
     review = db.Column(db.Text, default=None)
     popularity = db.Column(db.Float, default=None)
     subjectivity = db.Column(db.Float, default=None)
@@ -64,9 +64,9 @@ class MetaUserMovieModel(db.Model):
     __tablename__ = "meta_user_movie"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey(
-        "movie.movie_id"), primary_key=True)
+        "movie.movie_id", ondelete="CASCADE"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
     watch_count = db.Column(db.Integer, default=0)
@@ -80,9 +80,9 @@ class MetaUserTrackModel(db.Model):
     __tablename__ = "meta_user_track"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey(
-        "track.track_id"), primary_key=True)
+        "track.track_id", ondelete="CASCADE"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
     play_count = db.Column(db.Integer, default=0)
@@ -97,9 +97,9 @@ class MetaUserSerieModel(db.Model):
     __tablename__ = "meta_user_serie"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), primary_key=True)
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
     serie_id = db.Column(db.Integer, db.ForeignKey(
-        "serie.serie_id"), primary_key=True)
+        "serie.serie_id", ondelete="CASCADE"), primary_key=True)
     rating = db.Column(db.Integer, CheckConstraint(
         "rating <= 5 and rating >= 0"), default=None)
     num_watched_episodes = db.Column(db.Integer, default=0)
@@ -108,16 +108,16 @@ class MetaUserSerieModel(db.Model):
 
 GroupMembersModel = db.Table("group_members",
                              db.Column("user_id", db.Integer, db.ForeignKey(
-                                 "user.user_id"), primary_key=True),
+                                 "user.user_id", ondelete="CASCADE"), primary_key=True),
                              db.Column("group_id", db.Integer, db.ForeignKey(
-                                 "group.group_id"), primary_key=True)
+                                 "group.group_id", ondelete="CASCADE"), primary_key=True)
                              )
 
 LikedGenreModel = db.Table("liked_genres",
                            db.Column("user_id", db.Integer, db.ForeignKey(
-                               "user.user_id"), primary_key=True),
+                               "user.user_id", ondelete="CASCADE"), primary_key=True),
                            db.Column("genre_id", db.Integer, db.ForeignKey(
-                               "genre.genre_id"), primary_key=True)
+                               "genre.genre_id", ondelete="CASCADE"), primary_key=True)
                            )
 
 
@@ -133,10 +133,11 @@ class UserModel(db.Model):
     email = db.Column(db.String(255), unique=True)
     username = db.Column(db.String(45), nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    preferences_defined = db.Column(db.Boolean, default=False)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
     meta_user_books = db.relationship(
-        "BookModel", secondary=MetaUserBookModel.__table__, lazy="subquery")
+        "BookModel", secondary=MetaUserBookModel.__table__, lazy="subquery",)
     meta_user_games = db.relationship(
         "GameModel", secondary=MetaUserGameModel.__table__, lazy="subquery")
     meta_user_applications = db.relationship(

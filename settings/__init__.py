@@ -15,6 +15,9 @@ JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 
 PORT = os.environ['SERVICE_PORT']
 
+ENGINE_URL = os.environ.get("ENGINE_URL", "http://127.0.0.1:4041")
+ENGINE_APIKEY = os.environ.get("ENGINE_APIKEY", "")
+
 PAGE_SIZE = 24
 
 # MAILJET

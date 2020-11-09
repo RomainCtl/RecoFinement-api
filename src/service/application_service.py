@@ -34,8 +34,9 @@ class ApplicationService:
     @staticmethod
     def get_most_popular_applications(page):
         applications, total_pages = Paginator.get_from(
-            ApplicationModel.query.order_by(
-                ApplicationModel.reviews.desc().nullslast(), ApplicationModel.rating.desc().nullslast()),
+            ApplicationModel.query.filter(ApplicationModel.popularity_score != None).order_by(
+                ApplicationModel.popularity_score.desc().nullslast()
+            ),
             page,
         )
 

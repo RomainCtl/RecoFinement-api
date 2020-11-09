@@ -1,10 +1,11 @@
 from settings import TMDB_PROVIDER, TMDB_CLIENT_TOKEN, TMDB_REDIRECT_URI, TMDB_URL_TOKEN, TMDB_IMG_URL, TMDB_USER_URL,TMDB_USER_APPROVAL
+
 from urllib.parse import urlencode
 import base64
 import requests
 from flask_jwt_extended import create_access_token, set_access_cookies, decode_token
 
-class TMDB : 
+class TMDB: 
     @staticmethod
     def oauth_url():
         

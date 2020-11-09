@@ -42,6 +42,7 @@ class TrackModel(db.Model):
     rating_count = db.Column(db.Integer, default=0)
     spotify_id = db.Column(db.String(45))
     covert_art_url = db.Column(db.Text)
+    popularity_score = db.Column(db.Float, default=0)
 
     # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
     similars = db.relationship("TrackModel", secondary=SimilarsTracksModel.__table__,

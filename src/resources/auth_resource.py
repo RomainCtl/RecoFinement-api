@@ -1,4 +1,4 @@
-from flask import request,current_app
+from flask import request, current_app
 from flask_restx import Resource
 from flask_jwt_extended import get_raw_jwt, jwt_required
 import asyncio
@@ -47,8 +47,8 @@ class AuthLogin(Resource):
             return validation_error(False, errors)
 
         res,code = AuthService.login(login_data)
-        #current_app.logger.info('before get spotify data')
-        if code == 200 : 
+
+        if res['status']: 
             thread_spotify = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
             thread_spotify.daemon = True
             thread_spotify.start()
@@ -106,9 +106,10 @@ class AuthLogout(Resource):
 
         return AuthService.logout(token)
 
+
 @api.route("/forget")
 class AuthForgotPassword(Resource):
-    auth_forgot=AuthDto.auth_forgot
+    auth_forgot = AuthDto.auth_forgot
     """ User password forgot """
     @api.doc(
         "Auth password forgot",
@@ -120,15 +121,16 @@ class AuthForgotPassword(Resource):
     @api.expect(auth_forgot, validate=True)
     def post(self):
         """ User password forgot """
-        data=request.get_json()
+        data = request.get_json()
         # Validate data
         if (errors := forget_schema.validate(data)):
             return validation_error(False, errors)
         return AuthService.forget(data['email'])
 
+
 @api.route("/reset")
 class AuthResetPassword(Resource):
-    auth_reset=AuthDto.auth_reset
+    auth_reset = AuthDto.auth_reset
     """ User password reset """
     @api.doc(
         "Auth password reset",
@@ -145,4 +147,3 @@ class AuthResetPassword(Resource):
         if (errors := reset_schema.validate(data)):
             return validation_error(False, errors)
         return AuthService.reset(data)
-        

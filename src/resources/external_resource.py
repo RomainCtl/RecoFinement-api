@@ -7,8 +7,8 @@ from threading import Thread
 # External service modules
 from src.service import ExternalService
 from src.dto import ExternalDto
-
 from src.utils import validation_error, err_resp
+
 
 api = ExternalDto.api
 oauth_external = ExternalDto.oauth_url
@@ -43,17 +43,14 @@ class ExternalSpotifyCallbackResource(Resource):
             404: "User not found!",
         }
     )
-    # @api.expect(oauth_external, validate=True) # TODO when front is done
-    # @jwt_required
-    # TODO mettre jwt_required lorsque le front est fait
-    @api.doc(security=None)
-    def get(self):
+    @api.expect(oauth_external, validate=True)
+    @jwt_required
+    def post(self):
         """ Get access and refresh tokens """
-        csrf = request.args.get('state')
-        # TODO change after front done  : get_jwt_identity()
-        user_uuid = decode_token(csrf)['identity']
-        # TODO wait  front  -> receive "code" in json
-        code = request.args.get('code')
+        data = request.get_json()
+        csrf = data['state']
+        user_uuid = get_jwt_identity()
+        code = data['code']
 
         res,code = ExternalService.spotify_callback(csrf, code, user_uuid)
         if code == 201:

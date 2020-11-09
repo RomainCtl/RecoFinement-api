@@ -88,7 +88,7 @@ class ExternalService:
                             new_track = TrackModel(
                                 artist_name=" & ".join(line['artist_name']),
                                 title=line['title'],
-                                year=line['year'].split("-")[0],
+                                year=line['year'].split("-")[0] if line['year'] is not None else None,
                                 release=line['release'],
                                 spotify_id=line['spotify_id'],
                                 covert_art_url=line['cover_art_url']
@@ -101,7 +101,6 @@ class ExternalService:
                     for line in d:
                         track = TrackModel.query.filter_by(
                             spotify_id=line['spotify_id']).first()
-                        # TODO check played_at
                         if ((meta := MetaUserTrackModel.query.filter_by(track_id=track.track_id).first()) is None):
                             new_meta_user_track = MetaUserTrackModel(
                                 user_id=user.user_id,
