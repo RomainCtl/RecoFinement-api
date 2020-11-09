@@ -34,6 +34,25 @@ class UserObject(SQLAlchemyAutoSchema):
                   "groups", "invitations", "owned_groups")
 
 
+class UserFullObject(SQLAlchemyAutoSchema):
+    groups = ma.Nested("GroupBase", many=True)
+    invitations = ma.Nested("GroupBase", many=True)
+    owned_groups = ma.Nested("GroupBase", many=True)
+
+    liked_genres = ma.Nested("GenreBase", many=True)
+
+    meta_user_applications = ma.Nested("MetaUserApplicationItem", many=True)
+    meta_user_books = ma.Nested("MetaUserBookItem", many=True)
+    meta_user_games = ma.Nested("MetaUserGameItem", many=True)
+    meta_user_movies = ma.Nested("MetaUserMovieItem", many=True)
+    meta_user_series = ma.Nested("MetaUserSerieItem", many=True)
+    meta_user_tracks = ma.Nested("MetaUserTrackItem", many=True)
+
+    class Meta(UserMeta):
+        fields = ("uuid", "email", "username", "preferences_defined", "groups", "invitations", "owned_groups", "liked_genres",
+                  "meta_user_applications", "meta_user_books", "meta_user_games", "meta_user_movies", "meta_user_series", "meta_user_tracks")
+
+
 class UpdateUserDataSchema(DTOSchema):
     """ /auth/register [POST]
 

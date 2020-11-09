@@ -135,19 +135,14 @@ class UserModel(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     preferences_defined = db.Column(db.Boolean, default=False)
 
-    # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
-    meta_user_books = db.relationship(
-        "BookModel", secondary=MetaUserBookModel.__table__, lazy="subquery",)
-    meta_user_games = db.relationship(
-        "GameModel", secondary=MetaUserGameModel.__table__, lazy="subquery")
+    # Loaded immediately after loading User, but when querying multiple users, you will not get additional queries.
+    meta_user_books = db.relationship("MetaUserBookModel", lazy="subquery",)
+    meta_user_games = db.relationship("MetaUserGameModel", lazy="subquery")
     meta_user_applications = db.relationship(
-        "ApplicationModel", secondary=MetaUserApplicationModel.__table__, lazy="subquery")
-    meta_user_movies = db.relationship(
-        "MovieModel", secondary=MetaUserMovieModel.__table__, lazy="subquery")
-    meta_user_tracks = db.relationship(
-        "TrackModel", secondary=MetaUserTrackModel.__table__, lazy="subquery")
-    meta_user_series = db.relationship(
-        "SerieModel", secondary=MetaUserSerieModel.__table__, lazy="subquery")
+        "MetaUserApplicationModel", lazy="subquery")
+    meta_user_movies = db.relationship("MetaUserMovieModel", lazy="subquery")
+    meta_user_tracks = db.relationship("MetaUserTrackModel", lazy="subquery")
+    meta_user_series = db.relationship("MetaUserSerieModel", lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))

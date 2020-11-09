@@ -16,9 +16,9 @@ ExternalBaseObj = Model("External service Base", {
 })
 
 ExternalBaseObj = Model("External service Base", {
-    "service_id" :  fields.Integer,
-    "service_name" : fields.String,
-    "user_id" : fields.Integer
+    "service_id":  fields.Integer,
+    "service_name": fields.String,
+    "user_id": fields.Integer
 })
 
 GroupBaseObj = Model("Group base", {
@@ -160,41 +160,81 @@ MetaUserApplicationBaseObj = Model("MetaUserApplication base", {
     "review": fields.String,
     "rating": fields.Integer,
     "downloaded": fields.Boolean,
+    "review_see_count": fields.Integer,
 })
 
 MetaUserBookBaseObj = Model("MetaUserBook base", {
     "rating": fields.Integer,
     "purchase": fields.Boolean,
+    "review_see_count": fields.Integer,
 })
 
 MetaUserGameBaseObj = Model("MetaUserGame base", {
     "rating": fields.Integer,
     "purchase": fields.Boolean,
     "hours": fields.Integer,
+    "review_see_count": fields.Integer,
 })
 
 MetaUserMovieBaseObj = Model("MetaUserMovie base", {
     "rating": fields.Integer,
     "watch_count": fields.Integer,
+    "review_see_count": fields.Integer,
 })
 
 MetaUserSerieBaseObj = Model("MetaUserSerie base", {
     "rating": fields.Integer,
     "num_watched_episodes": fields.Integer,
+    "review_see_count": fields.Integer,
 })
 
 MetaUserTrackBaseObj = Model("MetaUserTrack base", {
     "rating": fields.Integer,
     "play_count": fields.Integer,
-    "last_played_date": fields.DateTime
+    "last_played_date": fields.DateTime,
+    "review_see_count": fields.Integer,
 })
 
 # Item object
 
+MetaUserApplicationItemObj = Model.clone("MetaUserApplication item", MetaUserApplicationBaseObj, {
+    "app_id": fields.Integer,
+})
+
+MetaUserBookItemObj = Model.clone("MetaUserBook item", MetaUserBookBaseObj, {
+    "isbn": fields.String,
+})
+
+MetaUserGameItemObj = Model.clone("MetaUserGame item", MetaUserGameBaseObj, {
+    "game_id": fields.Integer,
+})
+
+MetaUserMovieItemObj = Model.clone("MetaUserMovie item", MetaUserMovieBaseObj, {
+    "movie_id": fields.Integer,
+})
+
+MetaUserSerieItemObj = Model.clone("MetaUserSerie item", MetaUserSerieBaseObj, {
+    "serie_id": fields.Integer,
+})
+
+MetaUserTrackItemObj = Model.clone("MetaUserTrack item", MetaUserTrackBaseObj, {
+    "track_id": fields.Integer,
+})
+
 UserItemObj = Model.clone("User Item", UserBaseObj, {
     "groups": fields.List(fields.Nested(GroupBaseObj)),
     "invitations": fields.List(fields.Nested(GroupBaseObj)),
-    "owned_groups": fields.List(fields.Nested(GroupBaseObj))
+    "owned_groups": fields.List(fields.Nested(GroupBaseObj)),
+    "liked_genres": fields.List(fields.Nested(GenreBaseObj))
+})
+
+UserExportObj = Model.clone("User Export Item", UserItemObj, {
+    "meta_user_applications": fields.List(fields.Nested(MetaUserApplicationItemObj)),
+    "meta_user_books": fields.List(fields.Nested(MetaUserBookItemObj)),
+    "meta_user_games": fields.List(fields.Nested(MetaUserGameItemObj)),
+    "meta_user_movies": fields.List(fields.Nested(MetaUserMovieItemObj)),
+    "meta_user_series": fields.List(fields.Nested(MetaUserSerieItemObj)),
+    "meta_user_tracks": fields.List(fields.Nested(MetaUserTrackItemObj)),
 })
 
 GroupItemObj = Model.clone("Group Item", GroupBaseObj, {
