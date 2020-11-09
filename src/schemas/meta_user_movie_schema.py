@@ -9,10 +9,10 @@ class MetaUserMovieMeta:
 
 
 class MetaUserMovieBase(SQLAlchemyAutoSchema):
-    class Meta(MetaUserMovieModel):
+    class Meta(MetaUserMovieMeta):
         fields = ["rating", "watch_count", "review_see_count"]
 
 
 class MetaUserMovieItem(SQLAlchemyAutoSchema):
-    class Meta(MetaUserMovieModel):
+    class Meta(MetaUserMovieMeta):
         fields = ["movie_id", "rating", "watch_count", "review_see_count"]
