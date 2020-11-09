@@ -16,7 +16,7 @@ class ExternalService:
             return err_resp("User not found!", 404)
 
         try:
-            if (external := ExternalModel.query.filter_by(user_id=user.user_id).first()) is None:
+            if (external := ExternalModel.query.filter_by(user_id=user.user_id,service_name="Spotify").first()) is None:
                 resp = message(True, "Spotify oauth url sent")
                 resp["spotify_url"] = Spotify.oauth_url(user_uuid)
             else:
@@ -35,7 +35,7 @@ class ExternalService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
         # Check if the email is taken
-        if ExternalModel.query.filter_by(user_id=user.user_id).first() is not None:
+        if ExternalModel.query.filter_by(user_id=user.user_id,service_name="Spotify").first() is not None:
             return validation_error(False, "Spotify Oauth is already done.")
         try:
             token_info = Spotify.get_tokens(code)
@@ -65,7 +65,7 @@ class ExternalService:
         with app.app_context():
             if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
                 return err_resp("User not found!", 404)
-            if not (external := ExternalModel.query.filter_by(user_id=user.user_id).first()):
+            if not (external := ExternalModel.query.filter_by(user_id=user.user_id,service_name="Spotify").first()):
                 return err_resp("External service not found!", 404)
             try:
                 token_info = Spotify.refresh_token(external.refresh_token)
