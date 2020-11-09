@@ -55,12 +55,13 @@ class ExternalSpotifyCallbackResource(Resource):
         # TODO wait  front  -> receive "code" in json
         code = request.args.get('code')
 
-        res = ExternalService.spotify_callback(csrf, code, user_uuid)
-        thread = Thread(target=ExternalService.get_spotify_data, args=(
-            user_uuid, current_app._get_current_object()))
-        thread.daemon = True
-        thread.start()
-        return res
+        res,code = ExternalService.spotify_callback(csrf, code, user_uuid)
+        if code == 201:
+            thread = Thread(target=ExternalService.get_spotify_data, args=(
+                user_uuid, current_app._get_current_object()))
+            thread.daemon = True
+            thread.start()
+        return res,code
 
 @api.route("/tmdb")
 class ExternalTmdbResource(Resource):
@@ -81,7 +82,7 @@ class ExternalTmdbResource(Resource):
 
 @api.route("/tmdb/callback")
 class ExternalTmdbCallbackResource(Resource):
-    oauth_external = ExternalDto.oauth_callback # TODO when front is done
+    oauth_external = ExternalDto.oauth_callback
     @api.doc(
         "tmdb Oauth2 Callback",
         responses={
@@ -91,21 +92,22 @@ class ExternalTmdbCallbackResource(Resource):
         }
     )
     
-    @api.expect(oauth_external, validate=True) # TODO when front is done
+    @api.expect(oauth_external, validate=True)
     @jwt_required
     def post(self):
         """ Get access and refresh tokens """
         user_uuid = get_jwt_identity()
         
-        data=request.get_json() # ! front {"approved" :"true"} or {"denied": "true"} convet to {"approved": "true/false"}
+        data=request.get_json()
         if 'denied' in data.keys():
             return err_resp("Authorization denied", 200)
         approved = data["approved"]
         request_token = data['request_token']
 
-        res = ExternalService.tmdb_callback(request_token,approved, user_uuid)
-        thread = Thread(target=ExternalService.get_tmdb_data, args=(
-            user_uuid, current_app._get_current_object()))
-        thread.daemon = True
-        thread.start()
-        return res
+        res,code = ExternalService.tmdb_callback(request_token,approved, user_uuid)
+        if code == 201 :
+            thread = Thread(target=ExternalService.get_tmdb_data, args=(
+                user_uuid, current_app._get_current_object()))
+            thread.daemon = True
+            thread.start()
+        return res,code

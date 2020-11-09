@@ -48,12 +48,13 @@ class AuthLogin(Resource):
 
         res,code = AuthService.login(login_data)
         #current_app.logger.info('before get spotify data')
-        thread_spotify = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
-        thread_spotify.daemon = True
-        thread_spotify.start()
-        thread_tmdb = Thread(target=ExternalService.get_tmdb_data, args=(res['user']['uuid'],current_app._get_current_object()))
-        thread_tmdb.daemon = True
-        thread_tmdb.start()
+        if code == 200 : 
+            thread_spotify = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
+            thread_spotify.daemon = True
+            thread_spotify.start()
+            thread_tmdb = Thread(target=ExternalService.get_tmdb_data, args=(res['user']['uuid'],current_app._get_current_object()))
+            thread_tmdb.daemon = True
+            thread_tmdb.start()
         
         return res,code 
 
