@@ -1,4 +1,3 @@
-from src import service
 from src.utils import err_resp, message, internal_err_resp, Spotify, validation_error
 from src.model import UserModel, ExternalModel, TrackModel, MetaUserTrackModel
 from src import db
