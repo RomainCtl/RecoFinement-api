@@ -12,13 +12,6 @@ UserBaseObj = Model("User Base", {
 ExternalBaseObj = Model("External service Base", {
     "service_id":  fields.Integer,
     "service_name": fields.String,
-    "user_id": fields.Integer
-})
-
-ExternalBaseObj = Model("External service Base", {
-    "service_id":  fields.Integer,
-    "service_name": fields.String,
-    "user_id": fields.Integer
 })
 
 GroupBaseObj = Model("Group base", {
@@ -235,6 +228,7 @@ UserExportObj = Model.clone("User Export Item", UserItemObj, {
     "meta_user_movies": fields.List(fields.Nested(MetaUserMovieItemObj)),
     "meta_user_series": fields.List(fields.Nested(MetaUserSerieItemObj)),
     "meta_user_tracks": fields.List(fields.Nested(MetaUserTrackItemObj)),
+    "linked_services": fields.List(fields.Nested(ExternalBaseObj)),
 })
 
 GroupItemObj = Model.clone("Group Item", GroupBaseObj, {

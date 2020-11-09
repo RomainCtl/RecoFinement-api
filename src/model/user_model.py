@@ -149,6 +149,9 @@ class UserModel(db.Model):
     owned_groups = db.relationship(
         "GroupModel", backref="owner", lazy='dynamic')
 
+    linked_services = db.relationship(
+        "ExternalModel", backref="user", lazy='dynamic')
+
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreModel, lazy="dynamic")
 

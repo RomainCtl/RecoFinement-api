@@ -39,7 +39,7 @@ SPOTIFY_USER_URL = 'https://api.spotify.com/v1/me/'
 # TMDB
 TMDB_PROVIDER = "https://api.themoviedb.org/3/authentication/token/new"
 TMDB_USER_APPROVAL = "https://www.themoviedb.org/authenticate/"
-TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN_V3']
+TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN']
 TMDB_REDIRECT_URI = 'http://localhost:4040/api/external/tmdb/callback'
 TMDB_URL_TOKEN = "https://api.themoviedb.org/3/authentication/session/new?api_key="
 TMDB_IMG_URL = 'https://image.tmdb.org/t/p/w500/'

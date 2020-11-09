@@ -41,6 +41,8 @@ class UserFullObject(SQLAlchemyAutoSchema):
 
     liked_genres = ma.Nested("GenreBase", many=True)
 
+    linked_services = ma.Nested("ExternalBase", many=True)
+
     meta_user_applications = ma.Nested("MetaUserApplicationItem", many=True)
     meta_user_books = ma.Nested("MetaUserBookItem", many=True)
     meta_user_games = ma.Nested("MetaUserGameItem", many=True)
@@ -49,7 +51,7 @@ class UserFullObject(SQLAlchemyAutoSchema):
     meta_user_tracks = ma.Nested("MetaUserTrackItem", many=True)
 
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username", "preferences_defined", "groups", "invitations", "owned_groups", "liked_genres",
+        fields = ("uuid", "email", "username", "preferences_defined", "groups", "invitations", "owned_groups", "liked_genres", "linked_services",
                   "meta_user_applications", "meta_user_books", "meta_user_games", "meta_user_movies", "meta_user_series", "meta_user_tracks")
 
 
