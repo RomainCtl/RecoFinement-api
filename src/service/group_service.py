@@ -63,7 +63,7 @@ class GroupService:
         if group.members.filter_by(user_id=member.user_id).scalar() is not None:
             return err_resp("User is already a member of this group !", 400)
 
-        if str(group.owner.uuid) == member.uuid:
+        if group.owner.user_id == member.user_id:
             return err_resp("You can not invite yourself to your group !", 400)
 
         try:
