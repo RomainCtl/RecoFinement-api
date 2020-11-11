@@ -33,9 +33,11 @@ class ApplicationService:
 
     @staticmethod
     def get_most_popular_applications(page):
+        # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         applications, total_pages = Paginator.get_from(
-            ApplicationModel.query.filter(ApplicationModel.popularity_score != None).order_by(
-                ApplicationModel.popularity_score.desc().nullslast()
+            ApplicationModel.query.order_by(
+                ApplicationModel.reviews.desc().nullslast(),
+                ApplicationModel.rating.desc().nullslast(),
             ),
             page,
         )

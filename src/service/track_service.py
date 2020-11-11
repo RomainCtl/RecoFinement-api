@@ -34,9 +34,11 @@ class TrackService:
 
     @staticmethod
     def get_most_popular_tracks(page):
+        # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         tracks, total_pages = Paginator.get_from(
-            TrackModel.query.filter(TrackModel.popularity_score != None).order_by(
-                TrackModel.popularity_score.desc().nullslast()
+            TrackModel.query.order_by(
+                TrackModel.rating_count.desc().nullslast(),
+                TrackModel.rating.desc().nullslast(),
             ),
             page,
         )
