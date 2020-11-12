@@ -125,7 +125,7 @@ class RecommendedApplicationModel(db.Model):
     """
     RecommendedApplication Model for storing recommended applications for a user
     """
-    __tablename__ = "recomended_application"
+    __tablename__ = "recommended_application"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -133,13 +133,14 @@ class RecommendedApplicationModel(db.Model):
         "application.app_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class RecommendedBookModel(db.Model):
     """
     RecommendedBook Model for storing recommended books for a user
     """
-    __tablename__ = "recomended_book"
+    __tablename__ = "recommended_book"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -147,13 +148,14 @@ class RecommendedBookModel(db.Model):
         "book.isbn", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class RecommendedGameModel(db.Model):
     """
     RecommendedGame Model for storing recommended games for a user
     """
-    __tablename__ = "recomended_game"
+    __tablename__ = "recommended_game"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -161,13 +163,14 @@ class RecommendedGameModel(db.Model):
         "game.game_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class RecommendedMovieModel(db.Model):
     """
     RecommendedMovie Model for storing recommended movies for a user
     """
-    __tablename__ = "recomended_movie"
+    __tablename__ = "recommended_movie"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -175,13 +178,14 @@ class RecommendedMovieModel(db.Model):
         "movie.movie_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class RecommendedSerieModel(db.Model):
     """
     RecommendedSerie Model for storing recommended series for a user
     """
-    __tablename__ = "recomended_serie"
+    __tablename__ = "recommended_serie"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -189,13 +193,14 @@ class RecommendedSerieModel(db.Model):
         "serie.serie_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class RecommendedTrackModel(db.Model):
     """
     RecommendedTrack Model for storing recommended tracks for a user
     """
-    __tablename__ = "recomended_track"
+    __tablename__ = "recommended_track"
 
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -203,6 +208,7 @@ class RecommendedTrackModel(db.Model):
         "track.track_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
     engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
 
 
 class UserModel(db.Model):
