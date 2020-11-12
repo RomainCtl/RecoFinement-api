@@ -14,7 +14,7 @@ meta_resp = MovieDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class MovieResource(Resource):
     @api.doc(
-        "Get list of the most popular Movies",
+        "Get list of recommended Movies",
         responses={
             200: ("Movie data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,12 +22,14 @@ class MovieResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Movies """
+        """ Get list of recommended Movies """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return MovieService.get_most_popular_movies(page)
+        return MovieService.get_recommended_movies(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

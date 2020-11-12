@@ -1,10 +1,11 @@
 from flask import current_app
 from sqlalchemy import func, text
+from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import BookModel, MetaUserBookModel, UserModel
-from src.schemas import BookBase, MetaUserBookBase
+from src.model import BookModel, MetaUserBookModel, UserModel, RecommendedBookModel
+from src.schemas import BookBase, MetaUserBookBase, BookExtra
 
 
 class BookService:
@@ -32,16 +33,46 @@ class BookService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_books(page):
+    def get_recommended_books(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("isbn"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            BookModel
+        ).order_by(
+            BookModel.popularity_score.desc().nullslast(),
+        ).limit(200)
+
         books, total_pages = Paginator.get_from(
-            BookModel.query.filter(BookModel.popularity_score != None).order_by(
+            db.session.query(RecommendedBookModel, BookModel)
+            .select_from(RecommendedBookModel)
+            .outerjoin(BookModel, BookModel.isbn == RecommendedBookModel.isbn)
+            .filter(RecommendedBookModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedBookModel.engine_priority.desc().nullslast(),
+                RecommendedBookModel.score.desc(),
                 BookModel.popularity_score.desc().nullslast(),
             ),
             page,
         )
 
         try:
-            book_data = BookBase.loads(books)
+            def c_load(row):
+                if row[0] is None:
+                    book = BookExtra.load(row[1])
+                else:
+                    book = BookExtra.load(row[1])
+                    book["reco_engine"] = row[0].engine
+                    book["reco_score"] = row[0].score
+                return book
+
+            book_data = list(map(c_load, books))
 
             return pagination_resp(
                 message="Most popular book data sent",
@@ -92,7 +123,7 @@ class BookService:
         try:
             if not (meta_user_book := MetaUserBookModel.query.filter_by(user_id=user.user_id, isbn=isbn).first()):
                 meta_user_book = MetaUserBookModel(
-                    isbn_isbn, user_id=user.user_id)
+                    isbn, user_id=user.user_id)
 
             if 'rating' in data:
                 # Update average rating on object

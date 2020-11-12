@@ -15,7 +15,7 @@ history_resp = TrackDto.history_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class TrackResource(Resource):
     @api.doc(
-        "Get list of the most popular Tracks",
+        "Get list of recommended Tracks",
         responses={
             200: ("Track data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -23,12 +23,14 @@ class TrackResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Tracks """
+        """ Get list of recommended Tracks """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return TrackService.get_most_popular_tracks(page)
+        return TrackService.get_recommended_tracks(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

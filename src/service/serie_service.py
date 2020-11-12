@@ -1,10 +1,11 @@
 from flask import current_app
 from sqlalchemy import func, text
+from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel
-from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase
+from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel
+from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase, MovieExtra
 
 
 class SerieService:
@@ -32,16 +33,46 @@ class SerieService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_series(page):
+    def get_recommended_series(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("game_id"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            SerieModel
+        ).order_by(
+            SerieModel.popularity_score.desc().nullslast(),
+        ).limit(200)
+
         series, total_pages = Paginator.get_from(
-            SerieModel.query.filter(SerieModel.popularity_score != None).order_by(
-                SerieModel.popularity_score.desc().nullslast()
+            db.session.query(RecommendedSerieModel, SerieModel)
+            .select_from(RecommendedSerieModel)
+            .outerjoin(SerieModel, SerieModel.serie_id == RecommendedSerieModel.serie_id)
+            .filter(RecommendedSerieModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedSerieModel.engine_priority.desc().nullslast(),
+                RecommendedSerieModel.score.desc(),
+                SerieModel.popularity_score.desc().nullslast(),
             ),
             page,
         )
 
         try:
-            serie_data = SerieItem.loads(series)
+            def c_load(row):
+                if row[0] is None:
+                    serie = MovieExtra.load(row[1])
+                else:
+                    serie = MovieExtra.load(row[1])
+                    serie["reco_engine"] = row[0].engine
+                    serie["reco_score"] = row[0].score
+                return serie
+
+            serie_data = list(map(c_load, series))
 
             return pagination_resp(
                 message="Most popular serie data sent",

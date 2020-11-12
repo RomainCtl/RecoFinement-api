@@ -1,4 +1,5 @@
 # Serie Schemas
+from marshmallow import fields
 from src import ma
 from src.model import SerieModel
 from src.utils import SQLAlchemyAutoSchema
@@ -26,3 +27,9 @@ class SerieObject(SQLAlchemyAutoSchema):
 
     class Meta(SerieMeta):
         pass
+
+
+class SerieExtra(SerieObject):
+    # Extra fields from join with 'recommended_application'
+    reco_engine = fields.String(attribute="engine", default=None)
+    reco_score = fields.Float(attribute="score", default=None)

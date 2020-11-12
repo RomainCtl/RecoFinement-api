@@ -1,10 +1,11 @@
 from flask import current_app
 from sqlalchemy import func, text
+from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType, UserModel
-from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase
+from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType, UserModel, RecommendedGameModel
+from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase, GameExtra
 
 
 class GameService:
@@ -32,17 +33,47 @@ class GameService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_games(page):
+    def get_recommended_games(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
         # NOTE we do not have any rating for game (cold start), so we use 'recommendations' field instead of 'popularity_score' that is computed by 'reco_engine' service
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("game_id"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            GameModel
+        ).order_by(
+            GameModel.recommendations.desc().nullslast(),
+        ).limit(200)
+
         games, total_pages = Paginator.get_from(
-            GameModel.query.order_by(
-                GameModel.recommendations.desc().nullslast()
+            db.session.query(RecommendedGameModel, GameModel)
+            .select_from(RecommendedGameModel)
+            .outerjoin(GameModel, GameModel.game_id == RecommendedGameModel.game_id)
+            .filter(RecommendedGameModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedGameModel.engine_priority.desc().nullslast(),
+                RecommendedGameModel.score.desc(),
+                GameModel.recommendations.desc().nullslast(),
             ),
             page,
         )
 
         try:
-            game_data = GameObject.loads(games)
+            def c_load(row):
+                if row[0] is None:
+                    game = GameExtra.load(row[1])
+                else:
+                    game = GameExtra.load(row[1])
+                    game["reco_engine"] = row[0].engine
+                    game["reco_score"] = row[0].score
+                return game
+
+            game_data = list(map(c_load, games))
 
             return pagination_resp(
                 message="Most popular track data sent",
