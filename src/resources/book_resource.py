@@ -13,7 +13,7 @@ meta_resp = BookDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class BookResource(Resource):
     @api.doc(
-        "Get list of the most popular Books",
+        "Get list of recommended Books",
         responses={
             200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -21,12 +21,14 @@ class BookResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Books """
+        """ Get list of recommended Books """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return BookService.get_most_popular_books(page)
+        return BookService.get_recommended_books(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

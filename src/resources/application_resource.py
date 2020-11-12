@@ -14,7 +14,7 @@ meta_resp = ApplicationDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class ApplicationResource(Resource):
     @api.doc(
-        "Get list of the most popular Applications",
+        "Get list of the recommended Applications",
         responses={
             200: ("Application data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,12 +22,14 @@ class ApplicationResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Applications """
+        """ Get list of the recommended Applications """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return ApplicationService.get_most_popular_applications(page)
+        return ApplicationService.get_recommended_applications(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

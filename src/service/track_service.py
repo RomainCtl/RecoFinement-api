@@ -1,11 +1,12 @@
 from flask import current_app
 from sqlalchemy import func, text, and_
+from sqlalchemy.sql.expression import null
 from datetime import datetime
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel
-from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase
+from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel, RecommendedTrackModel
+from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase, TrackExtra
 
 
 class TrackService:
@@ -33,10 +34,32 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_tracks(page):
+    def get_recommended_tracks(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
         # NOTE IMDB measure of popularity does not seem to be relevant for this media.
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("track_id"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            TrackModel
+        ).order_by(
+            TrackModel.rating_count.desc().nullslast(),
+            TrackModel.rating.desc().nullslast(),
+        ).limit(200)
+
         tracks, total_pages = Paginator.get_from(
-            TrackModel.query.order_by(
+            db.session.query(RecommendedTrackModel, TrackModel)
+            .select_from(RecommendedTrackModel)
+            .outerjoin(TrackModel, TrackModel.track_id == RecommendedTrackModel.track_id)
+            .filter(RecommendedTrackModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedTrackModel.engine_priority.desc().nullslast(),
+                RecommendedTrackModel.score.desc(),
                 TrackModel.rating_count.desc().nullslast(),
                 TrackModel.rating.desc().nullslast(),
             ),
@@ -44,7 +67,16 @@ class TrackService:
         )
 
         try:
-            track_data = TrackObject.loads(tracks)
+            def c_load(row):
+                if row[0] is None:
+                    track = TrackExtra.load(row[1])
+                else:
+                    track = TrackExtra.load(row[1])
+                    track["reco_engine"] = row[0].engine
+                    track["reco_score"] = row[0].score
+                return track
+
+            track_data = list(map(c_load, tracks))
 
             return pagination_resp(
                 message="Most popular track data sent",

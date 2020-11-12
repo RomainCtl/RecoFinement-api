@@ -14,7 +14,7 @@ meta_resp = GameDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class GameResource(Resource):
     @api.doc(
-        "Get list of the most popular Games",
+        "Get list of recommended Games",
         responses={
             200: ("Game data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,12 +22,14 @@ class GameResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Games """
+        """ Get list of recommended Games """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return GameService.get_most_popular_games(page)
+        return GameService.get_recommended_games(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
