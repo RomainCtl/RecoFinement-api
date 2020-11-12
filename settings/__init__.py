@@ -31,8 +31,7 @@ URL_FRONT = os.environ['URL_FRONT']
 SPOTIFY_PROVIDER = "https://accounts.spotify.com/authorize"
 SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID']
 SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']
-SPOTIFY_REDIRECT_URI = 'http://' + \
-    os.environ['HOST']+'/api/external/spotify/callback'
+SPOTIFY_REDIRECT_URI = URL_FRONT+'/recofinement/user/profile'
 SPOTIFY_URL_TOKEN = "https://accounts.spotify.com/api/token"
 SPOTIFY_SCOPE = 'user-library-read user-top-read playlist-read-private user-read-recently-played'
 SPOTIFY_USER_URL = 'https://api.spotify.com/v1/me/'
@@ -41,7 +40,7 @@ SPOTIFY_USER_URL = 'https://api.spotify.com/v1/me/'
 TMDB_PROVIDER = "https://api.themoviedb.org/3/authentication/token/new"
 TMDB_USER_APPROVAL = "https://www.themoviedb.org/authenticate/"
 TMDB_CLIENT_TOKEN = os.environ['TMDB_CLIENT_TOKEN']
-TMDB_REDIRECT_URI = 'http://'+os.environ['HOST']+'/api/external/tmdb/callback'
+TMDB_REDIRECT_URI = URL_FRONT+'/recofinement/user/profile'
 TMDB_URL_TOKEN = "https://api.themoviedb.org/3/authentication/session/new?api_key="
 TMDB_IMG_URL = 'https://image.tmdb.org/t/p/w500/'
 TMDB_USER_URL = 'https://api.themoviedb.org/3/'
