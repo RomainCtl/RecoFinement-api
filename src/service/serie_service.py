@@ -5,7 +5,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel
-from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase, MovieExtra
+from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase, SerieExtra
 
 
 class SerieService:
@@ -39,7 +39,7 @@ class SerieService:
 
         popularity_query = db.session.query(
             null().label("user_id"),
-            null().label("game_id"),
+            null().label("serie_id"),
             null().label("score"),
             null().label("engine"),
             null().label("engine_priority"),
@@ -65,9 +65,9 @@ class SerieService:
         try:
             def c_load(row):
                 if row[0] is None:
-                    serie = MovieExtra.load(row[1])
+                    serie = SerieExtra.load(row[1])
                 else:
-                    serie = MovieExtra.load(row[1])
+                    serie = SerieExtra.load(row[1])
                     serie["reco_engine"] = row[0].engine
                     serie["reco_score"] = row[0].score
                 return serie
