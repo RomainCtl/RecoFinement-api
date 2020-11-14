@@ -1,10 +1,11 @@
 from flask import current_app
 from sqlalchemy import func, text
+from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import ApplicationModel, UserModel, MetaUserApplicationModel, GenreModel, ContentType
-from src.schemas import ApplicationBase, GenreBase, MetaUserApplicationBase
+from src.model import ApplicationModel, UserModel, MetaUserApplicationModel, GenreModel, ContentType, RecommendedApplicationModel
+from src.schemas import ApplicationBase, GenreBase, MetaUserApplicationBase, ApplicationExtra
 
 
 class ApplicationService:
@@ -32,16 +33,49 @@ class ApplicationService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_applications(page):
+    def get_recommended_applications(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # NOTE IMDB measure of popularity does not seem to be relevant for this media.
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("app_id"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            ApplicationModel
+        ).order_by(
+            ApplicationModel.reviews.desc().nullslast(),
+            ApplicationModel.rating.desc().nullslast(),
+        ).limit(200)
+
         applications, total_pages = Paginator.get_from(
-            ApplicationModel.query.filter(ApplicationModel.popularity_score != None).order_by(
-                ApplicationModel.popularity_score.desc().nullslast()
+            db.session.query(RecommendedApplicationModel, ApplicationModel)
+            .select_from(RecommendedApplicationModel)
+            .outerjoin(ApplicationModel, ApplicationModel.app_id == RecommendedApplicationModel.app_id)
+            .filter(RecommendedApplicationModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedApplicationModel.engine_priority.desc().nullslast(),
+                RecommendedApplicationModel.score.desc().nullslast(),
+                ApplicationModel.reviews.desc().nullslast(),
+                ApplicationModel.rating.desc().nullslast(),
             ),
             page,
         )
 
         try:
-            application_data = ApplicationBase.loads(applications)
+            def c_load(row):
+                if row[0] is None:
+                    game = ApplicationExtra.load(row[1])
+                else:
+                    game = ApplicationExtra.load(row[1])
+                    game["reco_engine"] = row[0].engine
+                    game["reco_score"] = row[0].score
+                return game
+
+            application_data = list(map(c_load, applications))
 
             return pagination_resp(
                 message="Most popular application data sent",

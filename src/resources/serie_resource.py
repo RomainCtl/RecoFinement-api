@@ -14,7 +14,7 @@ meta_resp = SerieDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class SerieResource(Resource):
     @api.doc(
-        "Get list of the most popular Series",
+        "Get list of recommended Series",
         responses={
             200: ("Serie data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,12 +22,14 @@ class SerieResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of the most popular Series """
+        """ Get list of recommended Series """
+        user_uuid = get_jwt_identity()
+
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return SerieService.get_most_popular_series(page)
+        return SerieService.get_recommended_series(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

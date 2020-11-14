@@ -11,6 +11,7 @@ from src.utils import validation_error
 
 api = UserDto.api
 data_resp = UserDto.data_resp
+export_user_resp = UserDto.export_user_resp
 search_data_resp = UserDto.search_data_resp
 update_schema = UpdateUserDataSchema()
 
@@ -154,3 +155,21 @@ class UserGenreResource(Resource):
         user_uuid = get_jwt_identity()
 
         return UserService.unlike_genre(genre_id, user_uuid)
+
+
+@api.route("/export")
+class UserExportResource(Resource):
+    @api.doc(
+        "Export data of a specific user",
+        responses={
+            200: ("User data successfully sent", export_user_resp),
+            401: ("Authentication required"),
+            404: "User not found!",
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Export data of a specific user """
+        user_uuid = get_jwt_identity()
+
+        return UserService.export_all_user_data(user_uuid)

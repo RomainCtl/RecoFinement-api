@@ -1,4 +1,5 @@
 # Track Schemas
+from marshmallow import fields
 from src import ma
 from src.model import TrackModel
 from src.utils import SQLAlchemyAutoSchema
@@ -19,3 +20,15 @@ class TrackObject(SQLAlchemyAutoSchema):
     class Meta(TrackMeta):
         fields = ("track_id", "title", "year", "artist_name", "release", "track_mmid",
                   "recording_mbid", "rating", "rating_count", "spotify_id", "covert_art_url", "genres")
+
+
+class TrackExtra(SQLAlchemyAutoSchema):
+    genres = ma.Nested("GenreBase", many=True)
+
+    # Extra fields from join with 'recommended_application'
+    reco_engine = fields.String(attribute="engine", default=None)
+    reco_score = fields.Float(attribute="score", default=None)
+
+    class Meta(TrackMeta):
+        fields = ("track_id", "title", "year", "artist_name", "release", "track_mmid", "recording_mbid", "rating",
+                  "rating_count", "spotify_id", "covert_art_url", "genres", "popularity_score", "reco_engine", "reco_score")

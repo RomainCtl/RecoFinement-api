@@ -121,6 +121,96 @@ LikedGenreModel = db.Table("liked_genres",
                            )
 
 
+class RecommendedApplicationModel(db.Model):
+    """
+    RecommendedApplication Model for storing recommended applications for a user
+    """
+    __tablename__ = "recommended_application"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    app_id = db.Column(db.Integer, db.ForeignKey(
+        "application.app_id", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
+class RecommendedBookModel(db.Model):
+    """
+    RecommendedBook Model for storing recommended books for a user
+    """
+    __tablename__ = "recommended_book"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    isbn = db.Column(db.String(13), db.ForeignKey(
+        "book.isbn", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
+class RecommendedGameModel(db.Model):
+    """
+    RecommendedGame Model for storing recommended games for a user
+    """
+    __tablename__ = "recommended_game"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.game_id", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
+class RecommendedMovieModel(db.Model):
+    """
+    RecommendedMovie Model for storing recommended movies for a user
+    """
+    __tablename__ = "recommended_movie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey(
+        "movie.movie_id", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
+class RecommendedSerieModel(db.Model):
+    """
+    RecommendedSerie Model for storing recommended series for a user
+    """
+    __tablename__ = "recommended_serie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    serie_id = db.Column(db.Integer, db.ForeignKey(
+        "serie.serie_id", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
+class RecommendedTrackModel(db.Model):
+    """
+    RecommendedTrack Model for storing recommended tracks for a user
+    """
+    __tablename__ = "recommended_track"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    track_id = db.Column(db.Integer, db.ForeignKey(
+        "track.track_id", ondelete="CASCADE"), primary_key=True)
+    score = db.Column(db.Float)
+    engine = db.Column(db.String)
+    engine_priority = db.Column(db.Integer)
+
+
 class UserModel(db.Model):
     """
     User Model for storing user related details
@@ -135,24 +225,35 @@ class UserModel(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     preferences_defined = db.Column(db.Boolean, default=False)
 
-    # Loaded immediately after loading Track, but when querying multiple tracks, you will not get additional queries.
-    meta_user_books = db.relationship(
-        "BookModel", secondary=MetaUserBookModel.__table__, lazy="subquery",)
-    meta_user_games = db.relationship(
-        "GameModel", secondary=MetaUserGameModel.__table__, lazy="subquery")
+    # Loaded immediately after loading User, but when querying multiple users, you will not get additional queries.
+    meta_user_books = db.relationship("MetaUserBookModel", lazy="subquery")
+    meta_user_games = db.relationship("MetaUserGameModel", lazy="subquery")
     meta_user_applications = db.relationship(
-        "ApplicationModel", secondary=MetaUserApplicationModel.__table__, lazy="subquery")
-    meta_user_movies = db.relationship(
-        "MovieModel", secondary=MetaUserMovieModel.__table__, lazy="subquery")
-    meta_user_tracks = db.relationship(
-        "TrackModel", secondary=MetaUserTrackModel.__table__, lazy="subquery")
-    meta_user_series = db.relationship(
-        "SerieModel", secondary=MetaUserSerieModel.__table__, lazy="subquery")
+        "MetaUserApplicationModel", lazy="subquery")
+    meta_user_movies = db.relationship("MetaUserMovieModel", lazy="subquery")
+    meta_user_tracks = db.relationship("MetaUserTrackModel", lazy="subquery")
+    meta_user_series = db.relationship("MetaUserSerieModel", lazy="subquery")
+
+    recommended_applications = db.relationship(
+        "RecommendedApplicationModel", lazy="subquery")
+    recommended_books = db.relationship(
+        "RecommendedBookModel", lazy="subquery")
+    recommended_games = db.relationship(
+        "RecommendedGameModel", lazy="subquery")
+    recommended_movies = db.relationship(
+        "RecommendedMovieModel", lazy="subquery")
+    recommended_series = db.relationship(
+        "RecommendedSerieModel", lazy="subquery")
+    recommended_tracks = db.relationship(
+        "RecommendedTrackModel", lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
     owned_groups = db.relationship(
         "GroupModel", backref="owner", lazy='dynamic')
+
+    linked_services = db.relationship(
+        "ExternalModel", backref="user", lazy='dynamic')
 
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreModel, lazy="dynamic")

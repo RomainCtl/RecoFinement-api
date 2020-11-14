@@ -8,5 +8,5 @@ from .movie_model import MovieModel
 from .revokedtoken_model import RevokedTokenModel
 from .serie_model import SerieModel
 from .track_model import TrackModel
-from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel
+from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel, RecommendedApplicationModel, RecommendedBookModel, RecommendedGameModel, RecommendedMovieModel, RecommendedSerieModel, RecommendedTrackModel
 from .external_model import ExternalModel

@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import UserBaseObj, GroupBaseObj, UserItemObj, messageObj, paginationObj, GenreBaseObj
+from .base import UserBaseObj, GroupBaseObj, UserItemObj, UserExportObj, messageObj, paginationObj, GenreBaseObj, MetaUserApplicationItemObj, MetaUserBookItemObj, MetaUserGameItemObj, MetaUserMovieItemObj, MetaUserSerieItemObj, MetaUserTrackItemObj
 
 
 class UserDto:
@@ -13,8 +13,29 @@ class UserDto:
     api.models[UserItemObj.name] = UserItemObj
     user_item = UserItemObj
 
+    api.models[UserExportObj.name] = UserExportObj
+    user_full_obj = UserExportObj
+
     api.models[GenreBaseObj.name] = GenreBaseObj
     genre_base = GenreBaseObj
+
+    api.models[MetaUserApplicationItemObj.name] = MetaUserApplicationItemObj
+    meta_user_app_item = MetaUserApplicationItemObj
+
+    api.models[MetaUserBookItemObj.name] = MetaUserBookItemObj
+    meta_user_book_item = MetaUserBookItemObj
+
+    api.models[MetaUserGameItemObj.name] = MetaUserGameItemObj
+    meta_user_game_item = MetaUserGameItemObj
+
+    api.models[MetaUserMovieItemObj.name] = MetaUserMovieItemObj
+    meta_user_movie_item = MetaUserMovieItemObj
+
+    api.models[MetaUserSerieItemObj.name] = MetaUserSerieItemObj
+    meta_user_serie_item = MetaUserSerieItemObj
+
+    api.models[MetaUserTrackItemObj.name] = MetaUserTrackItemObj
+    meta_user_track_item = MetaUserTrackItemObj
 
     # Responses
     data_resp = api.clone(
@@ -22,6 +43,14 @@ class UserDto:
         messageObj,
         {
             "user": fields.Nested(user_item)
+        }
+    )
+
+    export_user_resp = api.clone(
+        "User Exportation Data Response",
+        messageObj,
+        {
+            "user": fields.Nested(user_full_obj)
         }
     )
 

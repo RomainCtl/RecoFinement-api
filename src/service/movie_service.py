@@ -1,10 +1,11 @@
 from flask import current_app
 from sqlalchemy import func, text
+from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel
-from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase
+from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel, RecommendedMovieModel
+from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase, MovieExtra
 
 
 class MovieService:
@@ -32,16 +33,46 @@ class MovieService:
             return internal_err_resp()
 
     @staticmethod
-    def get_most_popular_movies(page):
+    def get_recommended_movies(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        popularity_query = db.session.query(
+            null().label("user_id"),
+            null().label("game_id"),
+            null().label("score"),
+            null().label("engine"),
+            null().label("engine_priority"),
+            MovieModel
+        ).order_by(
+            MovieModel.popularity_score.desc().nullslast(),
+        ).limit(200)
+
         movies, total_pages = Paginator.get_from(
-            MovieModel.query.filter(MovieModel.popularity_score != None).order_by(
-                MovieModel.popularity_score.desc().nullslast()
+            db.session.query(RecommendedMovieModel, MovieModel)
+            .select_from(RecommendedMovieModel)
+            .outerjoin(MovieModel, MovieModel.movie_id == RecommendedMovieModel.movie_id)
+            .filter(RecommendedMovieModel.user_id == user.user_id)
+            .union(popularity_query)
+            .order_by(
+                RecommendedMovieModel.engine_priority.desc().nullslast(),
+                RecommendedMovieModel.score.desc(),
+                MovieModel.popularity_score.desc().nullslast(),
             ),
             page,
         )
 
         try:
-            movie_data = MovieObject.loads(movies)
+            def c_load(row):
+                if row[0] is None:
+                    movie = MovieExtra.load(row[1])
+                else:
+                    movie = MovieExtra.load(row[1])
+                    movie["reco_engine"] = row[0].engine
+                    movie["reco_score"] = row[0].score
+                return movie
+
+            movie_data = list(map(c_load, movies))
 
             return pagination_resp(
                 message="Most popular movie data sent",

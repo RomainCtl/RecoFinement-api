@@ -13,4 +13,4 @@ class ExternalMeta:
 
 class ExternalBase(SQLAlchemyAutoSchema):
     class Meta(ExternalMeta):
-        fields = ("service_id", "service_name", "user_id")
+        fields = ("service_id", "service_name")
