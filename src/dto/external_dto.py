@@ -20,13 +20,31 @@ class ExternalDto:
         },
     )
 
-    # Expected data
-    oauth_callback = api.model(
+    # Expected tmdb data
+    oauth_spotify_callback = api.model(
         "ExternalDataExpected",
         {
-            "state": fields.String(min=10,max=350),
+            "state": fields.String(min=300,max=350),
             "code": fields.String(min=10, max=350),
+        },
+    )
+
+    # Expected tmdb data
+    oauth_tmdb_callback = api.model(
+        "ExternalDataExpected",
+        {
             "request_token" : fields.String(min=10, max=350),
-            "approved" : fields.String(min=4, max=5),
+            "approved" : fields.Boolean,
+            "denied" : fields.Boolean
+        },
+    )
+
+    # Expected data
+    oauth_gbooks_callback = api.model(
+        "ExternalDataExpected",
+        {
+            "state" : fields.String(min=300, max=350),
+            "code" : fields.String(min=50, max=85),
+            "scope" : fields.String(min=38, max=38) #"https://www.googleapis.com/auth/books"
         },
     )

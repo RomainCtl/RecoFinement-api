@@ -1,4 +1,4 @@
-from flask import request, current_app
+from flask import request, current_app, session
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, decode_token
 
@@ -33,7 +33,7 @@ class ExternalSpotifyResource(Resource):
 
 @api.route("/spotify/callback")
 class ExternalSpotifyCallbackResource(Resource):
-    # oauth_external = ExternalDto.oauth_callback # TODO when front is done
+    oauth_external = ExternalDto.oauth_spotify_callback
     @api.doc(
         "Spotify Oauth2 Callback",
         responses={
@@ -55,7 +55,7 @@ class ExternalSpotifyCallbackResource(Resource):
         code = data['code']
 
         res,code = ExternalService.spotify_callback(csrf, code, user_uuid)
-        if code == 201:
+        if res['status']:
             thread = Thread(target=ExternalService.get_spotify_data, args=(
                 user_uuid, current_app._get_current_object()))
             thread.daemon = True
@@ -81,7 +81,7 @@ class ExternalTmdbResource(Resource):
 
 @api.route("/tmdb/callback")
 class ExternalTmdbCallbackResource(Resource):
-    oauth_external = ExternalDto.oauth_callback
+    oauth_external = ExternalDto.oauth_tmdb_callback
     @api.doc(
         "tmdb Oauth2 Callback",
         responses={
@@ -100,12 +100,60 @@ class ExternalTmdbCallbackResource(Resource):
         data=request.get_json()
         if 'denied' in data.keys():
             return err_resp("Authorization denied", 200)
-        approved = data["approved"]
         request_token = data['request_token']
 
-        res,code = ExternalService.tmdb_callback(request_token,approved, user_uuid)
-        if code == 201 :
+        res,code = ExternalService.tmdb_callback(request_token, user_uuid)
+        if res['status'] :
             thread = Thread(target=ExternalService.get_tmdb_data, args=(
+                user_uuid, current_app._get_current_object()))
+            thread.daemon = True
+            thread.start()
+        return res,code
+
+@api.route("/gbooks")
+class ExternalTmdbResource(Resource):
+    @api.doc(
+        "Oauth2 gbooks",
+        responses={
+            201: ("Successfully send", oauth_external),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    @jwt_required
+    def get(self):
+        """ Get oauth gbooks """
+        user_uuid = get_jwt_identity()
+
+        return ExternalService.get_gbooks_oauth(user_uuid)
+
+@api.route("/gbooks/callback")
+class ExternalTmdbCallbackResource(Resource):
+    oauth_external = ExternalDto.oauth_gbooks_callback
+    @api.doc(
+        "gbooks Oauth2 Callback",
+        responses={
+            201: ("Successfully received callback"),
+            401: ("Authentication required"),
+            404: "User not found!",
+        }
+    )
+    
+    @api.expect(oauth_external, validate=True)
+    @jwt_required
+    def post(self):
+        """ Get access and refresh tokens """
+        user_uuid = get_jwt_identity()
+        
+        data=request.get_json()
+        state = data['state']
+        if ("error" in data.keys()) :
+            return err_resp("Authorization canceled by user", 200)
+        code = data['code']
+
+        res,code = ExternalService.gbooks_callback(user_uuid, code, state)
+        if res['status'] :
+            thread = Thread(target=ExternalService.get_gbooks_data, args=(
                 user_uuid, current_app._get_current_object()))
             thread.daemon = True
             thread.start()

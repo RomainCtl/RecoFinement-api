@@ -44,3 +44,9 @@ TMDB_REDIRECT_URI = 'http://localhost:4040/api/external/tmdb/callback'
 TMDB_URL_TOKEN = "https://api.themoviedb.org/3/authentication/session/new?api_key="
 TMDB_IMG_URL = 'https://image.tmdb.org/t/p/w500/'
 TMDB_USER_URL = 'https://api.themoviedb.org/3/'
+
+# GOOGLE BOOKS
+GOOGLE_OAUTH_FILE = os.environ['PATH_TO_GOOGLE_OAUTH_FILE']
+GBOOKS_SCOPES = ['https://www.googleapis.com/auth/books']
+GBOOKS_REDIRECT_URL = "http://localhost:4040/api/external/gbook/callback"
+GBOOKS_TOKEN_URI = "https://oauth2.googleapis.com/token"

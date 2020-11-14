@@ -48,11 +48,16 @@ class AuthLogin(Resource):
 
         res,code = AuthService.login(login_data)
 
-        if res['status']: 
+        if res['status']:
             thread_spotify = Thread(target=ExternalService.get_spotify_data, args=(res['user']['uuid'],current_app._get_current_object()))
             thread_spotify.daemon = True
             thread_spotify.start()
+            
             thread_tmdb = Thread(target=ExternalService.get_tmdb_data, args=(res['user']['uuid'],current_app._get_current_object()))
+            thread_tmdb.daemon = True
+            thread_tmdb.start()
+
+            thread_tmdb = Thread(target=ExternalService.get_gbooks_data, args=(res['user']['uuid'],current_app._get_current_object()))
             thread_tmdb.daemon = True
             thread_tmdb.start()
         

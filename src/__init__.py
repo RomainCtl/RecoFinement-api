@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 
 from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid
 import settings
