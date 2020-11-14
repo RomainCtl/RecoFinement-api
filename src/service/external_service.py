@@ -114,7 +114,6 @@ class ExternalService:
                             db.session.add(new_meta_user_track)
                             db.session.flush()
                         else :
-                            # ? a verif
                             if ((line['played_at'] is not None) and ((meta.last_played_date is None) or (line['played_at'] > meta.last_played_date) )) :
                                 meta.last_played_date=line['played_at']
                 db.session.commit()
