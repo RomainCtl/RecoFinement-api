@@ -25,6 +25,10 @@ psycopg2= "*"
 gunicorn = "*"
 flask-uuid = "*"
 mailjet-rest = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+launchpadlib = "*"
 
 [requires]
 python_version = "3.8"

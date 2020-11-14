@@ -2,7 +2,8 @@ from settings import SPOTIFY_PROVIDER, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET,
 from urllib.parse import urlencode
 import base64
 import requests
-from flask_jwt_extended import create_access_token, set_access_cookies, decode_token
+import dateutil.parser
+from flask_jwt_extended import create_access_token
 
 
 class Spotify:
@@ -27,7 +28,6 @@ class Spotify:
                 'code' : code,
                 'redirect_uri' : SPOTIFY_REDIRECT_URI
             }
-        # TODO check state 
         auth_header = base64.b64encode((SPOTIFY_CLIENT_ID+ ':' + SPOTIFY_CLIENT_SECRET).encode('ascii'))
         headers = {'Authorization': 'Basic %s' % auth_header.decode('ascii')}
         
@@ -96,11 +96,13 @@ class Spotify:
                 elements['artist_name']=[]
                 elements['release'] = item['album']['name']
                 elements['cover_art_url'] = item['album']['images'][0]["url"]
-                elements['year'] = item['album']['release_date']
+                elements['year'] = item['album']['release_date'].split("-")[0] if item['album']['release_date'] is not None else None 
                 for artist in item['artists']:
                     elements['artist_name'].append(artist['name'])
+                elements['artist_name'] = " & ".join(elements['artist_name'])
                 elements['title'] = item['name']
                 elements['spotify_id'] = item['id']
+                elements['played_at'] = None
                 items_list.append(elements)
             if response['next']:
                 url = response['next']
@@ -126,9 +128,11 @@ class Spotify:
                 elements['artist_name']=[]
                 elements['release'] = item['album']['name']
                 elements['cover_art_url'] = item['album']['images'][0]["url"]
-                elements['year'] = item['album']['release_date']
+                elements['year'] = item['album']['release_date'].split("-")[0] if item['album']['release_date'] is not None else None 
                 for artist in item['artists']:
                     elements['artist_name'].append(artist['name'])
+                elements['artist_name'] = " & ".join(elements['artist_name'])
+                elements['played_at'] = None
                 items_list.append(elements)
             if response['next']:
                 url = response['next']
@@ -155,10 +159,11 @@ class Spotify:
                 elements['title'] = item['track']['name']
                 elements['spotify_id'] = item['track']['id']
                 elements['release'] = item['track']['album']['name']
-                elements['year'] = item['track']['album']['release_date']
-                elements['played_at'] = item['played_at']
+                elements['year'] = item['track']['album']['release_date'].split("-")[0] if item['track']['album']['release_date'] is not None else None 
+                elements['played_at'] = dateutil.parser.isoparse(item['played_at'][:-1]) if "played_at" in item.keys() else None
                 for artist in item['track']['artists']:
                     elements['artist_name'].append(artist['name'])
+                elements['artist_name'] = " & ".join(elements['artist_name'])
                 url_cover = requests.get(item['track']['href'],headers=headers).json()
                 elements['cover_art_url'] = url_cover['album']['images'][0]['url']
                 items_list.append(elements)
@@ -192,11 +197,13 @@ class Spotify:
                     tk['artist_name']=[]
                     tk['release'] = track['track']['album']['name']
                     tk['cover_art_url'] = track['track']['album']['images'][0]["url"]
-                    tk['year'] = track['track']['album']['release_date']
+                    tk['year'] = track['track']['album']['release_date'].split("-")[0] if track['track']['album']['release_date'] is not None else None
                     for artist in track['track']['artists']:
                         tk['artist_name'].append(artist['name'])
+                    tk['artist_name'] = " & ".join(tk['artist_name'])
                     tk['title'] = track['track']['name']
                     tk['spotify_id'] = track['track']['id']
+                    tk['played_at']=None
                     elements['tracks'].append(tk)
                 items_list.append(elements)
             if response['next']:

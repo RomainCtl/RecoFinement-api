@@ -1,9 +1,5 @@
 from settings import TMDB_PROVIDER, TMDB_CLIENT_TOKEN, TMDB_REDIRECT_URI, TMDB_URL_TOKEN, TMDB_IMG_URL, TMDB_USER_URL,TMDB_USER_APPROVAL
-
-from urllib.parse import urlencode
-import base64
 import requests
-from flask_jwt_extended import create_access_token, set_access_cookies, decode_token
 
 class TMDB: 
     @staticmethod
@@ -31,7 +27,8 @@ class TMDB:
             "api_key" : TMDB_CLIENT_TOKEN,
             "session_id" : session_id
             }
-        return requests.get(TMDB_USER_URL+"account",params=params).json()['id']
+        res =  requests.get(TMDB_USER_URL+"account",params=params).json()
+        return res
         
     
     

@@ -4,6 +4,7 @@ from .paginator import Paginator
 from .mailjet import sendForget, sendReset, sendNewAccount
 from .spotify import Spotify
 from .tmdb import TMDB
+from .gbooks import GBooks
 
 
 def message(status, message):
