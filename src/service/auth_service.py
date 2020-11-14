@@ -75,7 +75,7 @@ class AuthService:
             # Commit changes to DB
             db.session.commit()
             # Send welcome email
-            mailjet.sendNewAccount(new_user,URL_FRONT)
+            mailjet.sendNewAccount(new_user, URL_FRONT)
             # Create an access token
             access_token = create_access_token(identity=new_user.uuid)
 
@@ -112,16 +112,13 @@ class AuthService:
             if user := UserModel.query.filter_by(email=email).first():
 
                 expires = datetime.timedelta(hours=24)
-                reset_token = create_access_token(identity=user.uuid, expires_delta=expires)
-                
-                #user.reset_password_token=reset_token
-                mailjet.sendForget(user,URL_FRONT+"reset")
-                
-                ''' db.session.add(user)
-                db.session.commit() '''
-            
-            resp = message(True, "If your account exist, you will find an email to recover your password in your mailbox")
+                reset_token = create_access_token(
+                    identity=user.uuid, expires_delta=expires)
 
+                mailjet.sendForget(user, URL_FRONT+"reset", reset_token)
+
+            resp = message(
+                True, "If your account exist, you will find an email to recover your password in your mailbox")
             return resp
         except Exception as error:
             current_app.logger.error(error)
@@ -129,7 +126,7 @@ class AuthService:
 
     @staticmethod
     def reset(data):
-        
+
         reset_token = data['reset_password_token']
         password = data['password']
         uuid = decode_token(reset_token)['identity']
@@ -140,11 +137,11 @@ class AuthService:
                     "Invalid token.",
                     401,
                 )
-            
-            user.password=password
-            if (mailjet.sendReset(user,URL_FRONT) == "error"):
-                return make_response("Something went wrong while sending the password reset confirmation email",400)
-            
+
+            user.password = password
+            if (mailjet.sendReset(user, URL_FRONT) == "error"):
+                return make_response("Something went wrong while sending the password reset confirmation email", 400)
+
             db.session.add(user)
             db.session.commit()
             resp = message(True, "Password reset successfully")
