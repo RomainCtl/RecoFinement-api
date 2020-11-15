@@ -32,7 +32,7 @@ class MovieModel(db.Model):
     title = db.Column(db.String(255), index=True)
     language = db.Column(db.String(255))
     actors = db.Column(db.Text)
-    year = db.Column(db.Integer)
+    year = db.Column(db.String(255))
     producers = db.Column(db.Text)
     director = db.Column(db.Text)
     writer = db.Column(db.Text)
