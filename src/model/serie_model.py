@@ -39,6 +39,7 @@ class SerieModel(db.Model):
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
     cover = db.Column(db.Text)
+    plot_outline = db.Column(db.Text)
     popularity_score = db.Column(db.Float, default=0)
 
     genres = db.relationship(
