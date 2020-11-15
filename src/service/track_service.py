@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel, RecommendedTrackModel
+from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel, RecommendedTrackModel, RecommendedTrackForGroupModel
 from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase, TrackExtra
 
 
@@ -38,6 +38,23 @@ class TrackService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedTrackModel, TrackModel)\
+            .select_from(RecommendedTrackModel)\
+            .outerjoin(TrackModel, TrackModel.track_id == RecommendedTrackModel.track_id)\
+            .filter(RecommendedTrackModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedTrackForGroupModel, TrackModel)\
+            .select_from(RecommendedTrackForGroupModel)\
+            .outerjoin(TrackModel, TrackModel.track_id == RecommendedTrackForGroupModel.track_id)\
+            .filter(RecommendedTrackForGroupModel.group_id.in_(groups_ids))
+
         # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         popularity_query = db.session.query(
             null().label("user_id"),
@@ -52,10 +69,8 @@ class TrackService:
         ).limit(200)
 
         tracks, total_pages = Paginator.get_from(
-            db.session.query(RecommendedTrackModel, TrackModel)
-            .select_from(RecommendedTrackModel)
-            .outerjoin(TrackModel, TrackModel.track_id == RecommendedTrackModel.track_id)
-            .filter(RecommendedTrackModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedTrackModel.engine_priority.desc().nullslast(),

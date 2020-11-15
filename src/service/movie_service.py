@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel, RecommendedMovieModel
+from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel, RecommendedMovieModel, RecommendedMovieForGroupModel
 from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase, MovieExtra
 
 
@@ -37,6 +37,24 @@ class MovieService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedMovieModel, MovieModel)\
+            .select_from(RecommendedMovieModel)\
+            .outerjoin(MovieModel, MovieModel.movie_id == RecommendedMovieModel.movie_id)\
+            .filter(RecommendedMovieModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedMovieForGroupModel, MovieModel)\
+            .select_from(RecommendedMovieForGroupModel)\
+            .outerjoin(MovieModel, MovieModel.movie_id == RecommendedMovieForGroupModel.movie_id)\
+            .filter(RecommendedMovieForGroupModel.group_id.in_(groups_ids))
+
+        # Popularity
         popularity_query = db.session.query(
             null().label("user_id"),
             null().label("game_id"),
@@ -49,10 +67,8 @@ class MovieService:
         ).limit(200)
 
         movies, total_pages = Paginator.get_from(
-            db.session.query(RecommendedMovieModel, MovieModel)
-            .select_from(RecommendedMovieModel)
-            .outerjoin(MovieModel, MovieModel.movie_id == RecommendedMovieModel.movie_id)
-            .filter(RecommendedMovieModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedMovieModel.engine_priority.desc().nullslast(),

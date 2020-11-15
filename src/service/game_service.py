@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType, UserModel, RecommendedGameModel
+from src.model import GameModel, MetaUserGameModel, GenreModel, ContentType, UserModel, RecommendedGameModel, RecommendedGameForGroupModel
 from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase, GameExtra
 
 
@@ -37,6 +37,23 @@ class GameService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedGameModel, GameModel)\
+            .select_from(RecommendedGameModel)\
+            .outerjoin(GameModel, GameModel.game_id == RecommendedGameModel.game_id)\
+            .filter(RecommendedGameModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedGameForGroupModel, GameModel)\
+            .select_from(RecommendedGameForGroupModel)\
+            .outerjoin(GameModel, GameModel.game_id == RecommendedGameForGroupModel.game_id)\
+            .filter(RecommendedGameForGroupModel.group_id.in_(groups_ids))
+
         # NOTE we do not have any rating for game (cold start), so we use 'recommendations' field instead of 'popularity_score' that is computed by 'reco_engine' service
         popularity_query = db.session.query(
             null().label("user_id"),
@@ -50,10 +67,8 @@ class GameService:
         ).limit(200)
 
         games, total_pages = Paginator.get_from(
-            db.session.query(RecommendedGameModel, GameModel)
-            .select_from(RecommendedGameModel)
-            .outerjoin(GameModel, GameModel.game_id == RecommendedGameModel.game_id)
-            .filter(RecommendedGameModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedGameModel.engine_priority.desc().nullslast(),
