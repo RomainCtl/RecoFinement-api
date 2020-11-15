@@ -1,10 +1,10 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, desc
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import ApplicationModel, UserModel, MetaUserApplicationModel, GenreModel, ContentType, RecommendedApplicationModel
+from src.model import ApplicationModel, UserModel, MetaUserApplicationModel, GenreModel, ContentType, RecommendedApplicationModel, RecommendedApplicationForGroupModel
 from src.schemas import ApplicationBase, GenreBase, MetaUserApplicationBase, ApplicationExtra
 
 
@@ -37,6 +37,23 @@ class ApplicationService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedApplicationModel, ApplicationModel)\
+            .select_from(RecommendedApplicationModel)\
+            .outerjoin(ApplicationModel, ApplicationModel.app_id == RecommendedApplicationModel.app_id)\
+            .filter(RecommendedApplicationModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedApplicationForGroupModel, ApplicationModel)\
+            .select_from(RecommendedApplicationForGroupModel)\
+            .outerjoin(ApplicationModel, ApplicationModel.app_id == RecommendedApplicationForGroupModel.app_id)\
+            .filter(RecommendedApplicationForGroupModel.group_id.in_(groups_ids))
+
         # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         popularity_query = db.session.query(
             null().label("user_id"),
@@ -51,10 +68,8 @@ class ApplicationService:
         ).limit(200)
 
         applications, total_pages = Paginator.get_from(
-            db.session.query(RecommendedApplicationModel, ApplicationModel)
-            .select_from(RecommendedApplicationModel)
-            .outerjoin(ApplicationModel, ApplicationModel.app_id == RecommendedApplicationModel.app_id)
-            .filter(RecommendedApplicationModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedApplicationModel.engine_priority.desc().nullslast(),

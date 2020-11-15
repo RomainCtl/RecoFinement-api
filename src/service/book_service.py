@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import BookModel, MetaUserBookModel, UserModel, RecommendedBookModel
+from src.model import BookModel, MetaUserBookModel, UserModel, RecommendedBookModel, RecommendedBookForGroupModel
 from src.schemas import BookBase, MetaUserBookBase, BookExtra
 
 
@@ -37,6 +37,24 @@ class BookService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedBookModel, BookModel)\
+            .select_from(RecommendedBookModel)\
+            .outerjoin(BookModel, BookModel.isbn == RecommendedBookModel.isbn)\
+            .filter(RecommendedBookModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedBookForGroupModel, BookModel)\
+            .select_from(RecommendedBookForGroupModel)\
+            .outerjoin(BookModel, BookModel.isbn == RecommendedBookForGroupModel.isbn)\
+            .filter(RecommendedBookForGroupModel.group_id.in_(groups_ids))
+
+        # Popularity
         popularity_query = db.session.query(
             null().label("user_id"),
             null().label("isbn"),
@@ -49,10 +67,8 @@ class BookService:
         ).limit(200)
 
         books, total_pages = Paginator.get_from(
-            db.session.query(RecommendedBookModel, BookModel)
-            .select_from(RecommendedBookModel)
-            .outerjoin(BookModel, BookModel.isbn == RecommendedBookModel.isbn)
-            .filter(RecommendedBookModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedBookModel.engine_priority.desc().nullslast(),
