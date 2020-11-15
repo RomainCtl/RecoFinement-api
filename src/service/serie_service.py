@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel
+from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel, RecommendedSerieForGroupModel
 from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase, SerieExtra
 
 
@@ -37,6 +37,24 @@ class SerieService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Query for recommendation from user
+        for_user_query = db.session.query(RecommendedSerieModel, SerieModel)\
+            .select_from(RecommendedSerieModel)\
+            .outerjoin(SerieModel, SerieModel.serie_id == RecommendedSerieModel.serie_id)\
+            .filter(RecommendedSerieModel.user_id == user.user_id)
+
+        # Query for recommendation from group
+        groups_ids = [
+            *list(map(lambda x: x.group_id, user.groups)),
+            *list(map(lambda x: x.group_id, user.owned_groups))
+        ]
+
+        for_group_query = db.session.query(RecommendedSerieForGroupModel, SerieModel)\
+            .select_from(RecommendedSerieForGroupModel)\
+            .outerjoin(SerieModel, SerieModel.serie_id == RecommendedSerieForGroupModel.serie_id)\
+            .filter(RecommendedSerieForGroupModel.group_id.in_(groups_ids))
+
+        # Popularity
         popularity_query = db.session.query(
             null().label("user_id"),
             null().label("serie_id"),
@@ -49,10 +67,8 @@ class SerieService:
         ).limit(200)
 
         series, total_pages = Paginator.get_from(
-            db.session.query(RecommendedSerieModel, SerieModel)
-            .select_from(RecommendedSerieModel)
-            .outerjoin(SerieModel, SerieModel.serie_id == RecommendedSerieModel.serie_id)
-            .filter(RecommendedSerieModel.user_id == user.user_id)
+            for_user_query
+            .union(for_group_query)
             .union(popularity_query)
             .order_by(
                 RecommendedSerieModel.engine_priority.desc().nullslast(),
