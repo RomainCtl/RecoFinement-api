@@ -1,9 +1,14 @@
 from flask_jwt_extended import create_access_token
 import pytest
+from py.xml import html
+
 
 from src import create_app, db
 from src.model import UserModel
 
+
+def pytest_html_report_title(report):
+    report.title = "Recofinement tests result"
 
 @pytest.fixture(scope="function")
 def first_user():
