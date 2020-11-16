@@ -17,6 +17,8 @@ else
 	PYTHON := python3
 endif
 
+TEST_OUTPUT_FILE = report.html
+
 # --------------------------------------------------------
 # Commands
 
@@ -56,7 +58,7 @@ clean: ## Delete all generated files in project folder
 	$(PIPENV) --rm
 
 test: ## Run all unit tests
-	$(PYTEST)
+	$(PYTEST) --html=$(TEST_OUTPUT_FILE) --self-contained-html
 
 db-update: ## Update database to the last migration
 	$(PIPENV) run flask db upgrade
