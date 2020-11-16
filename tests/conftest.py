@@ -1,12 +1,18 @@
 from flask_jwt_extended import create_access_token
 import pytest
 
-from src import create_app
+from src import create_app, db
+from src.model import UserModel
 
 
 @pytest.fixture(scope="function")
-def headers():
-    access_token = create_access_token(identity="f27da1ab-e045-4883-9b80-206d01335e7e")
+def first_user():
+    return UserModel.query.first()
+
+
+@pytest.fixture(scope="function")
+def headers(first_user):
+    access_token = create_access_token(identity=first_user.uuid)
     return {
         "Authorization": "Bearer %s" % access_token
     }
