@@ -22,7 +22,7 @@ endif
 
 PIPENV = ${PYTHON} -m pipenv
 PYTHON_ENV = ${PIPENV} run ${PYTHON}
-PYTEST = $(PYTHON) -m pytest
+PYTEST = $(PIPENV) run pytest
 
 # -----------------------------------------------------------------------------
 # include env
