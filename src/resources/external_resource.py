@@ -37,6 +37,7 @@ class ExternalSpotifyCallbackResource(Resource):
     @api.doc(
         "Spotify Oauth2 Callback",
         responses={
+            200 : ("Spotify oauth canceled"),
             201: ("Successfully received callback"),
             401: ("Authentication required"),
             404: "User not found!",
@@ -85,6 +86,7 @@ class ExternalTmdbCallbackResource(Resource):
     @api.doc(
         "tmdb Oauth2 Callback",
         responses={
+            200 : ("Authorization denied"),
             201: ("Successfully received callback"),
             401: ("Authentication required"),
             404: "User not found!",
@@ -133,6 +135,7 @@ class ExternalTmdbCallbackResource(Resource):
     @api.doc(
         "gbooks Oauth2 Callback",
         responses={
+            200 : ("Authorization canceled by user"),
             201: ("Successfully received callback"),
             401: ("Authentication required"),
             404: "User not found!",
