@@ -9,7 +9,7 @@ from .book_schema import BookBase, BookExtra
 from .episode_schema import EpisodeBase
 from .game_schema import GameBase, GameObject, GameExtra
 from .movie_schema import MovieBase, MovieObject, MovieExtra
-from .serie_schema import SerieBase, SerieItem, SerieObject, SerieExtra
+from .serie_schema import SerieBase, SerieItem, SerieExtra
 from .track_schema import TrackBase, TrackObject, TrackExtra
 
 from .genre_schema import GenreBase, GenreObject

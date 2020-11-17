@@ -8,6 +8,7 @@ from src.dto import SerieDto
 api = SerieDto.api
 data_resp = SerieDto.data_resp
 genres_resp = SerieDto.genres_resp
+episodes_resp = SerieDto.episodes_resp
 meta_resp = SerieDto.meta_resp
 
 
@@ -64,6 +65,21 @@ class SerieGenreResource(Resource):
     def get(self):
         """ Get serie genres """
         return SerieService.get_ordered_genre()
+
+
+@api.route("/<int:serie_id>/episodes")
+class SerieEpisodeResource(Resource):
+    @api.doc(
+        "Get series episodes",
+        responses={
+            200: ("Series episodes data sent", episodes_resp),
+            404: "Series not found!",
+        }
+    )
+    @jwt_required
+    def get(self, serie_id):
+        """ Get series episodes """
+        return SerieService.get_episodes(serie_id)
 
 
 @api.route("/<int:serie_id>/meta")

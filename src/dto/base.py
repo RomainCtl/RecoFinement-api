@@ -122,7 +122,6 @@ EpisodeBaseObj = Model("Episode base", {
     "episode_number": fields.Integer,
     "rating": fields.Float,
     "rating_count": fields.Integer,
-    "serie": fields.Nested(SerieBaseObj),
 })
 
 TrackGenresBaseObj = Model("TrackGenres base", {
@@ -238,10 +237,6 @@ GroupItemObj = Model.clone("Group Item", GroupBaseObj, {
 
 SerieItemObj = Model.clone("Serie Item", SerieBaseObj, {
     "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
-})
-
-SerieItemObj2 = Model.clone("Serie Item 2", SerieItemObj, {
-    "episodes": fields.List(fields.Nested(EpisodeBaseObj)),
 })
 
 TrackItemObj = Model.clone("Track Item", TrackBaseObj, {

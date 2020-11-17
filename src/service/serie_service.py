@@ -4,8 +4,8 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import SerieModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel, RecommendedSerieForGroupModel
-from src.schemas import SerieBase, SerieItem, GenreBase, MetaUserSerieBase, SerieExtra
+from src.model import SerieModel, EpisodeModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel, RecommendedSerieForGroupModel
+from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, MetaUserSerieBase, SerieExtra
 
 
 class SerieService:
@@ -111,6 +111,22 @@ class SerieService:
 
             resp = message(True, "Serie genres data sent")
             resp["content"] = genres_data
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_episodes(serie_id):
+        if not (episodes := EpisodeModel.query.filter_by(serie_id=serie_id).order_by(EpisodeModel.season_number, EpisodeModel.episode_number).all()):
+            return err_resp("Serie not found!", 404)
+
+        try:
+            episodes_data = EpisodeBase.loads(episodes)
+
+            resp = message(True, "Series episodes data sent")
+            resp["content"] = episodes_data
             return resp, 200
 
         except Exception as error:

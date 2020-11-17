@@ -21,15 +21,7 @@ class SerieItem(SQLAlchemyAutoSchema):
         pass
 
 
-class SerieObject(SQLAlchemyAutoSchema):
-    episodes = ma.Nested("EpisodeBase", many=True)
-    genres = ma.Nested("GenreBase", many=True)
-
-    class Meta(SerieMeta):
-        pass
-
-
-class SerieExtra(SerieObject):
+class SerieExtra(SerieItem):
     # Extra fields from join with 'recommended_application'
     reco_engine = fields.String(attribute="engine", default=None)
     reco_score = fields.Float(attribute="score", default=None)

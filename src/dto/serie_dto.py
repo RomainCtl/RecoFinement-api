@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import SerieBaseObj, SerieItemObj, paginationObj, messageObj, GenreBaseObj, MetaUserSerieBaseObj
+from .base import SerieBaseObj, SerieItemObj, paginationObj, messageObj, GenreBaseObj, MetaUserSerieBaseObj, EpisodeBaseObj
 
 
 class SerieDto:
@@ -18,6 +18,9 @@ class SerieDto:
 
     api.models[MetaUserSerieBaseObj.name] = MetaUserSerieBaseObj
     meta_user_serie_base = MetaUserSerieBaseObj
+
+    api.models[EpisodeBaseObj.name] = EpisodeBaseObj
+    episode_base = EpisodeBaseObj
 
     # Responses
     data_resp = api.clone(
@@ -41,6 +44,14 @@ class SerieDto:
         messageObj,
         {
             "content": fields.List(fields.Nested(genre_base))
+        }
+    )
+
+    episodes_resp = api.clone(
+        "Serie episodes Data Response",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(episode_base))
         }
     )
 
