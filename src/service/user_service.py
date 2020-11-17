@@ -169,7 +169,7 @@ class UserService:
 
             # Send request to reco_engine
             requests.put('%s/recommend/%s' % (ENGINE_URL, user.uuid),
-                         headers={'X-API-KEY': ENGINE_APIKEY})
+                         headers={'X-API-TOKEN': ENGINE_APIKEY})
 
             resp = message(True, "User updated successfully")
             return resp, 201
