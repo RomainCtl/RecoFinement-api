@@ -66,6 +66,21 @@ class SerieGenreResource(Resource):
         return SerieService.get_ordered_genre()
 
 
+@api.route("/<int:serie_id>/episodes")
+class SerieGenreResource(Resource):
+    @api.doc(
+        "Get series episodes",
+        responses={
+            200: ("Series episodes data sent", genres_resp),
+            404: "Series not found!",
+        }
+    )
+    @jwt_required
+    def get(self, serie_id):
+        """ Get series episodes """
+        return SerieService.get_episodes(serie_id)
+
+
 @api.route("/<int:serie_id>/meta")
 class SerieMetaResource(Resource):
     @api.doc(
