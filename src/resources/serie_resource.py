@@ -8,6 +8,7 @@ from src.dto import SerieDto
 api = SerieDto.api
 data_resp = SerieDto.data_resp
 genres_resp = SerieDto.genres_resp
+episodes_resp = SerieDto.episodes_resp
 meta_resp = SerieDto.meta_resp
 
 
@@ -67,11 +68,11 @@ class SerieGenreResource(Resource):
 
 
 @api.route("/<int:serie_id>/episodes")
-class SerieGenreResource(Resource):
+class SerieEpisodeResource(Resource):
     @api.doc(
         "Get series episodes",
         responses={
-            200: ("Series episodes data sent", genres_resp),
+            200: ("Series episodes data sent", episodes_resp),
             404: "Series not found!",
         }
     )
