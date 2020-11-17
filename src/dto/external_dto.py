@@ -34,8 +34,8 @@ class ExternalDto:
         "ExternalDataExpected",
         {
             "request_token" : fields.String(min=10, max=350),
-            "approved" : fields.Boolean,
-            "denied" : fields.Boolean
+            "approved" : fields.String(min=4,max=5),
+            "denied" : fields.String(min=4,max=5)
         },
     )
 
