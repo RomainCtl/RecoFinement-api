@@ -185,7 +185,7 @@ class SerieService:
 
                 meta_user_serie.rating = data["rating"]
             if 'num_watched_episodes' in data:
-                meta_user_serie.num_watched_episodes += data['num_watched_episodes']
+                meta_user_serie.num_watched_episodes = data['num_watched_episodes']
 
             db.session.add(meta_user_serie)
             db.session.commit()
