@@ -5,21 +5,22 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Install sqlite3
-        run: sudo apt install -y sqlite3
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.8
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install sqlite-utils
+          sqlite-utils --version
+          sqlite --version
 
       - name: Install dependencies
         run: make init
