@@ -35,7 +35,8 @@ def user_test1():
     Returns:
         UserObject: user "test1"
     """
-    if (user :=  UserModel.query.filter_by(username="test").first()):
+    if (user := UserModel.query.filter_by(username="test").first()):
+    
         return user
     else:
         new_user = UserModel(
@@ -56,7 +57,7 @@ def user_test2():
     Returns:
         UserObject: user "test1"
     """
-    if (user :=  UserModel.query.filter_by(username ="test2").first()):
+    if (user := UserModel.query.filter_by(username="test2").first()):
         return user
     else:
         new_user = UserModel(
