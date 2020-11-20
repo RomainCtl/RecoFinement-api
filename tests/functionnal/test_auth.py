@@ -5,10 +5,11 @@ from src import db
 from flask_jwt_extended import create_access_token
 import uuid
 
+
 class TestAuth:
-    
+
     ### REGISTER ###
-    def test_register(self,test_client):
+    def test_register(self, test_client):
         """test user registration
 
         Test:
@@ -20,13 +21,13 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        if ( user :=  UserModel.query.filter_by(username = "test").first()):
-            UserModel.query.filter_by(username = "test").delete()
+        if (user := UserModel.query.filter_by(username="test").first()):
+            UserModel.query.filter_by(username="test").delete()
             db.session.commit()
         response = test_client.post('/api/auth/register', json=dict(
-            email= "test@test.com",
-            username= "test",
-            password = "goodPassword!123"
+            email="test@test.com",
+            username="test",
+            password="goodPassword!123"
         ))
         res = json.loads(response.data)
 
@@ -34,7 +35,7 @@ class TestAuth:
         assert res['user']['email'] == "test@test.com"
         assert res['status'] == True
 
-    def test_register_email_exist(self,test_client):
+    def test_register_email_exist(self, test_client):
         """test user registration with already used email
 
         Test:
@@ -47,9 +48,9 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post('/api/auth/register', json=dict(
-            email= "test@test.com",
-            username= "test",
-            password = "goodPassword!123"
+            email="test@test.com",
+            username="test",
+            password="goodPassword!123"
         ))
         res = json.loads(response.data)
 
@@ -76,7 +77,7 @@ class TestAuth:
 
         assert response.status_code == 200
         assert res['user']['email'] == "test@test.com"
-    
+
     def test_login_wrong_passd(self, test_client):
         """test user login with wrong password
 
@@ -89,7 +90,8 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.post("/api/auth/login", json=dict(email="test@test.com", password="wrongPassword*"))
+        response = test_client.post(
+            "/api/auth/login", json=dict(email="test@test.com", password="wrongPassword*"))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -107,14 +109,15 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.post("/api/auth/login", json=dict(email="failure@test.com", password="wrongPassword*"))
+        response = test_client.post(
+            "/api/auth/login", json=dict(email="failure@test.com", password="wrongPassword*"))
         res = json.loads(response.data)
 
         assert response.status_code == 401
         assert res['status'] == False
 
     ### LOGOUT ###
-    def test_logout(self,test_client, headers):
+    def test_logout(self, test_client, headers):
         """test user logout 
 
         Test:
@@ -132,7 +135,7 @@ class TestAuth:
         assert response.status_code == 204
         assert res == b''
 
-    def test_logout_no_jwt(self,test_client):
+    def test_logout_no_jwt(self, test_client):
         """test user logout whitout the token access
 
         Test:
@@ -148,11 +151,11 @@ class TestAuth:
         res = json.loads(response.data)
 
         assert response.status_code == 401
-        assert res['msg'] == "Missing Authorization Header" 
+        assert res['msg'] == "Missing Authorization Header"
 
     ### FORGET PASSWORD ###
-    
-    def test_forget_passwd(self,test_client):
+
+    def test_forget_passwd(self, test_client):
         """test user forgot password
 
         Test:
@@ -164,13 +167,14 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.post('/api/auth/forget', json=dict(email="test@test.com"))
+        response = test_client.post(
+            '/api/auth/forget', json=dict(email="test@test.com"))
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
 
-    def test_forget_passwd_bad_email(self,test_client):
+    def test_forget_passwd_bad_email(self, test_client):
         """test user forgot password bad email
 
         Test:
@@ -182,7 +186,8 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.post('/api/auth/forget', json=dict(email="notest@test.com"))
+        response = test_client.post(
+            '/api/auth/forget', json=dict(email="notest@test.com"))
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -190,7 +195,7 @@ class TestAuth:
 
     ### RESET PASSWORD ###
 
-    def test_reset_passwd(self,test_client, user_test1):
+    def test_reset_passwd(self, test_client, user_test1):
         """test user reset password
 
         Test:
@@ -205,13 +210,13 @@ class TestAuth:
         response = test_client.post('/api/auth/reset', json=dict(
             reset_password_token=create_access_token(identity=user_test1.uuid),
             password="Azerty!123"
-            ))
+        ))
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
 
-    def test_reset_passwd_bad_token(self,test_client):
+    def test_reset_passwd_bad_token(self, test_client):
         """test user reset password bad token
 
         Test:
@@ -224,9 +229,10 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post('/api/auth/reset', json=dict(
-            reset_password_token=str(create_access_token(identity=uuid.uuid4())),
+            reset_password_token=str(
+                create_access_token(identity=uuid.uuid4())),
             password="Azerty!123"))
         res = json.loads(response.data)
-        
+
         assert response.status_code == 401
         assert res['status'] == False

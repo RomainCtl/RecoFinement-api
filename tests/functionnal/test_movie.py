@@ -3,6 +3,7 @@ import json
 from src.model import MovieModel, MetaUserMovieModel
 from src import db
 
+
 class TestMovie:
 
     ### MOVIE RESOURCE ###
@@ -22,20 +23,20 @@ class TestMovie:
         """
         if not (MovieModel.query.filter_by(movie_id=999999).first()):
             new_movie = MovieModel(
-                movie_id = 999999,
+                movie_id=999999,
                 title="test movie",
                 language="FR",
                 rating=5.0,
                 actors="authors movie",
-                year= "2020",
+                year="2020",
                 producers="producers movie",
-                director = "director movie",
-                writer = "writer movie",
-                imdbid = "99999999",
-                tmdbid =  "99999999",
-                rating_count = 1000,
-                plot_outline = "plot_outline movie",
-                cover = "cover"
+                director="director movie",
+                writer="writer movie",
+                imdbid="99999999",
+                tmdbid="99999999",
+                rating_count=1000,
+                plot_outline="plot_outline movie",
+                cover="cover"
             )
             db.session.add(new_movie)
             db.session.flush()
@@ -66,7 +67,7 @@ class TestMovie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] != []
-    
+
     def test_movie_recommended_big_page(self, test_client, headers):
         """Test movie get recommended movie page 9999999
 
@@ -86,7 +87,7 @@ class TestMovie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_movie_recommended_zero_page(self, test_client, headers):
         """Test movie get recommended movie page 0
 
@@ -126,7 +127,7 @@ class TestMovie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_movie_recommended_bad_jwt(self, test_client, headers_bad):
         """Test movie get recommended movie with bad JWT token 
 
@@ -163,7 +164,7 @@ class TestMovie:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_movie_recommended_no_jwt(self, test_client):
         """Test movie get recommended movie without JWT token 
 
@@ -181,7 +182,7 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### MOVIE SEARCH ###
 
     def test_movie_search(self, test_client, headers):
@@ -197,7 +198,8 @@ class TestMovie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/movie/search/test%20movie", headers=headers)
+        response = test_client.get(
+            "/api/movie/search/test%20movie", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -216,7 +218,8 @@ class TestMovie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/movie/search/test%20movie?page=1", headers=headers)
+        response = test_client.get(
+            "/api/movie/search/test%20movie?page=1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -236,13 +239,14 @@ class TestMovie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/movie/search/test%20movie?page=0", headers=headers)
+        response = test_client.get(
+            "/api/movie/search/test%20movie?page=0", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_movie_search_big_page(self, test_client, headers):
         """Test movie search get page 9999999
 
@@ -256,13 +260,14 @@ class TestMovie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/movie/search/test%20movie?page=9999999", headers=headers)
+        response = test_client.get(
+            "/api/movie/search/test%20movie?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_movie_search_negative_page(self, test_client, headers):
         """Test movie search get page -1
 
@@ -276,7 +281,8 @@ class TestMovie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/movie/search/test%20movie?page=-1", headers=headers)
+        response = test_client.get(
+            "/api/movie/search/test%20movie?page=-1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -296,7 +302,8 @@ class TestMovie:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.get("/api/movie/search/test%20movie", headers=headers_bad)
+        response = test_client.get(
+            "/api/movie/search/test%20movie", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -314,12 +321,13 @@ class TestMovie:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.get("/api/movie/search/test%20movie", headers=headers_fake)
+        response = test_client.get(
+            "/api/movie/search/test%20movie", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_movie_search_no_jwt(self, test_client):
         """Test movie search without JWT token
 
@@ -337,7 +345,7 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### MOVIE GENRE ###
 
     def test_movie_genre(self, test_client, headers):
@@ -376,7 +384,7 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_movie_genre_bad_jwt(self, test_client, headers_bad):
         """Test movie genre with bad JWT token 
 
@@ -413,7 +421,7 @@ class TestMovie:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### MOVIE USER META ###
 
     def test_movie_user_meta(self, test_client, headers):
@@ -430,7 +438,8 @@ class TestMovie:
             headers (dict): HTTP header, to get the access token
         """
         app = MovieModel.query.filter_by(movie_id=999999).first()
-        response = test_client.get("/api/movie/"+str(app.movie_id)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/movie/"+str(app.movie_id)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -450,7 +459,8 @@ class TestMovie:
             headers (dict): HTTP header, to get the access token
         """
         app = MovieModel.query.filter_by(movie_id=999999).first()
-        response = test_client.get("/api/movie/"+str(999999999999)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/movie/"+str(999999999999)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -470,7 +480,8 @@ class TestMovie:
             headers_bad (dict): bad HTTP header, with bad access token
         """
         app = MovieModel.query.filter_by(movie_id=999999).first()
-        response = test_client.get("/api/movie/"+str(app.movie_id)+"/meta", headers=headers_bad)
+        response = test_client.get(
+            "/api/movie/"+str(app.movie_id)+"/meta", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -489,7 +500,8 @@ class TestMovie:
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         app = MovieModel.query.filter_by(movie_id=999999).first()
-        response = test_client.get("/api/movie/"+str(app.movie_id)+"/meta", headers=headers_fake)
+        response = test_client.get(
+            "/api/movie/"+str(app.movie_id)+"/meta", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -513,9 +525,9 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### MOVIE USER META UPDATE ###
-    
+
     def test_movie_user_meta_update(self, test_client, headers, user_test1):
         """Test movie user meta update
 
@@ -533,10 +545,11 @@ class TestMovie:
         app = MovieModel.query.filter_by(movie_id=999999).first()
         response = test_client.patch("/api/movie/"+str(app.movie_id)+"/meta", headers=headers, json=dict(
             rating=5,
-            additional_watch_count = 10
+            additional_watch_count=10
         ))
         res = json.loads(response.data)
-        meta = MetaUserMovieModel.query.filter_by(user_id=user_test1.user_id,movie_id=999999).first()
+        meta = MetaUserMovieModel.query.filter_by(
+            user_id=user_test1.user_id, movie_id=999999).first()
 
         assert response.status_code == 201
         assert res['status'] == True
@@ -559,7 +572,7 @@ class TestMovie:
         app = MovieModel.query.filter_by(movie_id=999999).first()
         response = test_client.patch("/api/movie/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
-            additional_watch_count = 10
+            additional_watch_count=10
         ))
         res = json.loads(response.data)
 
@@ -582,8 +595,8 @@ class TestMovie:
         app = MovieModel.query.filter_by(movie_id=999999).first()
         response = test_client.patch("/api/movie/"+str(app.movie_id)+"/meta", headers=headers_bad, json=dict(
             rating=5,
-            additional_watch_count = 10
-            
+            additional_watch_count=10
+
         ))
         res = json.loads(response.data)
 
@@ -605,8 +618,8 @@ class TestMovie:
         app = MovieModel.query.filter_by(movie_id=999999).first()
         response = test_client.patch("/api/movie/"+str(app.movie_id)+"/meta", headers=headers_fake, json=dict(
             rating=5,
-            additional_watch_count = 10
-            
+            additional_watch_count=10
+
         ))
         res = json.loads(response.data)
 
@@ -628,8 +641,8 @@ class TestMovie:
         app = MovieModel.query.filter_by(movie_id=999999).first()
         response = test_client.patch("/api/movie/"+str(app.movie_id)+"/meta", json=dict(
             rating=5,
-            additional_watch_count = 10
-            
+            additional_watch_count=10
+
         ))
         res = json.loads(response.data)
 

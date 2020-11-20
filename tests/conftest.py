@@ -15,14 +15,17 @@ def pytest_html_report_title(report):
 def pytest_html_results_table_header(cells):
     cells.pop()
 
+
 def pytest_html_results_table_row(report, cells):
     cells.pop()
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
     report.description = html.pre(item.function.__doc__)
+
 
 def pytest_html_results_table_html(report, data):
     data.insert(0, report.description)
@@ -34,9 +37,9 @@ def genre_test1():
         return genre
     else:
         new_genre = GenreModel(
-            name = "genre_test",
-            count = 0,
-            content_type = ContentType.BOOK
+            name="genre_test",
+            count=0,
+            content_type=ContentType.BOOK
         )
         db.session.add(new_genre)
         db.session.flush()
@@ -52,7 +55,7 @@ def user_test1():
         UserObject: user "test1"
     """
     if (user := UserModel.query.filter_by(username="test").first()):
-    
+
         return user
     else:
         new_user = UserModel(

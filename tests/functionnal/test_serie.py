@@ -3,6 +3,7 @@ import json
 from src.model import SerieModel, MetaUserSerieModel
 from src import db
 
+
 class TestSerie:
 
     ### SERIE RESOURCE ###
@@ -23,18 +24,18 @@ class TestSerie:
 
         if not (SerieModel.query.filter_by(serie_id=999999).first()):
             new_serie = SerieModel(
-                serie_id = 999999,
+                serie_id=999999,
                 title="test serie",
                 rating=5.0,
                 actors="authors serie",
-                start_year= "2019",
-                end_year = "2020",
-                directors = "director serie",
-                writers = "writer serie",
-                imdbid = "99999999",
-                rating_count = 1000,
-                plot_outline = "plot_outline serie",
-                cover = "cover"
+                start_year="2019",
+                end_year="2020",
+                directors="director serie",
+                writers="writer serie",
+                imdbid="99999999",
+                rating_count=1000,
+                plot_outline="plot_outline serie",
+                cover="cover"
             )
             db.session.add(new_serie)
             db.session.flush()
@@ -65,7 +66,7 @@ class TestSerie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] != []
-    
+
     def test_serie_recommended_big_page(self, test_client, headers):
         """Test serie get recommended serie page 9999999
 
@@ -85,7 +86,7 @@ class TestSerie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_serie_recommended_zero_page(self, test_client, headers):
         """Test serie get recommended serie page 0
 
@@ -125,7 +126,7 @@ class TestSerie:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_serie_recommended_bad_jwt(self, test_client, headers_bad):
         """Test serie get recommended serie with bad JWT token 
 
@@ -162,7 +163,7 @@ class TestSerie:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_serie_recommended_no_jwt(self, test_client):
         """Test serie get recommended serie without JWT token 
 
@@ -180,7 +181,7 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### SERIE SEARCH ###
 
     def test_serie_search(self, test_client, headers):
@@ -196,7 +197,8 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/serie/search/test%20serie", headers=headers)
+        response = test_client.get(
+            "/api/serie/search/test%20serie", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -215,7 +217,8 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/serie/search/test%20serie?page=1", headers=headers)
+        response = test_client.get(
+            "/api/serie/search/test%20serie?page=1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -235,13 +238,14 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/serie/search/test%20serie?page=0", headers=headers)
+        response = test_client.get(
+            "/api/serie/search/test%20serie?page=0", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_serie_search_big_page(self, test_client, headers):
         """Test serie search get page 9999999
 
@@ -255,13 +259,14 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/serie/search/test%20serie?page=9999999", headers=headers)
+        response = test_client.get(
+            "/api/serie/search/test%20serie?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_serie_search_negative_page(self, test_client, headers):
         """Test serie search get page -1
 
@@ -275,7 +280,8 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/serie/search/test%20serie?page=-1", headers=headers)
+        response = test_client.get(
+            "/api/serie/search/test%20serie?page=-1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -295,7 +301,8 @@ class TestSerie:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.get("/api/serie/search/test%20serie", headers=headers_bad)
+        response = test_client.get(
+            "/api/serie/search/test%20serie", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -313,12 +320,13 @@ class TestSerie:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.get("/api/serie/search/test%20serie", headers=headers_fake)
+        response = test_client.get(
+            "/api/serie/search/test%20serie", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_serie_search_no_jwt(self, test_client):
         """Test serie search without JWT token
 
@@ -336,7 +344,7 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### SERIE GENRE ###
 
     def test_serie_genre(self, test_client, headers):
@@ -375,7 +383,7 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_serie_genre_bad_jwt(self, test_client, headers_bad):
         """Test serie genre with bad JWT token 
 
@@ -412,7 +420,7 @@ class TestSerie:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### SERIE USER META ###
 
     def test_serie_user_meta(self, test_client, headers):
@@ -429,7 +437,8 @@ class TestSerie:
             headers (dict): HTTP header, to get the access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
-        response = test_client.get("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/serie/"+str(serie.serie_id)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -449,7 +458,8 @@ class TestSerie:
             headers (dict): HTTP header, to get the access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
-        response = test_client.get("/api/serie/"+str(999999999999)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/serie/"+str(999999999999)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -469,7 +479,8 @@ class TestSerie:
             headers_bad (dict): bad HTTP header, with bad access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
-        response = test_client.get("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_bad)
+        response = test_client.get(
+            "/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -488,7 +499,8 @@ class TestSerie:
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
-        response = test_client.get("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_fake)
+        response = test_client.get(
+            "/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -512,9 +524,9 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### SERIE USER META UPDATE ###
-    
+
     def test_serie_user_meta_update(self, test_client, headers, user_test1):
         """Test serie user meta update
 
@@ -533,10 +545,11 @@ class TestSerie:
         response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers, json=dict(
             rating=5,
             num_watched_episodes=5,
-            
+
         ))
         res = json.loads(response.data)
-        meta = MetaUserSerieModel.query.filter_by(user_id=user_test1.user_id,serie_id=999999).first()
+        meta = MetaUserSerieModel.query.filter_by(
+            user_id=user_test1.user_id, serie_id=999999).first()
 
         assert response.status_code == 201
         assert res['status'] == True
@@ -560,7 +573,7 @@ class TestSerie:
         response = test_client.patch("/api/serie/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
             num_watched_episodes=5
-            
+
         ))
         res = json.loads(response.data)
 
@@ -584,7 +597,7 @@ class TestSerie:
         response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_bad, json=dict(
             rating=5,
             num_watched_episodes=5
-            
+
         ))
         res = json.loads(response.data)
 
@@ -607,7 +620,7 @@ class TestSerie:
         response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_fake, json=dict(
             rating=5,
             num_watched_episodes=5
-            
+
         ))
         res = json.loads(response.data)
 
@@ -630,7 +643,7 @@ class TestSerie:
         response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", json=dict(
             rating=5,
             num_watched_episodes=5
-            
+
         ))
         res = json.loads(response.data)
 

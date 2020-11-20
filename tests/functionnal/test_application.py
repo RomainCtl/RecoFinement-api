@@ -3,6 +3,7 @@ import json
 from src.model import ApplicationModel, MetaUserApplicationModel
 from src import db
 
+
 class TestApplication:
 
     ### APPLICATION RESOURCE ###
@@ -22,20 +23,20 @@ class TestApplication:
         """
         if not (ApplicationModel.query.filter_by(app_id=999999).first()):
             new_app = ApplicationModel(
-                app_id = 999999,
+                app_id=999999,
                 name="test app",
                 genre_id=1,
                 rating=5.0,
                 reviews=4,
-                size= "145mb",
+                size="145mb",
                 installs="110k",
-                type = "chat",
-                price = "free",
-                content_rating = "top",
-                last_updated = "11/10/2020",
-                current_version ="1.4",
-                android_version = "10.1",
-                cover = "cover"
+                type="chat",
+                price="free",
+                content_rating="top",
+                last_updated="11/10/2020",
+                current_version="1.4",
+                android_version="10.1",
+                cover="cover"
             )
             db.session.add(new_app)
             db.session.flush()
@@ -66,7 +67,7 @@ class TestApplication:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] != []
-    
+
     def test_application_recommended_big_page(self, test_client, headers):
         """Test application get recommended application page 9999999
 
@@ -80,13 +81,14 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application?page=9999999", headers=headers)
+        response = test_client.get(
+            "/api/application?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_application_recommended_zero_page(self, test_client, headers):
         """Test application get recommended application page 0
 
@@ -126,7 +128,7 @@ class TestApplication:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_application_recommended_bad_jwt(self, test_client, headers_bad):
         """Test application get recommended application with bad JWT token 
 
@@ -163,7 +165,7 @@ class TestApplication:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_application_recommended_no_jwt(self, test_client):
         """Test application get recommended application without JWT token 
 
@@ -181,7 +183,7 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### APPLICATION SEARCH ###
 
     def test_application_search(self, test_client, headers):
@@ -197,7 +199,8 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application/search/test%20app", headers=headers)
+        response = test_client.get(
+            "/api/application/search/test%20app", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -216,7 +219,8 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application/search/test%20app?page=1", headers=headers)
+        response = test_client.get(
+            "/api/application/search/test%20app?page=1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -236,13 +240,14 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application/search/test%20app?page=0", headers=headers)
+        response = test_client.get(
+            "/api/application/search/test%20app?page=0", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_application_search_big_page(self, test_client, headers):
         """Test application search get page 9999999
 
@@ -256,13 +261,14 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application/search/test%20app?page=9999999", headers=headers)
+        response = test_client.get(
+            "/api/application/search/test%20app?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_application_search_negative_page(self, test_client, headers):
         """Test application search get page -1
 
@@ -276,7 +282,8 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/application/search/test%20app?page=-1", headers=headers)
+        response = test_client.get(
+            "/api/application/search/test%20app?page=-1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -296,7 +303,8 @@ class TestApplication:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.get("/api/application/search/test%20app", headers=headers_bad)
+        response = test_client.get(
+            "/api/application/search/test%20app", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -314,12 +322,13 @@ class TestApplication:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.get("/api/application/search/test%20app", headers=headers_fake)
+        response = test_client.get(
+            "/api/application/search/test%20app", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_application_search_no_jwt(self, test_client):
         """Test application search without JWT token
 
@@ -337,7 +346,7 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### APPLICATION GENRE ###
 
     def test_application_genre(self, test_client, headers):
@@ -376,7 +385,7 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_application_genre_bad_jwt(self, test_client, headers_bad):
         """Test application genre with bad JWT token 
 
@@ -390,7 +399,8 @@ class TestApplication:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.get("/api/application/genres", headers=headers_bad)
+        response = test_client.get(
+            "/api/application/genres", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -408,12 +418,13 @@ class TestApplication:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.get("/api/application/genres", headers=headers_fake)
+        response = test_client.get(
+            "/api/application/genres", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### APPLICATION USER META ###
 
     def test_application_user_meta(self, test_client, headers):
@@ -430,7 +441,8 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.get("/api/application/"+str(app.app_id)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/application/"+str(app.app_id)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -450,7 +462,8 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.get("/api/application/"+str(999999999999)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/application/"+str(999999999999)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -470,7 +483,8 @@ class TestApplication:
             headers_bad (dict): bad HTTP header, with bad access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.get("/api/application/"+str(app.app_id)+"/meta", headers=headers_bad)
+        response = test_client.get(
+            "/api/application/"+str(app.app_id)+"/meta", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -489,7 +503,8 @@ class TestApplication:
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.get("/api/application/"+str(app.app_id)+"/meta", headers=headers_fake)
+        response = test_client.get(
+            "/api/application/"+str(app.app_id)+"/meta", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -513,9 +528,9 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### APPLICATION USER META UPDATE ###
-    
+
     def test_application_user_meta_update(self, test_client, headers, user_test1):
         """Test application user meta update
 
@@ -537,7 +552,8 @@ class TestApplication:
             downloaded=True
         ))
         res = json.loads(response.data)
-        meta = MetaUserApplicationModel.query.filter_by(user_id=user_test1.user_id,app_id=999999).first()
+        meta = MetaUserApplicationModel.query.filter_by(
+            user_id=user_test1.user_id, app_id=999999).first()
 
         assert response.status_code == 201
         assert res['status'] == True

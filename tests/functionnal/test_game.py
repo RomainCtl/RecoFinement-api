@@ -3,6 +3,7 @@ import json
 from src.model import GameModel, MetaUserGameModel
 from src import db
 
+
 class TestGame:
 
     ### GAME RESOURCE ###
@@ -22,19 +23,19 @@ class TestGame:
         """
         if not (GameModel.query.filter_by(game_id=999999).first()):
             new_game = GameModel(
-                game_id = 999999,
-                steamid = 999999,
+                game_id=999999,
+                steamid=999999,
                 name="test game",
                 short_description="short desc game",
                 rating=5.0,
                 header_image="header img",
-                website= "website",
+                website="website",
                 developers="dev",
-                publishers = "publishers",
-                price = "free",
-                recommendations = 150,
-                release_date = "11/10/2020",
-                rating_count = 10
+                publishers="publishers",
+                price="free",
+                recommendations=150,
+                release_date="11/10/2020",
+                rating_count=10
             )
             db.session.add(new_game)
             db.session.flush()
@@ -65,7 +66,7 @@ class TestGame:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] != []
-    
+
     def test_game_recommended_big_page(self, test_client, headers):
         """Test game get recommended game page 9999999
 
@@ -85,7 +86,7 @@ class TestGame:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_game_recommended_zero_page(self, test_client, headers):
         """Test game get recommended game page 0
 
@@ -125,7 +126,7 @@ class TestGame:
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_game_recommended_bad_jwt(self, test_client, headers_bad):
         """Test game get recommended game with bad JWT token 
 
@@ -162,7 +163,7 @@ class TestGame:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_game_recommended_no_jwt(self, test_client):
         """Test game get recommended game without JWT token 
 
@@ -180,7 +181,7 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### GAME SEARCH ###
 
     def test_game_search(self, test_client, headers):
@@ -196,7 +197,8 @@ class TestGame:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/game/search/test%20game", headers=headers)
+        response = test_client.get(
+            "/api/game/search/test%20game", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -215,7 +217,8 @@ class TestGame:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/game/search/test%20game?page=1", headers=headers)
+        response = test_client.get(
+            "/api/game/search/test%20game?page=1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -235,13 +238,14 @@ class TestGame:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/game/search/test%20game?page=0", headers=headers)
+        response = test_client.get(
+            "/api/game/search/test%20game?page=0", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_game_search_big_page(self, test_client, headers):
         """Test game search get page 9999999
 
@@ -255,13 +259,14 @@ class TestGame:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/game/search/test%20game?page=9999999", headers=headers)
+        response = test_client.get(
+            "/api/game/search/test%20game?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res['content'] == []
-    
+
     def test_game_search_negative_page(self, test_client, headers):
         """Test game search get page -1
 
@@ -275,7 +280,8 @@ class TestGame:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.get("/api/game/search/test%20game?page=-1", headers=headers)
+        response = test_client.get(
+            "/api/game/search/test%20game?page=-1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -295,7 +301,8 @@ class TestGame:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.get("/api/game/search/test%20game", headers=headers_bad)
+        response = test_client.get(
+            "/api/game/search/test%20game", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -313,12 +320,13 @@ class TestGame:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.get("/api/game/search/test%20game", headers=headers_fake)
+        response = test_client.get(
+            "/api/game/search/test%20game", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_game_search_no_jwt(self, test_client):
         """Test game search without JWT token
 
@@ -336,7 +344,7 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### GAME GENRE ###
 
     def test_game_genre(self, test_client, headers):
@@ -375,7 +383,7 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_game_genre_bad_jwt(self, test_client, headers_bad):
         """Test game genre with bad JWT token 
 
@@ -412,7 +420,7 @@ class TestGame:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### GAME USER META ###
 
     def test_game_user_meta(self, test_client, headers):
@@ -429,7 +437,8 @@ class TestGame:
             headers (dict): HTTP header, to get the access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
-        response = test_client.get("/api/game/"+str(game.game_id)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/game/"+str(game.game_id)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -449,7 +458,8 @@ class TestGame:
             headers (dict): HTTP header, to get the access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
-        response = test_client.get("/api/game/"+str(999999999999)+"/meta", headers=headers)
+        response = test_client.get(
+            "/api/game/"+str(999999999999)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -469,7 +479,8 @@ class TestGame:
             headers_bad (dict): bad HTTP header, with bad access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
-        response = test_client.get("/api/game/"+str(game.game_id)+"/meta", headers=headers_bad)
+        response = test_client.get(
+            "/api/game/"+str(game.game_id)+"/meta", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -488,7 +499,8 @@ class TestGame:
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
-        response = test_client.get("/api/game/"+str(game.game_id)+"/meta", headers=headers_fake)
+        response = test_client.get(
+            "/api/game/"+str(game.game_id)+"/meta", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -512,9 +524,9 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     ### GAME USER META UPDATE ###
-    
+
     def test_game_user_meta_update(self, test_client, headers, user_test1):
         """Test game user meta update
 
@@ -531,14 +543,14 @@ class TestGame:
         """
         game = GameModel.query.filter_by(game_id=999999).first()
         response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", headers=headers, json=dict(
-            rating = 5,
-            purchase = True,
-            additional_hours = 24.0
+            rating=5,
+            purchase=True,
+            additional_hours=24.0
         ))
-        
-        res = json.loads(response.data)
-        meta = MetaUserGameModel.query.filter_by(user_id=user_test1.user_id,game_id=999999).first()
 
+        res = json.loads(response.data)
+        meta = MetaUserGameModel.query.filter_by(
+            user_id=user_test1.user_id, game_id=999999).first()
 
         assert response.status_code == 201
         assert res['status'] == True
@@ -563,7 +575,7 @@ class TestGame:
         response = test_client.patch("/api/game/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
             additional_hours=24.5,
-            purchase = True
+            purchase=True
         ))
         res = json.loads(response.data)
 
@@ -587,7 +599,7 @@ class TestGame:
         response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", headers=headers_bad, json=dict(
             rating=5,
             additional_hours=24.5,
-            purchase = True
+            purchase=True
         ))
         res = json.loads(response.data)
 
@@ -610,7 +622,7 @@ class TestGame:
         response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", headers=headers_fake, json=dict(
             rating=5,
             additional_hours=24.5,
-            purchase = True
+            purchase=True
         ))
         res = json.loads(response.data)
 
@@ -633,7 +645,7 @@ class TestGame:
         response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", json=dict(
             rating=5,
             additional_hours=24.5,
-            purchase = True
+            purchase=True
         ))
         res = json.loads(response.data)
 

@@ -1,8 +1,9 @@
 import pytest
 import json
-from src.model import UserModel, GenreModel,ContentType
+from src.model import UserModel, GenreModel, ContentType
 import uuid
 from src import db
+
 
 class TestUser:
     ### GET USER RESOURCE ###
@@ -20,15 +21,16 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.get("/api/user/"+str(user.uuid), headers=headers)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.get(
+            "/api/user/"+str(user.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
         assert res["user"]["email"] == user.email
-    
-    def test_user_resource_bad_jwt(self, test_client,headers_bad):
+
+    def test_user_resource_bad_jwt(self, test_client, headers_bad):
         """Test user get resource with bad access token
 
         Test:
@@ -41,13 +43,14 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.get("/api/user/"+str(user.uuid), headers=headers_bad)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.get(
+            "/api/user/"+str(user.uuid), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
 
-    def test_user_resource_fake_jwt(self, test_client,headers_fake):
+    def test_user_resource_fake_jwt(self, test_client, headers_fake):
         """Test get user resource with fake access token
 
         Test:
@@ -60,8 +63,9 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.get("/api/user/"+str(user.uuid), headers=headers_fake)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.get(
+            "/api/user/"+str(user.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -79,12 +83,12 @@ class TestUser:
         Args:
             test_client (app context): Flask application
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.get("/api/user/"+str(user.uuid))
         res = json.loads(response.data)
 
         assert response.status_code == 401
-        assert res['msg'] == "Missing Authorization Header" 
+        assert res['msg'] == "Missing Authorization Header"
 
     def test_user_resource_bad_uuid(self, test_client, headers):
         """Test get user resource with bad uuid
@@ -99,7 +103,8 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        response = test_client.get("/api/user/"+str(uuid.uuid4()), headers=headers)
+        response = test_client.get(
+            "/api/user/"+str(uuid.uuid4()), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -107,7 +112,7 @@ class TestUser:
 
     ### DELETE USER ###
 
-    def test_delete_user_bad_jwt(self, test_client,headers_bad):
+    def test_delete_user_bad_jwt(self, test_client, headers_bad):
         """Test delete user with bad access token
 
         Test:
@@ -120,8 +125,9 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.delete("/api/user/"+str(user.uuid), headers=headers_bad)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.delete(
+            "/api/user/"+str(user.uuid), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -139,13 +145,14 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.delete("/api/user/"+str(user.uuid), headers=headers_fake)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.delete(
+            "/api/user/"+str(user.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_delete_user_no_jwt(self, test_client):
         """Test delete user resource without access token
 
@@ -158,12 +165,12 @@ class TestUser:
         Args:
             test_client (app context): Flask application
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.delete("/api/user/"+str(user.uuid))
         res = json.loads(response.data)
 
         assert response.status_code == 401
-        assert res['msg'] == "Missing Authorization Header" 
+        assert res['msg'] == "Missing Authorization Header"
 
     def test_delete_user_bad_uuid(self, test_client, headers, user_test2):
         """Test delete user resource with bad uuid
@@ -178,12 +185,13 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        response = test_client.delete("/api/user/"+str(user_test2.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/user/"+str(user_test2.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 403
         assert res['status'] == False
-    
+
     def test_delete_user_other_user(self, test_client, headers, user_test2):
         """Test delete other user resource with access token
 
@@ -197,7 +205,8 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the access token
         """
-        response = test_client.delete("/api/user/"+str(user_test2.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/user/"+str(user_test2.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 403
@@ -216,8 +225,9 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
-        response = test_client.delete("/api/user/"+str(user.uuid), headers=headers)
+        user = UserModel.query.filter_by(username="test").first()
+        response = test_client.delete(
+            "/api/user/"+str(user.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 201
@@ -238,18 +248,18 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.patch("/api/user/"+str(user.uuid), headers=headers, json=dict(
-            email = "test@test.bzh"
+            email="test@test.bzh"
         ))
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 201
         assert res['status'] == True
         assert user.email == "test@test.bzh"
 
-    def test_update_user_bad_jwt(self, test_client,headers_bad):
+    def test_update_user_bad_jwt(self, test_client, headers_bad):
         """Test user update with bad access token
 
         Test:
@@ -262,9 +272,9 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.patch("/api/user/"+str(user.uuid), headers=headers_bad, json=dict(
-            email = "test@test.com"
+            email="test@test.com"
         ))
         res = json.loads(response.data)
 
@@ -284,17 +294,17 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.patch("/api/user/"+str(user.uuid), headers=headers_fake, json=dict(
-            email = "test@test.com"
+            email="test@test.com"
         ))
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 404
         assert res['status'] == False
         assert user.email == "test@test.bzh"
-    
+
     def test_update_user_no_jwt(self, test_client):
         """Test update user resource without access token
 
@@ -307,12 +317,12 @@ class TestUser:
         Args:
             test_client (app context): Flask application
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.patch("/api/user/"+str(user.uuid), json=dict(
-            email = "test@test.com"
+            email="test@test.com"
         ))
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
@@ -332,7 +342,7 @@ class TestUser:
             headers (dict): HTTP headers, to get the access token
         """
         response = test_client.patch("/api/user/"+str(user_test2.uuid), headers=headers, json=dict(
-            email = "test@test.com"
+            email="test@test.com"
         ))
         res = json.loads(response.data)
 
@@ -352,17 +362,15 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
         response = test_client.patch("/api/user/"+str(user.uuid), headers=headers, json=dict(
-            avatar = "test@test.com"
+            avatar="test@test.com"
         ))
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 400
         assert res['status'] == False
-
-    
 
     ### USER PREFERENCES ###
 
@@ -380,12 +388,12 @@ class TestUser:
         """
         response = test_client.put("/api/user/preferences_defined")
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
         assert user.preferences_defined == False
-    
+
     def test_user_preferences_defined_fake_jwt(self, test_client, headers_fake):
         """Test set user preferences defined with fake access token
 
@@ -399,14 +407,15 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        response = test_client.put("/api/user/preferences_defined", headers=headers_fake)
+        response = test_client.put(
+            "/api/user/preferences_defined", headers=headers_fake)
         res = json.loads(response.data)
-        user =  UserModel.query.filter_by(username = "test").first()
+        user = UserModel.query.filter_by(username="test").first()
 
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_user_preferences_defined_bad_jwt(self, test_client,headers_bad):
+    def test_user_preferences_defined_bad_jwt(self, test_client, headers_bad):
         """Test user set preferences defined with bad access token
 
         Test:
@@ -419,10 +428,11 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        response = test_client.put("/api/user/preferences_defined", headers=headers_bad)
+        response = test_client.put(
+            "/api/user/preferences_defined", headers=headers_bad)
 
         assert response.status_code == 422
-    
+
     ### SEARCH USER ###
 
     def test_user_search_no_jwt(self, test_client):
@@ -443,7 +453,7 @@ class TestUser:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_user_search_bad_name(self, test_client, headers):
         """Test user search bad name with access token
 
@@ -457,7 +467,8 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the access token
         """
-        response = test_client.get("/api/user/search/"+str(uuid.uuid4()), headers=headers)
+        response = test_client.get(
+            "/api/user/search/"+str(uuid.uuid4()), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -477,12 +488,13 @@ class TestUser:
             headers (dict): HTTP headers, to get the access token
         """
         user = UserModel.query.filter_by(username="test").first()
-        response = test_client.get("/api/user/search/"+user.username, headers=headers)
+        response = test_client.get(
+            "/api/user/search/"+user.username, headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
-    
+
     def test_user_search_bad_jwt(self, test_client, headers_bad):
         """Test user search with bad access token
 
@@ -497,7 +509,8 @@ class TestUser:
             headers_bad (dict): HTTP headers, to get the bad access token
         """
         user = UserModel.query.filter_by(username="test").first()
-        response = test_client.get("/api/user/search/"+user.username, headers=headers_bad)
+        response = test_client.get(
+            "/api/user/search/"+user.username, headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -516,14 +529,15 @@ class TestUser:
             headers_fake (dict): HTTP headers, to get the fake access token
         """
         user = UserModel.query.filter_by(username="test").first()
-        response = test_client.get("/api/user/search/"+user.username, headers=headers_fake)
+        response = test_client.get(
+            "/api/user/search/"+user.username, headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### USER GENRE ###
-    
+
     def test_user_genre(self, test_client, headers):
         """Test get user genres with access token
 
@@ -579,7 +593,7 @@ class TestUser:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_user_genre_not_jwt(self, test_client):
         """Test get user genre without access token
 
@@ -613,8 +627,9 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        
-        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
+
+        response = test_client.put(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 201
@@ -633,7 +648,8 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
+        response = test_client.put(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -652,11 +668,12 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
+        response = test_client.put(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_user_genre_id_no_jwt(self, test_client, genre_test1):
         """Test update user genre by id without access token
 
@@ -669,7 +686,8 @@ class TestUser:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id))
+        response = test_client.put(
+            "/api/user/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -688,12 +706,13 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        response = test_client.put("/api/user/genre/"+str(9999999), headers=headers)
+        response = test_client.put(
+            "/api/user/genre/"+str(9999999), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ###  USER GENRE ID - DELETE ###
 
     def test_user_genre_delete(self, test_client, headers, genre_test1):
@@ -709,12 +728,13 @@ class TestUser:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
+        response = test_client.delete(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 201
         assert res['status'] == True
-    
+
     def test_user_genre_delete_id_fake_jwt(self, test_client, headers_fake, genre_test1):
         """Test delete user genre by id with fake access token
 
@@ -728,13 +748,14 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
+        response = test_client.delete(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_user_genre_delete_id_bad_jwt(self, test_client, headers_bad,genre_test1):
+    def test_user_genre_delete_id_bad_jwt(self, test_client, headers_bad, genre_test1):
         """Test user genre id delete with bad access token
 
         Test:
@@ -747,12 +768,13 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
+        response = test_client.delete(
+            "/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
-    def test_user_genre_delete_id_no_jwt(self, test_client,genre_test1):
+
+    def test_user_genre_delete_id_no_jwt(self, test_client, genre_test1):
         """Test delete user genre by id without access token
 
         Test:
@@ -765,7 +787,8 @@ class TestUser:
             test_client (app context): Flask application
         """
         genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id))
+        response = test_client.delete(
+            "/api/user/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -784,12 +807,13 @@ class TestUser:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the access token
         """
-        response = test_client.delete("/api/user/genre/"+str(9999999), headers=headers)
+        response = test_client.delete(
+            "/api/user/genre/"+str(9999999), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     ### EXPORT USER DATA ###
 
     def test_user_export_data(self, test_client, headers):
@@ -831,7 +855,7 @@ class TestUser:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_user_export_data_bad_jwt(self, test_client, headers_bad):
         """Test user export data with bad access token
 
@@ -849,7 +873,7 @@ class TestUser:
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_user_export_data_no_jwt(self, test_client):
         """Test  user export resource without access token
 

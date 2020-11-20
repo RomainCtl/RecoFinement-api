@@ -4,6 +4,7 @@ import json
 from src.model import GroupModel, UserModel
 from src import db
 
+
 class TestGroup:
 
     ### CREATE GROUP ###
@@ -21,11 +22,12 @@ class TestGroup:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        response = test_client.post("/api/group", headers=headers_bad, json=dict(name="group_test"))
+        response = test_client.post(
+            "/api/group", headers=headers_bad, json=dict(name="group_test"))
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_group_create_fake_jwt(self, test_client, headers_fake):
         """Test group creation with fake JWT token 
 
@@ -39,7 +41,8 @@ class TestGroup:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        response = test_client.post("/api/group", headers=headers_fake, json=dict(name="group_test"))
+        response = test_client.post(
+            "/api/group", headers=headers_fake, json=dict(name="group_test"))
         res = json.loads(response.data)
         group = GroupModel.query.filter_by(name="group_test").first()
 
@@ -62,7 +65,7 @@ class TestGroup:
         res = json.loads(response.data)
 
         assert response.status_code == 401
-        assert res['msg'] == "Missing Authorization Header" 
+        assert res['msg'] == "Missing Authorization Header"
 
     def test_group_create(self, test_client, headers):
         """Test group creation
@@ -77,7 +80,8 @@ class TestGroup:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.post("/api/group", headers=headers, json=dict(name="group_test"))
+        response = test_client.post(
+            "/api/group", headers=headers, json=dict(name="group_test"))
         res = json.loads(response.data)
         group = GroupModel.query.filter_by(name="group_test").first()
 
@@ -102,11 +106,12 @@ class TestGroup:
             headers_bad (dict): bad HTTP header, with bad access token
             group_test (Group object): group test
         """
-        response = test_client.get("/api/group/"+str(group_test.group_id), headers=headers_bad)
+        response = test_client.get(
+            "/api/group/"+str(group_test.group_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_group_get_id_no_jwt(self, test_client, group_test):
         """Test group by id without JWT token  
 
@@ -125,7 +130,7 @@ class TestGroup:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_group_get_id_bad_group_id(self, test_client, headers):
         """Test group by id with bad id
 
@@ -144,7 +149,7 @@ class TestGroup:
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_group_get_id(self, test_client, headers, group_test):
         """Test group by id
 
@@ -159,7 +164,8 @@ class TestGroup:
             headers (dict): HTTP header, to get the access token
             group_test (Group object): group test
         """
-        response = test_client.get("/api/group/"+str(group_test.group_id), headers=headers)
+        response = test_client.get(
+            "/api/group/"+str(group_test.group_id), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -186,7 +192,7 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(9999999)+"/invitations", headers=headers, json=dict(
             uuid=user_test2.uuid
-            ))
+        ))
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -209,14 +215,15 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(group_test2.group_id)+"/invitations", headers=headers, json=dict(
             uuid=user_test2.uuid
-            ))
+        ))
         res = json.loads(response.data)
-        group = GroupModel.query.filter_by(group_id=group_test2.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test2.group_id).first()
 
         assert response.status_code == 403
         assert res['status'] == False
         assert user_test2 not in group.invitations
-    
+
     def test_group_invitation_bad_jwt(self, test_client, headers_bad, user_test2):
         """Test group invitation with bad JWT token
 
@@ -233,11 +240,11 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(9999999)+"/invitations", headers=headers_bad, json=dict(
             uuid=user_test2.uuid
-            ))
+        ))
         res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_group_invitation_fake_jwt(self, test_client, headers_fake, user_test2):
         """Test group invitation with fake JWT token
 
@@ -254,12 +261,12 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(9999999)+"/invitations", headers=headers_fake, json=dict(
             uuid=user_test2.uuid
-            ))
+        ))
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_group_invitation(self, test_client, headers, user_test2, group_test):
         """Test group invitation 
 
@@ -277,14 +284,15 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(group_test.group_id)+"/invitations", headers=headers, json=dict(
             uuid=user_test2.uuid
-            ))
+        ))
         res = json.loads(response.data)
-        group = GroupModel.query.filter_by(group_id=group_test.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test.group_id).first()
 
         assert response.status_code == 200
         assert res['status'] == True
         assert user_test2 in group.invitations
-    
+
     def test_group_invitation_already_invited(self, test_client, headers, user_test2, group_test):
         """Test group invitation user already invited
 
@@ -302,9 +310,10 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(group_test.group_id)+"/invitations", headers=headers, json=dict(
             uuid=str(user_test2.uuid)
-            ))
+        ))
         res = json.loads(response.data)
-        group = GroupModel.query.filter_by(group_id=group_test.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test.group_id).first()
 
         assert response.status_code == 400
         assert res['status'] == False
@@ -333,9 +342,10 @@ class TestGroup:
         db.session.commit()
         response = test_client.post("/api/group/"+str(group_test.group_id)+"/invitations", headers=headers, json=dict(
             uuid=str(user_test2.uuid)
-            ))
+        ))
         res = json.loads(response.data)
-        group = GroupModel.query.filter_by(group_id=group_test.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test.group_id).first()
 
         assert response.status_code == 400
         assert res['status'] == False
@@ -359,14 +369,15 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(group_test.group_id)+"/invitations", headers=headers, json=dict(
             uuid=str(user_test1.uuid)
-            ))
+        ))
         res = json.loads(response.data)
-        group = GroupModel.query.filter_by(group_id=group_test.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test.group_id).first()
 
         assert response.status_code == 400
         assert res['status'] == False
         assert res['message'] == "You can not invite yourself to your group !"
-    
+
     def test_group_invitation_no_jwt(self, test_client, user_test2, group_test):
         """Test group invitation without JWT token
 
@@ -383,7 +394,7 @@ class TestGroup:
         """
         response = test_client.post("/api/group/"+str(group_test.group_id)+"/invitations", json=dict(
             uuid=str(user_test2.uuid)
-            ))
+        ))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -406,7 +417,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             user_test2 (User object): user test 2
         """
-        response = test_client.put("/api/group/"+str(99999)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.put(
+            "/api/group/"+str(99999)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -428,11 +440,12 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_bad)
+        response = test_client.put("/api/group/"+str(group_test2.group_id) +
+                                   "/invitations/"+str(user_test1.uuid), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
-        
+
     def test_group_accept_invitation_fake_jwt(self, test_client, headers_fake, user_test1, group_test2):
         """Test group accept invitation with fake JWT token
 
@@ -448,7 +461,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_fake)
+        response = test_client.put("/api/group/"+str(group_test2.group_id) +
+                                   "/invitations/"+str(user_test1.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -469,7 +483,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid))
+        response = test_client.put(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -490,7 +505,8 @@ class TestGroup:
             user_test2 (User object): user test 2
             group_test2 (Group object): group test 2
         """
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test2.uuid), headers=headers)
+        response = test_client.put(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test2.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 403
@@ -518,13 +534,14 @@ class TestGroup:
             group_test2.invitations.remove(user_test1)
         db.session.add(group_test2)
         db.session.commit()
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.put(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
         assert res['message'] == "Invitation not found !"
-    
+
     def test_group_accept_invitation(self, test_client, headers, user_test1, group_test2):
         """Test group accept invitation
 
@@ -546,7 +563,8 @@ class TestGroup:
             group_test2.invitations.append(user_test1)
         db.session.add(group_test2)
         db.session.commit()
-        response = test_client.put("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.put(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -571,7 +589,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             user_test2 (User object): user test 2
         """
-        response = test_client.delete("/api/group/"+str(99999)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/group/"+str(99999)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -593,11 +612,12 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_bad)
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
-        
+
     def test_group_delete_invitation_fake_jwt(self, test_client, headers_fake, user_test1, group_test2):
         """Test group delete invitation with fake JWT token
 
@@ -613,7 +633,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_fake)
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -634,7 +655,8 @@ class TestGroup:
             user_test1 (User object): user test 1
             group_test2 (Group object): group test 2
         """
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid))
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -655,7 +677,8 @@ class TestGroup:
             user_test2 (User object): user test 2
             group_test2 (Group object): group test 2
         """
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test2.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test2.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 403
@@ -683,13 +706,14 @@ class TestGroup:
             group_test2.invitations.remove(user_test1)
         db.session.add(group_test2)
         db.session.commit()
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
         assert res['message'] == "Invitation not found !"
-    
+
     def test_group_delete_invitation(self, test_client, headers, user_test1, group_test2):
         """Test group delete invitation
 
@@ -711,7 +735,8 @@ class TestGroup:
             group_test2.invitations.append(user_test1)
         db.session.add(group_test2)
         db.session.commit()
-        response = test_client.delete("/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id)+"/invitations/"+str(user_test1.uuid), headers=headers)
         res = response.data
 
         assert response.status_code == 204
@@ -732,12 +757,13 @@ class TestGroup:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        response = test_client.delete("/api/group/"+str(999999), headers=headers)
+        response = test_client.delete(
+            "/api/group/"+str(999999), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_group_delete_fake_jwt(self, test_client, headers_fake, group_test):
         """Test group delete group with fake JWT token
 
@@ -752,12 +778,13 @@ class TestGroup:
             headers_fake (dict): fake HTTP header, with invalid signed access token
             group_test (Group object): group test
         """
-        response = test_client.delete("/api/group/"+str(group_test.group_id), headers=headers_fake)
+        response = test_client.delete(
+            "/api/group/"+str(group_test.group_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
-    
+
     def test_group_delete_bad_jwt(self, test_client, headers_bad, group_test):
         """Test group delete group with bad JWT token
 
@@ -772,7 +799,8 @@ class TestGroup:
             headers_bad (dict): bad HTTP header, with bad access token
             group_test (Group object): group test
         """
-        response = test_client.delete("/api/group/"+str(group_test.group_id), headers=headers_bad)
+        response = test_client.delete(
+            "/api/group/"+str(group_test.group_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -795,7 +823,7 @@ class TestGroup:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-    
+
     def test_group_leave(self, test_client, headers, user_test2, group_test2):
         """Test group leave group
 
@@ -817,14 +845,16 @@ class TestGroup:
         db.session.add(group_test2)
         db.session.commit()
 
-        response = test_client.delete("/api/group/"+str(group_test2.group_id), headers=headers, json=dict(name="group_test"))
+        response = test_client.delete(
+            "/api/group/"+str(group_test2.group_id), headers=headers, json=dict(name="group_test"))
         res = response.data
-        group = GroupModel.query.filter_by(group_id=group_test2.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test2.group_id).first()
 
         assert response.status_code == 204
         assert res == b""
         assert user not in group.members
-    
+
     def test_group_delete(self, test_client, headers, group_test):
         """Test group delete group
 
@@ -839,9 +869,11 @@ class TestGroup:
             headers (dict): HTTP header, to get the access token
             group_test (Group object): group test 
         """
-        response = test_client.delete("/api/group/"+str(group_test.group_id), headers=headers, json=dict(name="group_test"))
+        response = test_client.delete(
+            "/api/group/"+str(group_test.group_id), headers=headers, json=dict(name="group_test"))
         res = response.data
-        group = GroupModel.query.filter_by(group_id=group_test.group_id).first()
+        group = GroupModel.query.filter_by(
+            group_id=group_test.group_id).first()
 
         assert response.status_code == 204
         assert res == b""
