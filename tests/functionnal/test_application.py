@@ -156,7 +156,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            header_fake (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/application", headers=headers_fake)
         res = json.loads(response.data)
@@ -312,7 +312,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/application/search/test%20app", headers=headers_fake)
         res = json.loads(response.data)
@@ -406,7 +406,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/application/genres", headers=headers_fake)
         res = json.loads(response.data)
@@ -486,7 +486,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
         response = test_client.get("/api/application/"+str(app.app_id)+"/meta", headers=headers_fake)
@@ -603,7 +603,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         app = ApplicationModel.query.filter_by(app_id=999999).first()
         response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers_fake, json=dict(

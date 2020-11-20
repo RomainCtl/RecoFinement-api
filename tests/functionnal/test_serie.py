@@ -155,7 +155,7 @@ class TestSerie:
 
         Args:
             test_client (app context): Flask application
-            header_fake (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/serie", headers=headers_fake)
         res = json.loads(response.data)
@@ -311,7 +311,7 @@ class TestSerie:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/serie/search/test%20serie", headers=headers_fake)
         res = json.loads(response.data)
@@ -405,7 +405,7 @@ class TestSerie:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/serie/genres", headers=headers_fake)
         res = json.loads(response.data)
@@ -485,7 +485,7 @@ class TestSerie:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
         response = test_client.get("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_fake)
@@ -601,7 +601,7 @@ class TestSerie:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         serie = SerieModel.query.filter_by(serie_id=999999).first()
         response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers_fake, json=dict(

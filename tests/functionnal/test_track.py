@@ -154,7 +154,7 @@ class TestTrack:
 
         Args:
             test_client (app context): Flask application
-            header_fake (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/track", headers=headers_fake)
         res = json.loads(response.data)
@@ -310,7 +310,7 @@ class TestTrack:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/track/search/test%20track", headers=headers_fake)
         res = json.loads(response.data)
@@ -404,7 +404,7 @@ class TestTrack:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/track/genres", headers=headers_fake)
         res = json.loads(response.data)
@@ -484,7 +484,7 @@ class TestTrack:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         track = TrackModel.query.filter_by(track_id=999999).first()
         response = test_client.get("/api/track/"+str(track.track_id)+"/meta", headers=headers_fake)
@@ -600,7 +600,7 @@ class TestTrack:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         track = TrackModel.query.filter_by(track_id=999999).first()
         response = test_client.patch("/api/track/"+str(track.track_id)+"/meta", headers=headers_fake, json=dict(

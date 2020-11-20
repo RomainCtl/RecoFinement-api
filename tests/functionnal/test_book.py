@@ -153,7 +153,7 @@ class TestBook:
 
         Args:
             test_client (app context): Flask application
-            header_fake (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/book", headers=headers_fake)
         res = json.loads(response.data)
@@ -310,7 +310,7 @@ class TestBook:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/book/search/test%20book", headers=headers_fake)
         res = json.loads(response.data)
@@ -407,7 +407,7 @@ class TestBook:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         book = BookModel.query.filter_by(isbn=str(123456789012)).first()
         response = test_client.get("/api/book/"+str(book.isbn)+"/meta", headers=headers_fake)
@@ -523,7 +523,7 @@ class TestBook:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         book = BookModel.query.filter_by(isbn=str(123456789012)).first()
         response = test_client.patch("/api/book/"+str(book.isbn)+"/meta", headers=headers_fake, json=dict(

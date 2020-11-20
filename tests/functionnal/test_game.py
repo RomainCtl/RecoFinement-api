@@ -155,7 +155,7 @@ class TestGame:
 
         Args:
             test_client (app context): Flask application
-            header_fake (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/game", headers=headers_fake)
         res = json.loads(response.data)
@@ -311,7 +311,7 @@ class TestGame:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/game/search/test%20game", headers=headers_fake)
         res = json.loads(response.data)
@@ -405,7 +405,7 @@ class TestGame:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         response = test_client.get("/api/game/genres", headers=headers_fake)
         res = json.loads(response.data)
@@ -485,7 +485,7 @@ class TestGame:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
         response = test_client.get("/api/game/"+str(game.game_id)+"/meta", headers=headers_fake)
@@ -604,7 +604,7 @@ class TestGame:
 
         Args:
             test_client (app context): Flask application
-            headers_bad (dict): fake HTTP header, with invalid signed access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
         game = GameModel.query.filter_by(game_id=999999).first()
         response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", headers=headers_fake, json=dict(
