@@ -6,14 +6,14 @@ from mailjet_rest import Client
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'postgresql://' + \
     os.environ.get('DB_USER_LOGIN', '')+':'+os.environ.get('DB_USER_PASSWORD', '')+'@' + \
-    os.environ['DB_URL']+':'+os.environ.get('DB_PORT', '')+'/'+os.environ.get('DB_NAME', '')
+    os.environ.get('DB_URL', '')+':'+os.environ.get('DB_PORT', '')+'/'+os.environ.get('DB_NAME', '')
 
 JWT_SECRET_KEY = os.environ.get('SECRET_KEY', '')
 JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(seconds=43_200)
 JWT_BLACKLIST_ENABLED = True
 JWT_BLACKLIST_TOKEN_CHECKS = ['access']
 
-PORT = os.environ['SERVICE_PORT']
+PORT = os.environ.get('SERVICE_PORT', '')
 
 ENGINE_URL = os.environ.get("ENGINE_URL", "http://127.0.0.1:4041")
 ENGINE_APIKEY = os.environ.get("ENGINE_APIKEY", "")
