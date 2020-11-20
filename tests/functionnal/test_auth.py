@@ -223,10 +223,10 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.post('/api/auth/forget', json=dict(
-            reset_password_token=create_access_token(identity=uuid.uuid4()),
+        response = test_client.post('/api/auth/reset', json=dict(
+            reset_password_token=str(create_access_token(identity=uuid.uuid4())),
             password="Azerty!123"))
         res = json.loads(response.data)
-
+        
         assert response.status_code == 401
         assert res['status'] == False

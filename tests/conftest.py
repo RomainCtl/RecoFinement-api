@@ -30,16 +30,12 @@ def genre_test1():
 
 @pytest.fixture(scope="function")
 def user_test1():
-<<<<<<< Updated upstream
-    if (user := UserModel.query.filter_by(username="test").first()):
-=======
     """ create UserObject test1
 
     Returns:
         UserObject: user "test1"
     """
-    if (user :=  UserModel.query.filter_by(username = "test").first()):
->>>>>>> Stashed changes
+    if (user :=  UserModel.query.filter_by(username="test").first()):
         return user
     else:
         new_user = UserModel(
@@ -55,16 +51,12 @@ def user_test1():
 
 @pytest.fixture(scope="function")
 def user_test2():
-<<<<<<< Updated upstream
-    if (user := UserModel.query.filter_by(username="test2").first()):
-=======
     """ create UserObject test1
 
     Returns:
         UserObject: user "test1"
     """
-    if (user :=  UserModel.query.filter_by(username = "test2").first()):
->>>>>>> Stashed changes
+    if (user :=  UserModel.query.filter_by(username ="test2").first()):
         return user
     else:
         new_user = UserModel(
@@ -152,16 +144,12 @@ def headers_fake():
 
 @pytest.fixture(scope="module")
 def test_client():
-<<<<<<< Updated upstream
-    flask_app = create_app(settings.testing)
-=======
     """ The Flask test application
 
     Yields:
         [app context]: app context for the Flask test application
     """
-    flask_app = create_app()
->>>>>>> Stashed changes
+    flask_app = create_app(settings.testing)
 
     # Flask provides a way to test your application exposing the Werkzeug test Client and handling the context locals for you.
     testing_client = flask_app.test_client()

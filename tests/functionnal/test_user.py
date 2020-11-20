@@ -423,25 +423,6 @@ class TestUser:
 
         assert response.status_code == 422
     
-    def test_user_preferences_defined(self, test_client,headers):
-        """Test user set preferences defined with access token
-
-        Test:
-            PUT: /api/user/preferences_defined
-
-        Expected result:
-            201, {"status" : True}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP headers, to get the access token
-        """
-        response = test_client.put("/api/user/preferences_defined", headers=headers)
-        res =json.loads(response.data)
-
-        assert response.status_code == 201
-        assert res['status'] == True
-    
     ### SEARCH USER ###
 
     def test_user_search_no_jwt(self, test_client):
