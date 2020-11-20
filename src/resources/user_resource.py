@@ -29,7 +29,8 @@ class UserResource(Resource):
     @jwt_required
     def get(self, uuid):
         """ Get a specific user's data by their uuid """
-        return UserService.get_user_data(uuid)
+        user_uuid = get_jwt_identity()
+        return UserService.get_user_data(uuid, user_uuid)
 
     @api.doc(
         "Delete a specific user account",
@@ -99,11 +100,12 @@ class UserSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Get list of track's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return UserService.search_user_data(search_term, page)
+        return UserService.search_user_data(search_term, page, user_uuid)
 
 
 @api.route("/genre")

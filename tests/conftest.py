@@ -30,7 +30,16 @@ def genre_test1():
 
 @pytest.fixture(scope="function")
 def user_test1():
+<<<<<<< Updated upstream
     if (user := UserModel.query.filter_by(username="test").first()):
+=======
+    """ create UserObject test1
+
+    Returns:
+        UserObject: user "test1"
+    """
+    if (user :=  UserModel.query.filter_by(username = "test").first()):
+>>>>>>> Stashed changes
         return user
     else:
         new_user = UserModel(
@@ -46,7 +55,16 @@ def user_test1():
 
 @pytest.fixture(scope="function")
 def user_test2():
+<<<<<<< Updated upstream
     if (user := UserModel.query.filter_by(username="test2").first()):
+=======
+    """ create UserObject test1
+
+    Returns:
+        UserObject: user "test1"
+    """
+    if (user :=  UserModel.query.filter_by(username = "test2").first()):
+>>>>>>> Stashed changes
         return user
     else:
         new_user = UserModel(
@@ -92,6 +110,14 @@ def group_test2(user_test2):
 
 @pytest.fixture(scope="function")
 def headers(user_test1):
+    """Create header with access token from user test 1
+
+    Args:
+        user_test1 (UserObject): user "test1"
+
+    Returns:
+        Dict: Headers with the token access
+    """
     access_token = create_access_token(identity=user_test1.uuid)
     return {
         "Authorization": "Bearer %s" % access_token
@@ -100,6 +126,11 @@ def headers(user_test1):
 
 @pytest.fixture(scope="function")
 def headers_bad():
+    """Create header with bad access token. It is a uuid
+
+    Returns:
+        Dict: Headers with the bad token access
+    """
     access_token = str(uuid.uuid4())
     return {
         "Authorization": "Bearer %s" % access_token
@@ -108,6 +139,11 @@ def headers_bad():
 
 @pytest.fixture(scope="function")
 def headers_fake():
+    """Create header with fake access token signed by Flask application
+
+    Returns:
+        Dict: Headers with the fake token access
+    """
     access_token = str(create_access_token(identity=uuid.uuid4()))
     return {
         "Authorization": "Bearer %s" % access_token
@@ -116,7 +152,16 @@ def headers_fake():
 
 @pytest.fixture(scope="module")
 def test_client():
+<<<<<<< Updated upstream
     flask_app = create_app(settings.testing)
+=======
+    """ The Flask test application
+
+    Yields:
+        [app context]: app context for the Flask test application
+    """
+    flask_app = create_app()
+>>>>>>> Stashed changes
 
     # Flask provides a way to test your application exposing the Werkzeug test Client and handling the context locals for you.
     testing_client = flask_app.test_client()

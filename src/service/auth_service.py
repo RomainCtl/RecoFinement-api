@@ -145,7 +145,7 @@ class AuthService:
             db.session.add(user)
             db.session.commit()
             resp = message(True, "Password reset successfully")
-            return resp
+            return resp,200
 
         except Exception as error:
             current_app.logger.error(error)
