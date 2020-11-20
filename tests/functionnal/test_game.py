@@ -17,7 +17,7 @@ class TestGame:
             200, {"status": True, "content": ResponseObject}
 
         Args:
-            test_client (app context): Flask game
+            test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
         if not (GameModel.query.filter_by(game_id=999999).first()):
