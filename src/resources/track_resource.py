@@ -45,11 +45,12 @@ class TrackSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Getlist of track's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return TrackService.search_track_data(search_term, page)
+        return TrackService.search_track_data(search_term, page, user_uuid)
 
 
 @api.route("/genres")
@@ -64,7 +65,8 @@ class TrackGenresResource(Resource):
     @jwt_required
     def get(self):
         """ Get track genres """
-        return TrackService.get_ordered_genre()
+        user_uuid = get_jwt_identity()
+        return TrackService.get_ordered_genre(user_uuid)
 
 
 @api.route("/<int:track_id>/meta")

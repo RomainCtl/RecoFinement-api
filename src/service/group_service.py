@@ -29,7 +29,8 @@ class GroupService:
         """ Create group object """
         try:
             group = GroupModel(name=group_name)
-            user = UserModel.query.filter_by(uuid=creator_uuid).first()
+            if not (user := UserModel.query.filter_by(uuid=creator_uuid).first()):
+                return err_resp("User not found!", 404)
             user.owned_groups.append(group)
 
             db.session.add(user)
@@ -89,6 +90,9 @@ class GroupService:
 
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("Member not found!", 404)
+        
+        if not ( UserModel.query.filter_by(uuid=current_user_uuid).first()):
+            return err_resp("Member not found!", 404)
 
         if str(user.uuid) != current_user_uuid:
             return err_resp("Unable to accept an invitation that is not intended to you", 403)
@@ -121,6 +125,9 @@ class GroupService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("Member not found!", 404)
 
+        if not (UserModel.query.filter_by(uuid=current_user_uuid).first()):
+            return err_resp("Member not found!", 404)
+
         if str(user.uuid) != current_user_uuid and str(group.owner.uuid) != current_user_uuid:
             return err_resp("Unable to delete an invitation that is not intended to you if you are not the group owner", 403)
 
@@ -143,6 +150,9 @@ class GroupService:
         """ Leave group (if current user is the group owner, this group will be deleted) """
         if not (group := GroupModel.query.filter_by(group_id=group_id).first()):
             return err_resp("Group not found!", 404)
+        
+        if not (UserModel.query.filter_by(uuid=current_user_uuid).first()):
+                return err_resp("User not found!", 404)
 
         try:
             if str(group.owner.uuid) == current_user_uuid:

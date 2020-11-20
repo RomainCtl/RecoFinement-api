@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -10,8 +10,10 @@ from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase, GameE
 
 class GameService:
     @staticmethod
-    def search_game_data(search_term, page):
+    def search_game_data(search_term, page, connected_user_uuid):
         """ Search game data by name """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+                return err_resp("User not found!", 404)
         games, total_pages = Paginator.get_from(
             GameModel.query.filter(GameModel.name.ilike(search_term+"%")).union(
                 GameModel.query.filter(GameModel.name.ilike("%"+search_term+"%"))),
@@ -56,20 +58,20 @@ class GameService:
 
         # NOTE we do not have any rating for game (cold start), so we use 'recommendations' field instead of 'popularity_score' that is computed by 'reco_engine' service
         popularity_query = db.session.query(
-            null().label("user_id"),
-            null().label("game_id"),
-            null().label("score"),
-            null().label("engine"),
-            null().label("engine_priority"),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Float),
+            null(),
+            func.cast(null(), db.Integer),
             GameModel
         ).order_by(
             GameModel.recommendations.desc().nullslast(),
-        ).limit(200)
+        ).limit(200).subquery()
 
         games, total_pages = Paginator.get_from(
             for_user_query
             .union(for_group_query)
-            .union(popularity_query)
+            .union(select([popularity_query]))
             .order_by(
                 RecommendedGameModel.engine_priority.desc().nullslast(),
                 RecommendedGameModel.score.desc(),
@@ -102,7 +104,9 @@ class GameService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre():
+    def get_ordered_genre(connected_user_uuid):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.GAME).order_by(GenreModel.count.desc()).all()
 
@@ -122,6 +126,9 @@ class GameService:
         """ Get specific 'meta_user_track' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not (GameModel.query.filter_by(game_id=game_id).first()):
+            return err_resp("Book not found!", 404)
 
         try:
             if not (meta_user_game := MetaUserGameModel.query.filter_by(user_id=user.user_id, game_id=game_id).first()):

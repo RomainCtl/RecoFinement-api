@@ -11,8 +11,10 @@ from src.schemas import UserBase, UserObject, UserFullObject, GenreBase
 
 class UserService:
     @staticmethod
-    def search_user_data(search_term, page):
+    def search_user_data(search_term, page, connected_user_uuid):
         """ Search user data by username """
+        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         users, total_pages = Paginator.get_from(
             UserModel.query.filter(UserModel.username.ilike(search_term+"%")).union(
                 UserModel.query.filter(UserModel.username.ilike("%"+search_term+"%"))),
@@ -34,9 +36,12 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def get_user_data(uuid):
+    def get_user_data(uuid,connected_user_uuid):
         """ Get user's data by uuid """
         if not (user := UserModel.query.filter_by(uuid=uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
         try:
@@ -78,7 +83,7 @@ class UserService:
 
             resp = message(True, "User liked genre sent")
             resp["content"] = genres_data
-            return resp, 201
+            return resp, 200
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
@@ -133,6 +138,9 @@ class UserService:
         """ Update user data username - email - password """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+        
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
 
         if str(user_uuid) != connected_user_uuid:
             return err_resp("Unable to update an account which is not your's", 403)
@@ -181,10 +189,13 @@ class UserService:
     @staticmethod
     def delete_account(user_uuid, connected_user_uuid):
         """" Delete user account """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if str(user_uuid) != connected_user_uuid:
+        if str(user_uuid) != str(connected_user_uuid):
             return err_resp("Unable to delete an account which is not your's", 403)
 
         try:

@@ -44,11 +44,12 @@ class MovieSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Getlist of movie's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return MovieService.search_movie_data(search_term, page)
+        return MovieService.search_movie_data(search_term, page, user_uuid)
 
 
 @api.route("/genres")
@@ -63,7 +64,8 @@ class MovieGenresResource(Resource):
     @jwt_required
     def get(self):
         """ Get movie genres """
-        return MovieService.get_ordered_genre()
+        user_uuid = get_jwt_identity()
+        return MovieService.get_ordered_genre(user_uuid)
 
 
 @api.route("/<int:movie_id>/meta")

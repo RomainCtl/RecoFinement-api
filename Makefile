@@ -17,12 +17,14 @@ else
 	PYTHON := python3
 endif
 
+TEST_OUTPUT_FILE = build/index.html
+
 # --------------------------------------------------------
 # Commands
 
 PIPENV = ${PYTHON} -m pipenv
 PYTHON_ENV = ${PIPENV} run ${PYTHON}
-PYTEST = $(PYTHON) -m pytest
+PYTEST = $(PIPENV) run pytest
 
 # -----------------------------------------------------------------------------
 # include env
@@ -56,7 +58,9 @@ clean: ## Delete all generated files in project folder
 	$(PIPENV) --rm
 
 test: ## Run all unit tests
-	$(PYTEST)
+	rm ./test.db || true
+	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html
+	rm ./test.db
 
 db-update: ## Update database to the last migration
 	$(PIPENV) run flask db upgrade

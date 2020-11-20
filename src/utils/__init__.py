@@ -5,6 +5,7 @@ from .mailjet import sendForget, sendReset, sendNewAccount
 from .spotify import Spotify
 from .tmdb import TMDB
 from .gbooks import GBooks
+from .guid import GUID
 
 
 def message(status, message):

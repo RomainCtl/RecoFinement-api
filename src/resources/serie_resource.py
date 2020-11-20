@@ -45,11 +45,12 @@ class SerieSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Getlist of serie's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return SerieService.search_serie_data(search_term, page)
+        return SerieService.search_serie_data(search_term, page, user_uuid)
 
 
 @api.route("/genres")
@@ -64,7 +65,8 @@ class SerieGenreResource(Resource):
     @jwt_required
     def get(self):
         """ Get serie genres """
-        return SerieService.get_ordered_genre()
+        user_uuid = get_jwt_identity()
+        return SerieService.get_ordered_genre(user_uuid)
 
 
 @api.route("/<int:serie_id>/episodes")

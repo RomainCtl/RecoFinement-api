@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -10,8 +10,10 @@ from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, MetaUserSe
 
 class SerieService:
     @staticmethod
-    def search_serie_data(search_term, page):
+    def search_serie_data(search_term, page, connected_user_uuid):
         """ Search serie data by title """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         series, total_pages = Paginator.get_from(
             SerieModel.query.filter(SerieModel.title.ilike(search_term+"%")).union(
                 SerieModel.query.filter(SerieModel.title.ilike("%"+search_term+"%"))),
@@ -56,20 +58,20 @@ class SerieService:
 
         # Popularity
         popularity_query = db.session.query(
-            null().label("user_id"),
-            null().label("serie_id"),
-            null().label("score"),
-            null().label("engine"),
-            null().label("engine_priority"),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Float),
+            null(),
+            func.cast(null(), db.Integer),
             SerieModel
         ).order_by(
             SerieModel.popularity_score.desc().nullslast(),
-        ).limit(200)
+        ).limit(200).subquery()
 
         series, total_pages = Paginator.get_from(
             for_user_query
             .union(for_group_query)
-            .union(popularity_query)
+            .union(select([popularity_query]))
             .order_by(
                 RecommendedSerieModel.engine_priority.desc().nullslast(),
                 RecommendedSerieModel.score.desc(),
@@ -102,7 +104,9 @@ class SerieService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre():
+    def get_ordered_genre(connected_user_uuid):
+        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.SERIE).order_by(GenreModel.count.desc()).all()
 
@@ -138,6 +142,9 @@ class SerieService:
         """ Get specific 'meta_user_serie' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not (SerieModel.query.filter_by(serie_id=serie_id).first()):
+            return err_resp("Application not found!", 404)
 
         try:
             if not (meta_user_serie := MetaUserSerieModel.query.filter_by(user_id=user.user_id, serie_id=serie_id).first()):

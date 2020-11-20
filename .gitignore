@@ -3,5 +3,12 @@ __pycache__/
 .vscode/
 .env
 
+*.html
+
 ### backup tarball ###
 /backup/*.gz
+
+test.db
+test.db-journal
+
+build/

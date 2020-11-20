@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -10,8 +10,10 @@ from src.schemas import BookBase, MetaUserBookBase, BookExtra
 
 class BookService:
     @staticmethod
-    def search_book_data(search_term, page):
+    def search_book_data(search_term, page, connected_user_uuid):
         """ Search book data by title """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+                return err_resp("User not found!", 404)
         books, total_pages = Paginator.get_from(
             BookModel.query.filter(BookModel.title.ilike(search_term+"%")).union(
                 BookModel.query.filter(BookModel.title.ilike("%"+search_term+"%"))),
@@ -56,20 +58,20 @@ class BookService:
 
         # Popularity
         popularity_query = db.session.query(
-            null().label("user_id"),
-            null().label("isbn"),
-            null().label("score"),
-            null().label("engine"),
-            null().label("engine_priority"),
+            func.cast(null(), db.Integer),
+            null(),
+            func.cast(null(), db.Float),
+            null(),
+            func.cast(null(), db.Integer),
             BookModel
         ).order_by(
             BookModel.popularity_score.desc().nullslast(),
-        ).limit(200)
+        ).limit(200).subquery()
 
         books, total_pages = Paginator.get_from(
             for_user_query
             .union(for_group_query)
-            .union(popularity_query)
+            .union(select([popularity_query]))
             .order_by(
                 RecommendedBookModel.engine_priority.desc().nullslast(),
                 RecommendedBookModel.score.desc(),
@@ -106,6 +108,9 @@ class BookService:
         """ Get specific 'meta_user_book' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not (BookModel.query.filter_by(isbn=isbn).first()):
+            return err_resp("Book not found!", 404)
 
         try:
             if not (meta_user_book := MetaUserBookModel.query.filter_by(user_id=user.user_id, isbn=isbn).first()):

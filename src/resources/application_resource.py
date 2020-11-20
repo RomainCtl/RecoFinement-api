@@ -44,11 +44,12 @@ class ApplicationSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Getlist of application's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return ApplicationService.search_application_data(search_term, page)
+        return ApplicationService.search_application_data(search_term, page, user_uuid)
 
 
 @api.route("/genres")
@@ -63,7 +64,8 @@ class ApplicatioGenresResource(Resource):
     @jwt_required
     def get(self):
         """ Get application genres """
-        return ApplicationService.get_ordered_genres()
+        uuid = get_jwt_identity()
+        return ApplicationService.get_ordered_genres(uuid)
 
 
 @api.route("/<int:app_id>/meta")
