@@ -1,6 +1,6 @@
 from flask_jwt_extended import create_access_token
-import pytest
 from py.xml import html
+import pytest
 import uuid
 
 import settings.testing
@@ -10,6 +10,22 @@ from src.model import UserModel, GroupModel, GenreModel, ContentType
 
 def pytest_html_report_title(report):
     report.title = "Recofinement tests result"
+
+
+def pytest_html_results_table_header(cells):
+    cells.pop()
+
+def pytest_html_results_table_row(report, cells):
+    cells.pop()
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    report.description = html.pre(item.function.__doc__)
+
+def pytest_html_results_table_html(report, data):
+    data.insert(0, report.description)
 
 
 @pytest.fixture(scope="function")

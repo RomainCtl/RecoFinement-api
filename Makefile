@@ -60,6 +60,7 @@ clean: ## Delete all generated files in project folder
 test: ## Run all unit tests
 	rm ./test.db || true
 	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html
+	rm ./test.db
 
 db-update: ## Update database to the last migration
 	$(PIPENV) run flask db upgrade
