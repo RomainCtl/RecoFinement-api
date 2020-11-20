@@ -14,7 +14,7 @@ class TestApplication:
             GET: /api/book
 
         Expected result: 
-            200, {"content": ResponseObject}
+            200, {"status": True, "content": ResponseObject}
 
         Args:
             test_client (app context): Flask application
@@ -51,7 +51,7 @@ class TestApplication:
             GET: /api/book?page=1
 
         Expected result: 
-            200, {"content": ResponseObject}
+            200, {"status": True, "content": ResponseObject}
 
         Args:
             test_client (app context): Flask application
@@ -71,7 +71,7 @@ class TestApplication:
             GET: /api/book?page=9999999
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -91,7 +91,7 @@ class TestApplication:
             GET: /api/book?page=0
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -111,7 +111,7 @@ class TestApplication:
             GET: /api/book?page=-1
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -131,7 +131,7 @@ class TestApplication:
             GET: /api/book
 
         Expected result: 
-            422, {}
+            422
 
         Args:
             test_client (app context): Flask application
@@ -149,7 +149,7 @@ class TestApplication:
             GET: /api/book
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
@@ -188,7 +188,7 @@ class TestApplication:
             GET: /api/book/search/test book
 
         Expected result: 
-            200, {"content": ResponseObject}
+            200, {"status": True, "content": ResponseObject}
 
         Args:
             test_client (app context): Flask application
@@ -208,7 +208,7 @@ class TestApplication:
             GET: /api/book/search/test book?page=1
 
         Expected result: 
-            200, {"content": ResponseObject}
+            200, {"status": True, "content": ResponseObject}
 
         Args:
             test_client (app context): Flask application
@@ -228,7 +228,7 @@ class TestApplication:
             GET: /api/book/search/test book?page=0
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -248,7 +248,7 @@ class TestApplication:
             GET: /api/book/search/test book?page=9999999
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -268,7 +268,7 @@ class TestApplication:
             GET: /api/book/search/test book?page=-1
 
         Expected result: 
-            200, {"content": []}
+            200, {"status": True, "content": []}
 
         Args:
             test_client (app context): Flask application
@@ -288,7 +288,7 @@ class TestApplication:
             GET: /api/book/search/test book
 
         Expected result: 
-            422, {}
+            422
 
         Args:
             test_client (app context): Flask application
@@ -306,7 +306,7 @@ class TestApplication:
             GET: /api/book/search/test book
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
@@ -345,7 +345,7 @@ class TestApplication:
             GET: /api/book/<isbn>/meta
 
         Expected result: 
-            200
+            200, {"status": True}
 
         Args:
             test_client (app context): Flask application
@@ -365,7 +365,7 @@ class TestApplication:
             GET: /api/book/<bad_isbn>/meta
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
@@ -384,7 +384,7 @@ class TestApplication:
             GET: /api/book/<isbn>/meta
 
         Expected result: 
-            422, {}
+            422
 
         Args:
             test_client (app context): Flask application
@@ -403,7 +403,7 @@ class TestApplication:
             GET: /api/book/<isbn>/meta
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
@@ -444,7 +444,7 @@ class TestApplication:
             PATCH: /api/book/<isbn>/meta
 
         Expected result: 
-            201, {}
+            201, {"status": True}
 
         Args:
             test_client (app context): Flask application
@@ -472,7 +472,7 @@ class TestApplication:
             PATCH: /api/book/<bad_isbn>/meta
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
@@ -496,7 +496,7 @@ class TestApplication:
             PATCH: /api/book/<isbn>/meta
 
         Expected result: 
-            422, {}
+            422
 
         Args:
             test_client (app context): Flask application
@@ -519,7 +519,7 @@ class TestApplication:
             PATCH: /api/book/<isbn>/meta
 
         Expected result: 
-            404, {}
+            404, {"status": False}
 
         Args:
             test_client (app context): Flask application
