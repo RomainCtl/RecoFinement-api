@@ -4,7 +4,7 @@ from src.model import TrackModel, MetaUserTrackModel
 from src import db
 import uuid
 
-class TestApplication:
+class TestTrack:
 
     ### SERIE RESOURCE ###
 

@@ -3,7 +3,7 @@ import json
 from src.model import MovieModel, MetaUserMovieModel
 from src import db
 
-class TestApplication:
+class TestMovie:
 
     ### MOVIE RESOURCE ###
 

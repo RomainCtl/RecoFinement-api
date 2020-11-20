@@ -3,7 +3,7 @@ import json
 from src.model import GameModel, MetaUserGameModel
 from src import db
 
-class TestApplication:
+class TestGame:
 
     ### GAME RESOURCE ###
 

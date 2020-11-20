@@ -244,43 +244,28 @@ class TestUser:
 
     ### USER GENRE ID - UPDATE ###
 
-    def test_user_genre_id(self, test_client, headers):
-        if not (GenreModel.query.filter_by(name="genre test").first()) :
-            new_user = GenreModel(
-                    genre_id = -1,
-                    name = "genre test",
-                    count = 0,
-                    content_type = ContentType.BOOK
-                )
-            db.session.add(new_user)
-            db.session.flush()
-            db.session.commit()
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        #genre = GenreModel.query.first()
-        response = test_client.put("/api/user/genre/"+str(genre.genre_id), headers=headers)
+    def test_user_genre_id(self, test_client, headers, genre_test1):
+        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 201
         assert res['status'] == True
 
-    def test_user_genre_id_fake_jwt(self, test_client, headers_fake):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.put("/api/user/genre/"+str(genre.genre_id), headers=headers_fake)
+    def test_user_genre_id_fake_jwt(self, test_client, headers_fake, genre_test1):
+        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_user_genre_id_bad_jwt(self, test_client, headers_bad):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.put("/api/user/genre/"+str(genre.genre_id), headers=headers_bad)
+    def test_user_genre_id_bad_jwt(self, test_client, headers_bad, genre_test1):
+        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
     
-    def test_user_genre_id_no_jwt(self, test_client):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.put("/api/user/genre/"+str(genre.genre_id))
+    def test_user_genre_id_no_jwt(self, test_client, genre_test1):
+        response = test_client.put("/api/user/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -295,32 +280,28 @@ class TestUser:
     
     ###  USER GENRE ID - DELETE ###
 
-    def test_user_genre_delete(self, test_client, headers):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.delete("/api/user/genre/"+str(genre.genre_id), headers=headers)
+    def test_user_genre_delete(self, test_client, headers, genre_test1):
+        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 201
         assert res['status'] == True
     
-    def test_user_genre_delete_id_fake_jwt(self, test_client, headers_fake):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.delete("/api/user/genre/"+str(genre.genre_id), headers=headers_fake)
+    def test_user_genre_delete_id_fake_jwt(self, test_client, headers_fake, genre_test1):
+        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_user_genre_delete_id_bad_jwt(self, test_client, headers_bad):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.delete("/api/user/genre/"+str(genre.genre_id), headers=headers_bad)
+    def test_user_genre_delete_id_bad_jwt(self, test_client, headers_bad, genre_test1):
+        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
     
-    def test_user_genre_delete_id_no_jwt(self, test_client):
-        genre = GenreModel.query.filter_by(name="genre test").first()
-        response = test_client.delete("/api/user/genre/"+str(genre.genre_id))
+    def test_user_genre_delete_id_no_jwt(self, test_client, genre_test1):
+        response = test_client.delete("/api/user/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401

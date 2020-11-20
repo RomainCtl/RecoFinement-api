@@ -3,7 +3,7 @@ import json
 from src.model import SerieModel, MetaUserSerieModel
 from src import db
 
-class TestApplication:
+class TestSerie:
 
     ### SERIE RESOURCE ###
 

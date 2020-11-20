@@ -90,14 +90,14 @@ class TestApplication:
     ### APPLICATION SEARCH ###
 
     def test_application_search(self, test_client, headers):
-        response = test_client.get("/api/application/search/messenger", headers=headers)
+        response = test_client.get("/api/application/search/test%20app", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
 
     def test_application_search_one_page(self, test_client, headers):
-        response = test_client.get("/api/application/search/messenger?page=1", headers=headers)
+        response = test_client.get("/api/application/search/test%20app?page=1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -105,7 +105,7 @@ class TestApplication:
         assert res['content'] != []
 
     def test_application_search_zero_page(self, test_client, headers):
-        response = test_client.get("/api/application/search/messenger?page=0", headers=headers)
+        response = test_client.get("/api/application/search/test%20app?page=0", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -113,7 +113,7 @@ class TestApplication:
         assert res['content'] == []
     
     def test_application_search_big_page(self, test_client, headers):
-        response = test_client.get("/api/application/search/messenger?page=9999999", headers=headers)
+        response = test_client.get("/api/application/search/test%20app?page=9999999", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -121,7 +121,7 @@ class TestApplication:
         assert res['content'] == []
     
     def test_application_search_negative_page(self, test_client, headers):
-        response = test_client.get("/api/application/search/messenger?page=-1", headers=headers)
+        response = test_client.get("/api/application/search/test%20app?page=-1", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -129,20 +129,20 @@ class TestApplication:
         assert res['content'] == []
 
     def test_application_search_bad_jwt(self, test_client, headers_bad):
-        response = test_client.get("/api/application/search/messenger", headers=headers_bad)
+        response = test_client.get("/api/application/search/test%20app", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
 
     def test_application_search_fake_jwt(self, test_client, headers_fake):
-        response = test_client.get("/api/application/search/messenger", headers=headers_fake)
+        response = test_client.get("/api/application/search/test%20app", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
         assert res['status'] == False
     
     def test_application_search_no_jwt(self, test_client):
-        response = test_client.get("/api/application/search/messenger")
+        response = test_client.get("/api/application/search/test%20app")
         res = json.loads(response.data)
 
         assert response.status_code == 401

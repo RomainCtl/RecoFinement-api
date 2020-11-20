@@ -7,3 +7,6 @@ __pycache__/
 
 ### backup tarball ###
 /backup/*.gz
+
+test.db
+test.db-journal

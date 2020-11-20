@@ -58,6 +58,7 @@ clean: ## Delete all generated files in project folder
 	$(PIPENV) --rm
 
 test: ## Run all unit tests
+	rm ./test.db || true
 	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html
 
 db-update: ## Update database to the last migration

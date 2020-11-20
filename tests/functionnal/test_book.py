@@ -3,7 +3,7 @@ import json
 from src.model import BookModel, MetaUserBookModel
 from src import db
 
-class TestApplication:
+class TestBook:
 
     ### BOOK RESOURCE ###
 
