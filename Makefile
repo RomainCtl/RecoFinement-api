@@ -17,7 +17,7 @@ else
 	PYTHON := python3
 endif
 
-TEST_OUTPUT_FILE = report.html
+TEST_OUTPUT_FILE = builld/index.html
 
 # --------------------------------------------------------
 # Commands
