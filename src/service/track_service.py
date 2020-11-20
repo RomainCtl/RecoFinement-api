@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text, and_, select, desc, nullslast
+from sqlalchemy import func, text, and_, select
 from sqlalchemy.sql.expression import null
 from datetime import datetime
 
@@ -66,8 +66,8 @@ class TrackService:
             func.cast(null(), db.Integer),
             TrackModel
         ).order_by(
-            nullslast(desc(TrackModel.rating_count)),
-            nullslast(desc(TrackModel.rating)),
+            TrackModel.rating_count.desc().nullslast(),
+            TrackModel.rating.desc().nullslast(),
         ).limit(200).subquery()
 
         tracks, total_pages = Paginator.get_from(
@@ -77,8 +77,8 @@ class TrackService:
             .order_by(
                 RecommendedTrackModel.engine_priority.desc().nullslast(),
                 RecommendedTrackModel.score.desc(),
-                nullslast(desc(TrackModel.rating_count)),
-                nullslast(desc(TrackModel.rating)),
+                TrackModel.rating_count.desc().nullslast(),
+                TrackModel.rating.desc().nullslast(),
             ),
             page,
         )

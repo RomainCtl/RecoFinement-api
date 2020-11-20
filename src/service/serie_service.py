@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text, select, desc, nullslast
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -65,7 +65,7 @@ class SerieService:
             func.cast(null(), db.Integer),
             SerieModel
         ).order_by(
-            nullslast(desc(SerieModel.popularity_score)),
+            SerieModel.popularity_score.desc().nullslast(),
         ).limit(200).subquery()
 
         series, total_pages = Paginator.get_from(
@@ -75,7 +75,7 @@ class SerieService:
             .order_by(
                 RecommendedSerieModel.engine_priority.desc().nullslast(),
                 RecommendedSerieModel.score.desc(),
-                nullslast(desc(SerieModel.popularity_score)),
+                SerieModel.popularity_score.desc().nullslast(),
             ),
             page,
         )

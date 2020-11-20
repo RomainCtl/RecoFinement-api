@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text, select, desc, nullslast
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -65,7 +65,7 @@ class GameService:
             func.cast(null(), db.Integer),
             GameModel
         ).order_by(
-            nullslast(desc(GameModel.recommendations)),
+            GameModel.recommendations.desc().nullslast(),
         ).limit(200).subquery()
 
         games, total_pages = Paginator.get_from(
@@ -75,7 +75,7 @@ class GameService:
             .order_by(
                 RecommendedGameModel.engine_priority.desc().nullslast(),
                 RecommendedGameModel.score.desc(),
-                nullslast(desc(GameModel.recommendations)),
+                GameModel.recommendations.desc().nullslast(),
             ),
             page,
         )

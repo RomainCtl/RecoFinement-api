@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text, select, desc, nullslast
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -65,7 +65,7 @@ class MovieService:
             func.cast(null(), db.Integer),
             MovieModel
         ).order_by(
-            nullslast(desc(MovieModel.popularity_score)),
+            MovieModel.popularity_score.desc().nullslast(),
         ).limit(200).subquery()
 
         movies, total_pages = Paginator.get_from(
@@ -75,7 +75,7 @@ class MovieService:
             .order_by(
                 RecommendedMovieModel.engine_priority.desc().nullslast(),
                 RecommendedMovieModel.score.desc(),
-                nullslast(desc(MovieModel.popularity_score)),
+                MovieModel.popularity_score.desc().nullslast(),
             ),
             page,
         )

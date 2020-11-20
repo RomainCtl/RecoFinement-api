@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text, select, desc, nullslast
+from sqlalchemy import func, text, select, nulls_last
 from sqlalchemy.sql.expression import null
 from sqlalchemy.sql.elements import Null
 
@@ -66,8 +66,8 @@ class ApplicationService:
             func.cast(null(), db.Integer),
             ApplicationModel
         ).order_by(
-            nullslast(desc(ApplicationModel.reviews)),
-            nullslast(desc(ApplicationModel.rating)),
+            nulls_last(ApplicationModel.reviews.desc().nullslast(),
+            nulls_last(ApplicationModel.rating.desc().nullslast(),
         ).limit(200).subquery()
 
         applications, total_pages = Paginator.get_from(
@@ -77,8 +77,8 @@ class ApplicationService:
             .order_by(
                 RecommendedApplicationModel.engine_priority.desc().nullslast(),
                 RecommendedApplicationModel.score.desc().nullslast(),
-                nullslast(desc(ApplicationModel.reviews)),
-                nullslast(desc(ApplicationModel.rating)),
+                ApplicationModel.reviews.desc().nullslast(),
+                ApplicationModel.rating.desc().nullslast(),
             ),
             page,
         )
