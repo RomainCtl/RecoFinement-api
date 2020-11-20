@@ -25,7 +25,7 @@ API_KEY = os.environ.get('MJ_APIKEY_PUBLIC', '')
 API_SECRET = os.environ.get('MJ_APIKEY_PRIVATE', '')
 MAILJET = Client(auth=(API_KEY, API_SECRET), version='v3.1')
 FROM_EMAIL = "advise.ly1@gmail.com"
-URL_FRONT = os.enviro.get('URL_FRONT', '')
+URL_FRONT = os.environ.get('URL_FRONT', '')
 
 # SPOTIFY
 SPOTIFY_PROVIDER = "https://accounts.spotify.com/authorize"
