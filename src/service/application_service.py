@@ -1,6 +1,7 @@
 from flask import current_app
-from sqlalchemy import func, text, desc
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
+from sqlalchemy.sql.elements import Null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
@@ -58,21 +59,21 @@ class ApplicationService:
 
         # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         popularity_query = db.session.query(
-            null().label("user_id"),
-            null().label("app_id"),
-            null().label("score"),
-            null().label("engine"),
-            null().label("engine_priority"),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Float),
+            null(),
+            func.cast(null(), db.Integer),
             ApplicationModel
         ).order_by(
             ApplicationModel.reviews.desc().nullslast(),
             ApplicationModel.rating.desc().nullslast(),
-        ).limit(200)
+        ).limit(200).subquery()
 
         applications, total_pages = Paginator.get_from(
             for_user_query
             .union(for_group_query)
-            .union(popularity_query)
+            .union(select([popularity_query]))
             .order_by(
                 RecommendedApplicationModel.engine_priority.desc().nullslast(),
                 RecommendedApplicationModel.score.desc().nullslast(),

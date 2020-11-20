@@ -1,7 +1,5 @@
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
-
 from src import db
+from src.utils import GUID
 
 TrackGenresModel = db.Table("track_genres",
                             db.Column("track_id", db.Integer, db.ForeignKey(
@@ -37,7 +35,7 @@ class TrackModel(db.Model):
     artist_name = db.Column(db.String(255), index=True)
     release = db.Column(db.String(255))
     track_mmid = db.Column(db.String(45))
-    recording_mbid = db.Column(UUID(as_uuid=True))
+    recording_mbid = db.Column(GUID())
     rating = db.Column(db.Float)
     rating_count = db.Column(db.Integer, default=0)
     spotify_id = db.Column(db.String(45))

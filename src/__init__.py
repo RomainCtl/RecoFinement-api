@@ -4,13 +4,16 @@ from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid
 import settings
 
 
-def create_app():
+def create_app(config = None):
     """
     Create application
     """
     #: Flask application
     app = Flask(__name__)
-    app.config.from_object(settings)
+    if config is None:
+        app.config.from_object(settings)
+    else:
+        app.config.from_object(config)
 
     # Registers flask extensions
     db.init_app(app)

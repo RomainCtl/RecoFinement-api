@@ -1,5 +1,5 @@
 from flask import current_app
-from sqlalchemy import func, text
+from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -58,20 +58,20 @@ class MovieService:
 
         # Popularity
         popularity_query = db.session.query(
-            null().label("user_id"),
-            null().label("game_id"),
-            null().label("score"),
-            null().label("engine"),
-            null().label("engine_priority"),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Integer),
+            func.cast(null(), db.Float),
+            null(),
+            func.cast(null(), db.Integer),
             MovieModel
         ).order_by(
             MovieModel.popularity_score.desc().nullslast(),
-        ).limit(200)
+        ).limit(200).subquery()
 
         movies, total_pages = Paginator.get_from(
             for_user_query
             .union(for_group_query)
-            .union(popularity_query)
+            .union(select([popularity_query]))
             .order_by(
                 RecommendedMovieModel.engine_priority.desc().nullslast(),
                 RecommendedMovieModel.score.desc(),

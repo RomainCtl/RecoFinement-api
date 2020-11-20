@@ -1,8 +1,8 @@
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import CheckConstraint
 import uuid
 
 from src import db, bcrypt
+from src.utils import GUID
 
 
 class MetaUserBookModel(db.Model):
@@ -219,7 +219,7 @@ class UserModel(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True,
                         autoincrement=True, index=True)
-    uuid = db.Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True)
+    uuid = db.Column(GUID(), default=uuid.uuid4, unique=True)
     email = db.Column(db.String(255), unique=True)
     username = db.Column(db.String(45), nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
