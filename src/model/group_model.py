@@ -110,7 +110,7 @@ class GroupModel(db.Model):
         "user.user_id", ondelete="CASCADE"))
 
     invitations = db.relationship("UserModel", secondary=InvitationModel,
-                                  lazy="dynamic", backref=db.backref("invitations", lazy="dynamic", cascade="all,delete"), cascade="all,delete")
+                                  lazy="dynamic", backref=db.backref("invitations", lazy="dynamic"))
 
     recommended_applications = db.relationship(
         "RecommendedApplicationForGroupModel", lazy="subquery")

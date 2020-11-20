@@ -147,6 +147,7 @@ class GroupService:
         try:
             if str(group.owner.uuid) == current_user_uuid:
                 group.members = []
+                group.invitations = []
                 db.session.delete(group)
             else:
                 current_user = UserModel.query.filter_by(
