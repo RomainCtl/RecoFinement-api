@@ -44,11 +44,12 @@ class GameSearchResource(Resource):
     @jwt_required
     def get(self, search_term):
         """ Getlist of game's data by term """
+        user_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return GameService.search_game_data(search_term, page)
+        return GameService.search_game_data(search_term, page, user_uuid)
 
 
 @api.route("/genres")
@@ -63,7 +64,8 @@ class GameGenresResource(Resource):
     @jwt_required
     def get(self):
         """ Get game genres """
-        return GameService.get_ordered_genre()
+        user_uuid = get_jwt_identity()
+        return GameService.get_ordered_genre(user_uuid)
 
 
 @api.route("/<int:game_id>/meta")

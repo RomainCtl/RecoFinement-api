@@ -10,8 +10,10 @@ from src.schemas import GameBase, GameObject, GenreBase, MetaUserGameBase, GameE
 
 class GameService:
     @staticmethod
-    def search_game_data(search_term, page):
+    def search_game_data(search_term, page, connected_user_uuid):
         """ Search game data by name """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+                return err_resp("User not found!", 404)
         games, total_pages = Paginator.get_from(
             GameModel.query.filter(GameModel.name.ilike(search_term+"%")).union(
                 GameModel.query.filter(GameModel.name.ilike("%"+search_term+"%"))),
@@ -102,7 +104,9 @@ class GameService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre():
+    def get_ordered_genre(connected_user_uuid):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.GAME).order_by(GenreModel.count.desc()).all()
 
@@ -122,6 +126,9 @@ class GameService:
         """ Get specific 'meta_user_track' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not (GameModel.query.filter_by(game_id=game_id).first()):
+            return err_resp("Book not found!", 404)
 
         try:
             if not (meta_user_game := MetaUserGameModel.query.filter_by(user_id=user.user_id, game_id=game_id).first()):

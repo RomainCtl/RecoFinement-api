@@ -10,8 +10,10 @@ from src.schemas import BookBase, MetaUserBookBase, BookExtra
 
 class BookService:
     @staticmethod
-    def search_book_data(search_term, page):
+    def search_book_data(search_term, page, connected_user_uuid):
         """ Search book data by title """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+                return err_resp("User not found!", 404)
         books, total_pages = Paginator.get_from(
             BookModel.query.filter(BookModel.title.ilike(search_term+"%")).union(
                 BookModel.query.filter(BookModel.title.ilike("%"+search_term+"%"))),
@@ -106,6 +108,9 @@ class BookService:
         """ Get specific 'meta_user_book' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not (BookModel.query.filter_by(isbn=isbn).first()):
+            return err_resp("Book not found!", 404)
 
         try:
             if not (meta_user_book := MetaUserBookModel.query.filter_by(user_id=user.user_id, isbn=isbn).first()):

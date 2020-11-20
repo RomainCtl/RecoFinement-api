@@ -307,7 +307,7 @@ class ExternalService:
             return err_resp("CSRF invalid!", 404)
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-        # Check if the email is taken
+        
         if ExternalModel.query.filter_by(user_id=user.user_id,service_name="GBooks").first() is not None:
             return validation_error(False, "gbooks Oauth is already done.")
         try:

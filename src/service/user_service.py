@@ -181,10 +181,13 @@ class UserService:
     @staticmethod
     def delete_account(user_uuid, connected_user_uuid):
         """" Delete user account """
-        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if str(user_uuid) != connected_user_uuid:
+        if str(user_uuid) != str(connected_user_uuid):
             return err_resp("Unable to delete an account which is not your's", 403)
 
         try:

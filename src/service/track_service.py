@@ -11,8 +11,10 @@ from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase, Tr
 
 class TrackService:
     @staticmethod
-    def search_track_data(search_term, page):
+    def search_track_data(search_term, page, connected_user_uuid):
         """ Search track data by title """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         tracks, total_pages = Paginator.get_from(
             TrackModel.query.filter(TrackModel.title.ilike(search_term+"%")).union(
                 TrackModel.query.filter(TrackModel.title.ilike("%"+search_term+"%"))),
@@ -105,7 +107,9 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre():
+    def get_ordered_genre(connected_user_uuid):
+        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.TRACK).order_by(GenreModel.count.desc()).all()
 
@@ -125,6 +129,9 @@ class TrackService:
         """ Get specific 'meta_user_track' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not ( TrackModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Application not found!", 404)
 
         try:
             if not (meta_user_track := MetaUserTrackModel.query.filter_by(user_id=user.user_id, track_id=track_id).first()):

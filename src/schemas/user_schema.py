@@ -56,7 +56,8 @@ class UserFullObject(SQLAlchemyAutoSchema):
 
 
 class UpdateUserDataSchema(DTOSchema):
-    """ /auth/register [POST]
+    """ /auth/register  [POST]
+        /user/update    [PATCH]
 
     Parameters:
     - Email

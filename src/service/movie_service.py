@@ -10,8 +10,10 @@ from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase, Mo
 
 class MovieService:
     @staticmethod
-    def search_movie_data(search_term, page):
+    def search_movie_data(search_term, page, connected_user_uuid):
         """ Search movie data by title """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         movies, total_pages = Paginator.get_from(
             MovieModel.query.filter(MovieModel.title.ilike(search_term+"%")).union(
                 MovieModel.query.filter(MovieModel.title.ilike("%"+search_term+"%"))),
@@ -102,7 +104,9 @@ class MovieService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genre():
+    def get_ordered_genre(connected_user_uuid):
+        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.MOVIE).order_by(GenreModel.count.desc()).all()
 
@@ -122,6 +126,9 @@ class MovieService:
         """ Get specific 'meta_user_movie' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not ( MovieModel.query.filter_by(movie_id=movie_id).first()):
+            return err_resp("Application not found!", 404)
 
         try:
             if not (meta_user_movie := MetaUserMovieModel.query.filter_by(user_id=user.user_id, movie_id=movie_id).first()):

@@ -10,8 +10,10 @@ from src.schemas import ApplicationBase, GenreBase, MetaUserApplicationBase, App
 
 class ApplicationService:
     @staticmethod
-    def search_application_data(search_term, page):
+    def search_application_data(search_term, page, connected_user_uuid):
         """ Search application data by name """
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
         applications, total_pages = Paginator.get_from(
             ApplicationModel.query.filter(ApplicationModel.name.ilike(search_term+"%")).union(
                 ApplicationModel.query.filter(ApplicationModel.name.ilike("%"+search_term+"%"))),
@@ -104,7 +106,10 @@ class ApplicationService:
             return internal_err_resp()
 
     @staticmethod
-    def get_ordered_genres():
+    def get_ordered_genres(connected_user_uuid):
+        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+        
         genres = GenreModel.query.filter_by(
             content_type=ContentType.APPLICATION).order_by(GenreModel.count.desc()).all()
 
@@ -124,6 +129,9 @@ class ApplicationService:
         """ Get specific 'meta_user_application' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        if not ( ApplicationModel.query.filter_by(app_id=app_id).first()):
+            return err_resp("Application not found!", 404)
 
         try:
             if not (meta_user_application := MetaUserApplicationModel.query.filter_by(user_id=user.user_id, app_id=app_id).first()):

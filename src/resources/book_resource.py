@@ -1,3 +1,4 @@
+import uuid
 from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -47,7 +48,8 @@ class BookSearchResource(Resource):
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return BookService.search_book_data(search_term, page)
+        uuid=get_jwt_identity()
+        return BookService.search_book_data(search_term, page, uuid)
 
 
 @api.route("/<string:isbn>/meta")

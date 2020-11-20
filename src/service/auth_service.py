@@ -119,7 +119,7 @@ class AuthService:
 
             resp = message(
                 True, "If your account exist, you will find an email to recover your password in your mailbox")
-            return resp
+            return resp, 200
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
