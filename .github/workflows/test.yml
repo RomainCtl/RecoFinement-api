@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -15,11 +15,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-          
-      - name: Install Python dependencies
-        run: |
-          python -m pip install sqlite-utils
-          sqlite-utils --version
 
       - name: Install dependencies
         run: make init
