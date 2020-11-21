@@ -59,7 +59,7 @@ clean: ## Delete all generated files in project folder
 
 test: ## Run all unit tests
 	rm test.db .coverage || true
-	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html --cov=src --cov-report html:build/coverage --cov-report term:skip-covered tests/ -k "TestApplication"
+	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html --cov=src --cov-report html:build/coverage --cov-report term:skip-covered tests/
 	rm test.db .coverage
 
 db-update: ## Update database to the last migration
