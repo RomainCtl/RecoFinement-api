@@ -30,7 +30,7 @@ jobs:
 
       - name: Badge
         run: |
-          pipenv run anybadge -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg coverage
+          pipenv run anybadge -l coverage -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg
           pipenv run anybadge -l tests -v passing -f build/tests.svg
 
       - name: Deploy
