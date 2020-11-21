@@ -1,12 +1,12 @@
 name: Test and Deploy
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: [push]
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
 
 jobs:
   build-and-deploy:
@@ -25,6 +25,11 @@ jobs:
 
       - name: Test with pytest
         run: make test
+
+      - name: Badge
+        run: |
+          pipenv run anybadge -v $() -f build/coverage.svg coverage
+          pipenv run anybadge -v passing -f build/tests.svg tests
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
