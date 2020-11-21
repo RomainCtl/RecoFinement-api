@@ -21,7 +21,9 @@ jobs:
           python-version: 3.8
 
       - name: Install dependencies
-        run: make init
+        run: |
+          make init
+          apt install libxml2
 
       - name: Test with pytest
         run: make test
