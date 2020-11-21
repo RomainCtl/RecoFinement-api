@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           make init
-          sudo apt install libxml2
+          sudo apt install libxml2-utils
 
       - name: Test with pytest
         run: make test
