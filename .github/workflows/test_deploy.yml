@@ -30,7 +30,7 @@ jobs:
 
       - name: Badge
         run: |
-          score = $(xmllint --html --xpath "div[@id='header']/div/h1/span" build/coverage/index.html)
+          score = $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html)
           pipenv run anybadge -v $score -f build/coverage.svg coverage
           pipenv run anybadge -v passing -f build/tests.svg tests
 
