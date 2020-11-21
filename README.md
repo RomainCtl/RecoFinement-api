@@ -1,5 +1,8 @@
 # RecoFinement - API service
 
+![Test&Deploy badge](https://github.com/RomainCtl/Recofinement-api/workflows/Test%20and%20Deploy/badge.svg) ![Tests](https://github.com/RomainCtl/RecoFinement-api/blob/gh-pages/tests.svg) ![Coverage score](https://github.com/RomainCtl/RecoFinement-api/blob/gh-pages/coverage.svg)
+
+* Tests results: [https://romainctl.github.io/RecoFinement-api/](https://romainctl.github.io/RecoFinement-api/)
 * Documentation: [https://RomainCtl.github.io/RecoFinement/](https://RomainCtl.github.io/RecoFinement/)
 * Master project repo: [https://github.com/RomainCtl/RecoFinement](https://github.com/RomainCtl/RecoFinement)
 

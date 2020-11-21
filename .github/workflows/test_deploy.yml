@@ -1,6 +1,6 @@
 name: Test and Deploy
 
-on:
+on: [push]
   push:
     branches:
       - master
@@ -21,10 +21,17 @@ jobs:
           python-version: 3.8
 
       - name: Install dependencies
-        run: make init
+        run: |
+          make init
+          sudo apt install libxml2-utils
 
       - name: Test with pytest
         run: make test
+
+      - name: Badge
+        run: |
+          pipenv run anybadge -l coverage -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg
+          pipenv run anybadge -l tests -v passing -f build/tests.svg
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1

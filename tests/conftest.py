@@ -12,6 +12,12 @@ def pytest_html_report_title(report):
     report.title = "Recofinement tests result"
 
 
+def pytest_html_results_summary(prefix, summary, postfix):
+    l = html.p(html.b("Coverage details: "))
+    l.append(html.a("here", href="./coverage/index.html"))
+    prefix.append(l)
+
+
 def pytest_html_results_table_header(cells):
     cells.pop()
 

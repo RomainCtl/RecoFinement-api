@@ -30,6 +30,8 @@ google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
 launchpadlib = "*"
 pytest-html = "*"
+pytest-cov = "*"
+anybadge = "*"
 
 [requires]
 python_version = "3.8"
