@@ -28,12 +28,19 @@ jobs:
       - name: Test with pytest
         run: make test
 
-      - name: Badge
-        run: |
-          pipenv run anybadge -l coverage -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg
-          pipenv run anybadge -l tests -v passing -f build/tests.svg
+      - name: Coverage badge
+        run: pipenv run anybadge -l coverage -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg
+
+      - name: Tests status badge
+        if: ${{ success() }}
+        run: pipenv run anybadge -l tests -v passing -f build/tests.svg passing=green failing=red
+
+      - name: Tests status badge
+        if: ${{ failure() }}
+        run: pipenv run anybadge -l tests -v failing -f build/tests.svg passing=green failing=red
 
       - name: Deploy
+        if: ${{ always() }}
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
