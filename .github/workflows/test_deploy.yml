@@ -31,7 +31,7 @@ jobs:
       - name: Badge
         run: |
           pipenv run anybadge -v $(xmllint --html --xpath "//div[@id='header']/div/h1/span/text()" build/coverage/index.html) -f build/coverage.svg coverage
-          pipenv run anybadge -v passing -f build/tests.svg tests
+          pipenv run anybadge -l tests -v passing -f build/tests.svg
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
