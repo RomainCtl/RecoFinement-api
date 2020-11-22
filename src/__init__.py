@@ -1,10 +1,11 @@
 from flask import Flask
 
 from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid
+from src.utils import err_resp
 import settings
 
 
-def create_app(config = None):
+def create_app(config=None):
     """
     Create application
     """
@@ -30,6 +31,11 @@ def create_app(config = None):
     @jwt.token_in_blacklist_loader
     def check_if_token_is_revoked(decrypted_token):
         return RevokedTokenModel.is_revoked(decrypted_token['jti'])
+
+    @jwt.expired_token_loader
+    def my_expired_token_callback(expired_token):
+        token_type = expired_token['type']
+        return err_resp('The {} token has expired'.format(token_type), 401)
 
     # Register blueprints
     from .resources import api_bp

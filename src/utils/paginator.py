@@ -1,13 +1,13 @@
 from sqlalchemy import func
 import math
 
-from src import settings
+from settings import PAGE_SIZE
 
 
 class Paginator:
     @staticmethod
     def get_from(query, page_number=1):
-        page_size = settings.PAGE_SIZE
+        page_size = PAGE_SIZE
         offset = (page_number - 1) * page_size
 
         total_elem = query.count()
