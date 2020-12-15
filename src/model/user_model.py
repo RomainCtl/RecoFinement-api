@@ -329,17 +329,17 @@ class UserModel(db.Model):
         "RecommendedTrackModel", lazy="subquery")
     
     bad_recommadation_applications = db.relationship(
-        "BadRecommadationApplicationModel", lazy="subquery")
+        "BadRecommendationApplicationModel", lazy="subquery")
     bad_recommadation_books = db.relationship(
-        "BadRecommadationBookModel", lazy="subquery")
+        "BadRecommendationBookModel", lazy="subquery")
     bad_recommadation_games = db.relationship(
-        "BadRecommadationGameModel", lazy="subquery")
+        "BadRecommendationGameModel", lazy="subquery")
     bad_recommadation_movies = db.relationship(
-        "BadRecommadationMovieModel", lazy="subquery")
+        "BadRecommendationMovieModel", lazy="subquery")
     bad_recommadation_series = db.relationship(
-        "BadRecommadationSerieModel", lazy="subquery")
+        "BadRecommendationSerieModel", lazy="subquery")
     bad_recommadation_tracks = db.relationship(
-        "BadRecommadationTrackModel", lazy="subquery")
+        "BadRecommendationTrackModel", lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
