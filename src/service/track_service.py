@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel, RecommendedTrackModel, RecommendedTrackForGroupModel
+from src.model import TrackModel, MetaUserTrackModel, GenreModel, ContentType, UserModel, RecommendedTrackModel, RecommendedTrackForGroupModel, BadRecommendationTrackModel
 from src.schemas import TrackBase, TrackObject, GenreBase, MetaUserTrackBase, TrackExtra
 
 
@@ -221,6 +221,37 @@ class TrackService:
                 page=page,
                 total_pages=total_pages
             )
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_bad_recommendation(user_uuid, track_id, data):
+        """ Add bad user recommendation """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Track not found!", 404)
+        
+        try:
+            for rc in  data['reason_categorie'].split(','):
+                for r in data['reason'].split(','):
+
+                    new_bad_reco = BadRecommendationTrackModel(
+                        user_id = user.id,
+                        track_id = track.track_id,
+                        reason_categorie = rc,
+                        reason = r
+                    )
+
+                    db.session.add(new_bad_reco)
+                    db.session.flush()
+            db.session.commit()
+
+            resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()

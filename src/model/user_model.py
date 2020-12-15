@@ -211,6 +211,87 @@ class RecommendedTrackModel(db.Model):
     engine_priority = db.Column(db.Integer)
 
 
+class BadRecommendationApplicationModel(db.Model):
+    """
+    BadRecommendationApplication Model for storing bad recommended applications for a user
+    """
+    __tablename__ = "bad_recommendation_application"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    app_id = db.Column(db.Integer, db.ForeignKey(
+        "application.app_id", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
+class BadRecommendationBookModel(db.Model):
+    """
+    BadRecommendationBook Model for storing bad recommended Books for a user
+    """
+    __tablename__ = "bad_recommendation_book"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    isbn = db.Column(db.String(13), db.ForeignKey(
+        "book.isbn", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
+
+class BadRecommendationGameModel(db.Model):
+    """
+    BadRecommendationGame Model for storing bad recommended Games for a user
+    """
+    __tablename__ = "bad_recommendation_game"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.game_id", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
+
+class BadRecommendationMovieModel(db.Model):
+    """
+    BadRecommendationMovie Model for storing bad recommended Movies for a user
+    """
+    __tablename__ = "bad_recommendation_movie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey(
+        "movie.movie_id", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
+
+class BadRecommendationSerieModel(db.Model):
+    """
+    BadRecommendationSerie Model for storing bad recommended Series for a user
+    """
+    __tablename__ = "bad_recommendation_serie"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    serie_id = db.Column(db.Integer, db.ForeignKey(
+        "serie.serie_id", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
+class BadRecommendationTrackModel(db.Model):
+    """
+    BadRecommendationTrack Model for storing bad recommended Tracks for a user
+    """
+    __tablename__ = "bad_recommendation_track"
+
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), primary_key=True)
+    track_id = db.Column(db.Integer, db.ForeignKey(
+        "track.track_id", ondelete="CASCADE"), primary_key=True)
+    reason_categorie = db.Column(db.Text,nullable=False)
+    reason = db.Column(db.Text)# ? , nullable=False)
+
 class UserModel(db.Model):
     """
     User Model for storing user related details
@@ -246,6 +327,19 @@ class UserModel(db.Model):
         "RecommendedSerieModel", lazy="subquery")
     recommended_tracks = db.relationship(
         "RecommendedTrackModel", lazy="subquery")
+    
+    bad_recommadation_applications = db.relationship(
+        "BadRecommadationApplicationModel", lazy="subquery")
+    bad_recommadation_books = db.relationship(
+        "BadRecommadationBookModel", lazy="subquery")
+    bad_recommadation_games = db.relationship(
+        "BadRecommadationGameModel", lazy="subquery")
+    bad_recommadation_movies = db.relationship(
+        "BadRecommadationMovieModel", lazy="subquery")
+    bad_recommadation_series = db.relationship(
+        "BadRecommadationSerieModel", lazy="subquery")
+    bad_recommadation_tracks = db.relationship(
+        "BadRecommadationTrackModel", lazy="subquery")
 
     groups = db.relationship(
         "GroupModel", secondary=GroupMembersModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))

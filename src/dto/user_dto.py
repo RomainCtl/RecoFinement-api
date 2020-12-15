@@ -71,3 +71,11 @@ class UserDto:
             "email": fields.String(min=5, max=64)
         },
     )
+
+    bad_recommendation = api.model(
+        "ApplicationMetaExpected",
+        {
+            "reason_categorie": fields.String,
+            "reason": fields.String
+        }
+    )

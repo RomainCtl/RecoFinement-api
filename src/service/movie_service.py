@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel, RecommendedMovieModel, RecommendedMovieForGroupModel
+from src.model import MovieModel, MetaUserMovieModel, GenreModel, ContentType, UserModel, RecommendedMovieModel, RecommendedMovieForGroupModel, BadRecommendationMovieModel
 from src.schemas import MovieBase, MovieObject, GenreBase, MetaUserMovieBase, MovieExtra
 
 
@@ -182,6 +182,37 @@ class MovieService:
             db.session.commit()
 
             resp = message(True, "Meta successfully updated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_bad_recommendation(user_uuid, movie_id, data):
+        """ Add bad user recommendation """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
+            return err_resp("Movie not found!", 404)
+        
+        try:
+            for rc in  data['reason_categorie'].split(','):
+                for r in data['reason'].split(','):
+
+                    new_bad_reco = BadRecommendationMovieModel(
+                        user_id = user.id,
+                        movie_id = movie.movie_id,
+                        reason_categorie = rc,
+                        reason = r
+                    )
+
+                    db.session.add(new_bad_reco)
+                    db.session.flush()
+            db.session.commit()
+
+            resp = message(True, "Bad recommendation has been registered.")
             return resp, 201
 
         except Exception as error:

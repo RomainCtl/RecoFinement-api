@@ -4,7 +4,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import BookService
-from src.dto import BookDto
+from src.dto import BookDto, UserDto
 
 api = BookDto.api
 data_resp = BookDto.data_resp
@@ -88,3 +88,25 @@ class bookMetaResource(Resource):
         data = request.get_json()
 
         return BookService.update_meta(user_uuid, isbn, data)
+
+@api.route("/<string:isbn>/bad_recommendation")
+class BookBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add Book-user (connected user) bad recommendation",
+        responses={
+            200: ("Book-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, isbn):
+        """ Add Book-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return BookService.add_bad_recommendation(user_uuid, isbn, data)

@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import SerieModel, EpisodeModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel, RecommendedSerieForGroupModel
+from src.model import SerieModel, EpisodeModel, MetaUserSerieModel, GenreModel, ContentType, UserModel, RecommendedSerieModel, RecommendedSerieForGroupModel, BadRecommendationSerieModel
 from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, MetaUserSerieBase, SerieExtra
 
 
@@ -198,6 +198,37 @@ class SerieService:
             db.session.commit()
 
             resp = message(True, "Meta successfully updated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_bad_recommendation(user_uuid, serie_id, data):
+        """ Add bad user recommendation """
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (serie := SerieModel.query.filter_by(serie_id=serie_id).first()):
+            return err_resp("Serie not found!", 404)
+        
+        try:
+            for rc in  data['reason_categorie'].split(','):
+                for r in data['reason'].split(','):
+
+                    new_bad_reco = BadRecommendationSerieModel(
+                        user_id = user.id,
+                        serie_id = serie.serie_id,
+                        reason_categorie = rc,
+                        reason = r
+                    )
+
+                    db.session.add(new_bad_reco)
+                    db.session.flush()
+            db.session.commit()
+
+            resp = message(True, "Bad recommendation has been registered.")
             return resp, 201
 
         except Exception as error:

@@ -10,5 +10,5 @@ from .track_model import TrackModel
 from .genre_model import GenreModel, LinkedGenreModel, ContentType
 from .external_model import ExternalModel
 
-from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel, RecommendedApplicationModel, RecommendedBookModel, RecommendedGameModel, RecommendedMovieModel, RecommendedSerieModel, RecommendedTrackModel
+from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel, RecommendedApplicationModel, RecommendedBookModel, RecommendedGameModel, RecommendedMovieModel, RecommendedSerieModel, RecommendedTrackModel, BadRecommendationApplicationModel, BadRecommendationBookModel, BadRecommendationGameModel, BadRecommendationMovieModel, BadRecommendationSerieModel, BadRecommendationTrackModel
 from .group_model import GroupModel, RecommendedApplicationForGroupModel, RecommendedBookForGroupModel, RecommendedGameForGroupModel, RecommendedMovieForGroupModel, RecommendedSerieForGroupModel, RecommendedTrackForGroupModel
