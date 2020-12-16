@@ -182,9 +182,9 @@ class BookService:
             return err_resp("Book not found!", 404)
         
         try:
-            for rc in  data['reason_categorie'].split(','):
+            for rc in  data['reason_categorie']:
                 if rc in REASON_CATEGORIES['book'] :
-                    for r in data['reason'].split(','):
+                    for r in data['reason']:
 
                         new_bad_reco = BadRecommendationBookModel(
                             user_id = user.id,

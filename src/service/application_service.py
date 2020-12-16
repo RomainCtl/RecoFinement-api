@@ -205,9 +205,9 @@ class ApplicationService:
             return err_resp("Application not found!", 404)
         
         try:
-            for rc in  data['reason_categorie'].split(','):
+            for rc in  data['reason_categorie']:
                 if rc in REASON_CATEGORIES['application'] :
-                    for r in data['reason'].split(','):
+                    for r in data['reason']:
 
                         new_bad_reco = BadRecommendationApplicationModel(
                             user_id = user.id,
