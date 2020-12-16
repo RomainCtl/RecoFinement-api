@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import ApplicationService
-from src.dto import ApplicationDto
+from src.dto import ApplicationDto, UserDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
@@ -73,7 +73,7 @@ class ApplicationMetaResource(Resource):
     @api.doc(
         "Get application-user (connected user) meta",
         responses={
-            200: ("Track-User meta data successfully sent", meta_resp),
+            200: ("Application-User meta data successfully sent", meta_resp),
             401: ("Authentication required"),
         }
     )
@@ -104,3 +104,25 @@ class ApplicationMetaResource(Resource):
         data = request.get_json()
 
         return ApplicationService.update_meta(user_uuid, app_id, data)
+
+@api.route("/<int:app_id>/bad_recommendation")
+class ApplicationBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add application-user (connected user) bad recommendation",
+        responses={
+            200: ("Application-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, app_id):
+        """ Add application-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return ApplicationService.add_bad_recommendation(user_uuid, app_id, data)

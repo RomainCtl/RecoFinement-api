@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import MovieService
-from src.dto import MovieDto
+from src.dto import MovieDto, UserDto
 
 api = MovieDto.api
 data_resp = MovieDto.data_resp
@@ -104,3 +104,25 @@ class MovieMetaResource(Resource):
         data = request.get_json()
 
         return MovieService.update_meta(user_uuid, movie_id, data)
+
+@api.route("/<int:movie_id>/bad_recommendation")
+class MovieBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add Movie-user (connected user) bad recommendation",
+        responses={
+            200: ("Movie-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, movie_id):
+        """ Add Movie-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return MovieService.add_bad_recommendation(user_uuid, movie_id, data)

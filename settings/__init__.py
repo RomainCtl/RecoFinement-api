@@ -50,3 +50,13 @@ GOOGLE_OAUTH_FILE = os.environ.get('PATH_TO_GOOGLE_OAUTH_FILE', '')
 GBOOKS_SCOPES = ['https://www.googleapis.com/auth/books']
 GBOOKS_REDIRECT_URL = URL_FRONT+'/recofinement/user/profile'
 GBOOKS_TOKEN_URI = "https://oauth2.googleapis.com/token"
+
+# REASON CATEGORIES
+REASON_CATEGORIES = {
+    "book" : ["author","publisher","year_of_publication"],
+    "application" : ["categorie"],
+    "game" : ["developers", "publishers", "genres", "release_date"],
+    "movie" : ["actors", "year", "producers", "director", "genres", "writer"],
+    "serie" : ["directors", "writers", "start_year", "end_year", "genres", "actors"],
+    "track" : ["year", "artist_name", "release", "genres"]
+}

@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import TrackService
-from src.dto import TrackDto
+from src.dto import TrackDto, UserDto
 
 api = TrackDto.api
 data_resp = TrackDto.data_resp
@@ -128,3 +128,26 @@ class TrackHistoryResource(Resource):
             page = 1
 
         return TrackService.get_history(user_uuid, page)
+
+
+@api.route("/<int:track_id>/bad_recommendation")
+class TrackBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add Track-user (connected user) bad recommendation",
+        responses={
+            200: ("Track-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, track_id):
+        """ Add Track-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return TrackService.add_bad_recommendation(user_uuid, track_id, data)
