@@ -235,7 +235,7 @@ class BadRecommendationBookModel(db.Model):
     isbn = db.Column(db.String(13), db.ForeignKey(
         "book.isbn", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)# ? , nullable=False)
+    reason = db.Column(db.Text)
 
 
 class BadRecommendationGameModel(db.Model):
