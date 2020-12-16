@@ -33,6 +33,10 @@ def create_app(config=None):
     def check_if_token_is_revoked(decrypted_token):
         return RevokedTokenModel.is_revoked(decrypted_token['jti'])
 
+    @jwt.expired_token_loader
+    def custom_expired_token_loader_callback():
+        return err_resp('The token has expired', 401)
+
     @app.errorhandler(ExpiredSignatureError)
     def handle_expired_token(e):
         return err_resp('The token has expired', 401)
