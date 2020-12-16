@@ -54,7 +54,7 @@ GBOOKS_TOKEN_URI = "https://oauth2.googleapis.com/token"
 # REASON CATEGORIES
 REASON_CATEGORIES = {
     "book" : ["author","publisher","year_of_publication"],
-    "application" : ["genre"],
+    "application" : ["categorie"],
     "game" : ["developers", "publishers", "genres", "release_date"],
     "movie" : ["actors", "year", "producers", "director", "genres", "writer"],
     "serie" : ["directors", "writers", "start_year", "end_year", "genres", "actors"],
