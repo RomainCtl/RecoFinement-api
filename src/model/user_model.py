@@ -249,7 +249,7 @@ class BadRecommendationGameModel(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey(
         "game.game_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)# ? , nullable=False)
+    reason = db.Column(db.Text)
 
 
 class BadRecommendationMovieModel(db.Model):
