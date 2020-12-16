@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import GameService
-from src.dto import GameDto
+from src.dto import GameDto, UserDto
 
 api = GameDto.api
 data_resp = GameDto.data_resp
@@ -104,3 +104,26 @@ class GameMetaResource(Resource):
         data = request.get_json()
 
         return GameService.update_meta(user_uuid, game_id, data)
+
+
+@api.route("/<int:game_id>/bad_recommendation")
+class GameBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add Game-user (connected user) bad recommendation",
+        responses={
+            200: ("Game-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, game_id):
+        """ Add Game-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return GameService.add_bad_recommendation(user_uuid, game_id, data)

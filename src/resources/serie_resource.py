@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import SerieService
-from src.dto import SerieDto
+from src.dto import SerieDto, UserDto
 
 api = SerieDto.api
 data_resp = SerieDto.data_resp
@@ -120,3 +120,26 @@ class SerieMetaResource(Resource):
         data = request.get_json()
 
         return SerieService.update_meta(user_uuid, serie_id, data)
+
+
+@api.route("/<int:serie_id>/bad_recommendation")
+class SerieBadRecommendation(Resource):
+    bad_recommendation = UserDto.bad_recommendation
+    @api.doc(
+        "Add Serie-user (connected user) bad recommendation",
+        responses={
+            200: ("Serie-User bad recommendation successfully sent", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+
+    @jwt_required
+    @api.expect(bad_recommendation, validate=True)
+    def post(self, serie_id):
+        """ Add Serie-user (connected user) bad recommendation """
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return SerieService.add_bad_recommendation(user_uuid, serie_id, data)
