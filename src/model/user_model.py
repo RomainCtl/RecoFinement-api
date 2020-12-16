@@ -221,7 +221,7 @@ class BadRecommendationApplicationModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     app_id = db.Column(db.Integer, db.ForeignKey(
         "application.app_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 class BadRecommendationBookModel(db.Model):
@@ -234,7 +234,7 @@ class BadRecommendationBookModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     isbn = db.Column(db.String(13), db.ForeignKey(
         "book.isbn", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 
@@ -248,7 +248,7 @@ class BadRecommendationGameModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     game_id = db.Column(db.Integer, db.ForeignKey(
         "game.game_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 
@@ -262,7 +262,7 @@ class BadRecommendationMovieModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey(
         "movie.movie_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 
@@ -276,7 +276,7 @@ class BadRecommendationSerieModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     serie_id = db.Column(db.Integer, db.ForeignKey(
         "serie.serie_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 class BadRecommendationTrackModel(db.Model):
@@ -289,7 +289,7 @@ class BadRecommendationTrackModel(db.Model):
         "user.user_id", ondelete="CASCADE"), primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey(
         "track.track_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text,nullable=False)
+    reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)# ? , nullable=False)
 
 class UserModel(db.Model):

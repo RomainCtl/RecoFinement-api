@@ -1,3 +1,4 @@
+from settings import REASON_CATEGORIES
 from flask import current_app
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
@@ -205,17 +206,18 @@ class ApplicationService:
         
         try:
             for rc in  data['reason_categorie'].split(','):
-                for r in data['reason'].split(','):
+                if rc in REASON_CATEGORIES['application'] :
+                    for r in data['reason'].split(','):
 
-                    new_bad_reco = BadRecommendationApplicationModel(
-                        user_id = user.id,
-                        app_id = app.app_id,
-                        reason_categorie = rc,
-                        reason = r
-                    )
+                        new_bad_reco = BadRecommendationApplicationModel(
+                            user_id = user.id,
+                            app_id = app.app_id,
+                            reason_categorie = rc,
+                            reason = r
+                        )
 
-                    db.session.add(new_bad_reco)
-                    db.session.flush()
+                        db.session.add(new_bad_reco)
+                        db.session.flush()
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
