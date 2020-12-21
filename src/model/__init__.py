@@ -1,3 +1,5 @@
+from .content_model import ContentModel, ContentType, SimilarsContentModel
+
 from .application_model import ApplicationModel
 from .book_model import BookModel
 from .episode_model import EpisodeModel
@@ -10,5 +12,5 @@ from .track_model import TrackModel
 from .genre_model import GenreModel, LinkedGenreModel, ContentType
 from .external_model import ExternalModel
 
-from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel, RecommendedApplicationModel, RecommendedBookModel, RecommendedGameModel, RecommendedMovieModel, RecommendedSerieModel, RecommendedTrackModel, BadRecommendationApplicationModel, BadRecommendationBookModel, BadRecommendationGameModel, BadRecommendationMovieModel, BadRecommendationSerieModel, BadRecommendationTrackModel
-from .group_model import GroupModel, RecommendedApplicationForGroupModel, RecommendedBookForGroupModel, RecommendedGameForGroupModel, RecommendedMovieForGroupModel, RecommendedSerieForGroupModel, RecommendedTrackForGroupModel
+from .user_model import UserModel, MetaUserContentModel, RecommendedContentModel, BadRecommendationContentModel
+from .group_model import GroupModel, RecommendedContentForGroupModel
