@@ -30,7 +30,7 @@ class AuthService:
             elif user and user.verify_password(password):
                 user_info = user_base.dump(user)
 
-                access_token = create_access_token(identity=user.uuid)
+                access_token = create_access_token(identity=user)
 
                 resp = message(True, "Successfully logged in.")
                 resp["user"] = user_info
@@ -64,6 +64,7 @@ class AuthService:
                 email=email,
                 username=username,
                 password=password,
+                role="user"
             )
 
             db.session.add(new_user)
@@ -77,7 +78,7 @@ class AuthService:
             # Send welcome email
             mailjet.sendNewAccount(new_user, URL_FRONT)
             # Create an access token
-            access_token = create_access_token(identity=new_user.uuid)
+            access_token = create_access_token(identity=new_user)
 
             resp = message(True, "User has been registered.")
             resp["user"] = user_info
@@ -113,7 +114,7 @@ class AuthService:
 
                 expires = datetime.timedelta(hours=24)
                 reset_token = create_access_token(
-                    identity=user.uuid, expires_delta=expires)
+                    identity=user, expires_delta=expires)
 
                 mailjet.sendForget(user, URL_FRONT+"/reset", reset_token)
 
@@ -129,7 +130,7 @@ class AuthService:
 
         reset_token = data['reset_password_token']
         password = data['password']
-        uuid = decode_token(reset_token)['identity']
+        uuid = decode_token(reset_token)['identity']['uuid']
         try:
             # Fetch user data
             if not (user := UserModel.query.filter_by(uuid=uuid).first()):

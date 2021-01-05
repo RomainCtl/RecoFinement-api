@@ -3,7 +3,7 @@ from src.utils import GUID
 
 RolePermissionModel = db.Table("role_permission",
                             db.Column("role_id", db.Integer, db.ForeignKey(
-                                "role.track_id"), primary_key=True),
+                                "role.role_id"), primary_key=True),
                             db.Column("permission", db.String(45), db.ForeignKey(
                                 "permission.permission"), primary_key=True)
                             )
@@ -27,7 +27,6 @@ class PermissionModel(db.Model):
     """
     __tablename__ = "permission"
 
-    permission = db.Column(db.String(45), primary_key=True,
-                            autoincrement=True, nullable=False)
+    permission = db.Column(db.String(45), primary_key=True, nullable=False)
 
     

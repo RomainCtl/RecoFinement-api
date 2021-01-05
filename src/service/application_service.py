@@ -13,6 +13,11 @@ class ApplicationService:
     @staticmethod
     def search_application_data(search_term, page, connected_user_uuid):
         """ Search application data by name """
+
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions :
+            return err_resp("Permission missing", 403)
+
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         applications, total_pages = Paginator.get_from(
