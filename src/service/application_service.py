@@ -13,11 +13,6 @@ class ApplicationService:
     @staticmethod
     def search_application_data(search_term, page, connected_user_uuid):
         """ Search application data by name """
-
-        permissions = get_jwt_claims()['permissions']
-        if "view_recommendation" not in permissions :
-            return err_resp("Permission missing", 403)
-
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         applications, total_pages = Paginator.get_from(
@@ -44,6 +39,11 @@ class ApplicationService:
     def get_recommended_applications(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions :
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedApplicationModel, ApplicationModel)\
@@ -169,6 +169,11 @@ class ApplicationService:
         if not (app := ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
+
         try:
             if not (meta_user_application := MetaUserApplicationModel.query.filter_by(user_id=user.user_id, app_id=app_id).first()):
                 meta_user_application = MetaUserApplicationModel(
@@ -208,6 +213,11 @@ class ApplicationService:
 
         if not (app := ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
+        
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
         
         try:
             for rc in  data['reason_categorie']:

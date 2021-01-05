@@ -94,6 +94,11 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions :
+            return err_resp("Permission missing", 403)
+
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
             return err_resp("Genre not found!", 404)
 
@@ -114,6 +119,11 @@ class UserService:
         """" Unlike a genre """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions :
+            return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
             return err_resp("Genre not found!", 404)
@@ -139,6 +149,11 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
         
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions :
+            return err_resp("Permission missing", 403)
+
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -169,6 +184,11 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions :
+            return err_resp("Permission missing", 403)
+
         try:
             user.preferences_defined = True
 
@@ -192,6 +212,11 @@ class UserService:
         if not (UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
         
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions :
+            return err_resp("Permission missing", 403)
+
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 

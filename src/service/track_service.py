@@ -41,6 +41,11 @@ class TrackService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions :
+            return err_resp("Permission missing", 403)
+
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedTrackModel, TrackModel)\
             .select_from(RecommendedTrackModel)\
@@ -160,6 +165,11 @@ class TrackService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
+
         if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)
 
@@ -231,6 +241,11 @@ class TrackService:
         """ Add bad user recommendation """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
 
         if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)

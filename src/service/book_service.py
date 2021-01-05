@@ -39,6 +39,11 @@ class BookService:
     def get_recommended_books(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+        
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions :
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedBookModel, BookModel)\
@@ -109,7 +114,6 @@ class BookService:
         """ Get specific 'meta_user_book' data """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-
         if not (BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
 
@@ -138,6 +142,11 @@ class BookService:
         """ Add 'purchase' or/and update 'rating' """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
 
         if not (book := BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
@@ -177,6 +186,11 @@ class BookService:
         """ Add bad user recommendation """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions :
+            return err_resp("Permission missing", 403)
 
         if not (book := BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
