@@ -73,7 +73,7 @@ class UserDto:
     )
 
     bad_recommendation = api.model(
-        "ApplicationMetaExpected",
+        "BadRecommendationMetaExpected",
         {
             "reason_categorie": fields.List(fields.String),
             "reason": fields.List(fields.String)
