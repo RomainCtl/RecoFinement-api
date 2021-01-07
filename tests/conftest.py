@@ -67,7 +67,8 @@ def user_test1():
         new_user = UserModel(
             email="test@test.com",
             username="test",
-            password="goodPassword!123"
+            password="goodPassword!123",
+            role="user"
         )
         db.session.add(new_user)
         db.session.flush()
@@ -88,7 +89,8 @@ def user_test2():
         new_user = UserModel(
             email="test2@test.com",
             username="test2",
-            password="goodPassword!123"
+            password="goodPassword!123",
+            role="user"
         )
         db.session.add(new_user)
         db.session.flush()
@@ -136,7 +138,7 @@ def headers(user_test1):
     Returns:
         Dict: Headers with the token access
     """
-    access_token = create_access_token(identity=user_test1.uuid)
+    access_token = create_access_token(identity=user_test1)
     return {
         "Authorization": "Bearer %s" % access_token
     }

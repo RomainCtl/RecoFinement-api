@@ -208,7 +208,7 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post('/api/auth/reset', json=dict(
-            reset_password_token=create_access_token(identity=user_test1.uuid),
+            reset_password_token=create_access_token(identity=user_test1),
             password="Azerty!123"
         ))
         res = json.loads(response.data)
