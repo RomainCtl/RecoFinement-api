@@ -22,6 +22,7 @@ class MetaUserContentModel(db.Model):
     last_review_see_date = db.Column(db.DateTime, default=None)
     # can be play_count, watch_count, num_watched_episodes
     count = db.Column(db.Integer, default=0)
+    last_count_increment = db.Column(db.DateTime, default=None)
 
 
 GroupMembersModel = db.Table("group_members",

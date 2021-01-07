@@ -16,11 +16,8 @@ class EpisodeModel(db.Model):
     imdbid = db.Column(db.String(255))
     title = db.Column(db.String(512), index=True)
     year = db.Column(db.Integer)
-    genres = db.Column(db.Text)
     season_number = db.Column(db.Integer)
     episode_number = db.Column(db.Integer)
-    rating = db.Column(db.Float)
-    rating_count = db.Column(db.Integer, default=0)
     serie_id = db.Column(db.Integer, db.ForeignKey("serie.content_id"))
 
     content = db.relationship(
