@@ -5,7 +5,7 @@ import uuid
 
 import settings.testing
 from src import create_app, db
-from src.model import UserModel, GroupModel, GenreModel, ContentType
+from src.model import UserModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
 
 
 def pytest_html_report_title(report):
@@ -64,11 +64,31 @@ def user_test1():
 
         return user
     else:
+        indicate_interest = PermissionModel(
+            permission="indicate_interest"
+        )
+        modify_user_profil = PermissionModel(
+            permission="modify_user_profil"
+        )
+        view_recommendation = PermissionModel(
+            permission="view_recommendation"
+        )
+        play_music = PermissionModel(
+            permission="play_music"
+        )
+        add_content = PermissionModel(
+            permission="add_content"
+        )
+        role = RoleModel(
+            role_id=1,
+            name="user",
+            permission=[indicate_interest, modify_user_profil, view_recommendation, play_music, add_content] 
+        )
         new_user = UserModel(
             email="test@test.com",
             username="test",
             password="goodPassword!123",
-            role="user"
+            role=role
         )
         db.session.add(new_user)
         db.session.flush()
@@ -86,11 +106,31 @@ def user_test2():
     if (user := UserModel.query.filter_by(username="test2").first()):
         return user
     else:
+        indicate_interest = PermissionModel(
+            permission="indicate_interest"
+        )
+        modify_user_profil = PermissionModel(
+            permission="modify_user_profil"
+        )
+        view_recommendation = PermissionModel(
+            permission="view_recommendation"
+        )
+        play_music = PermissionModel(
+            permission="play_music"
+        )
+        add_content = PermissionModel(
+            permission="add_content"
+        )
+        role = RoleModel(
+            role_id=1,
+            name="user",
+            permission=[indicate_interest, modify_user_profil, view_recommendation, play_music, add_content] 
+        )
         new_user = UserModel(
             email="test2@test.com",
             username="test2",
             password="goodPassword!123",
-            role="user"
+            role=role
         )
         db.session.add(new_user)
         db.session.flush()
