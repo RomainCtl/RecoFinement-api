@@ -43,16 +43,11 @@ class UserFullObject(SQLAlchemyAutoSchema):
 
     linked_services = ma.Nested("ExternalBase", many=True)
 
-    meta_user_applications = ma.Nested("MetaUserApplicationItem", many=True)
-    meta_user_books = ma.Nested("MetaUserBookItem", many=True)
-    meta_user_games = ma.Nested("MetaUserGameItem", many=True)
-    meta_user_movies = ma.Nested("MetaUserMovieItem", many=True)
-    meta_user_series = ma.Nested("MetaUserSerieItem", many=True)
-    meta_user_tracks = ma.Nested("MetaUserTrackItem", many=True)
+    meta_user_content = ma.Nested("MetaUserContentItem", many=True)
 
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username", "preferences_defined", "groups", "invitations", "owned_groups", "liked_genres", "linked_services",
-                  "meta_user_applications", "meta_user_books", "meta_user_games", "meta_user_movies", "meta_user_series", "meta_user_tracks")
+        fields = ("uuid", "email", "username", "preferences_defined", "groups", "invitations",
+                  "owned_groups", "liked_genres", "linked_services", "meta_user_content")
 
 
 class UpdateUserDataSchema(DTOSchema):

@@ -33,4 +33,4 @@ class ApplicationModel(db.Model):
 
     @hybrid_property
     def categorie(self):
-        return content.genres[0] if content.genres else None
+        return self.content.genres[0] if self.content.genres else None

@@ -14,9 +14,5 @@ from .track_schema import TrackBase, TrackObject, TrackExtra
 
 from .genre_schema import GenreBase, GenreObject
 
-from .meta_user_track_schema import MetaUserTrackBase, MetaUserTrackItem
-from .meta_user_application_schema import MetaUserApplicationBase, MetaUserApplicationItem
-from .meta_user_book_schema import MetaUserBookBase, MetaUserBookItem
-from .meta_user_game_schema import MetaUserGameBase, MetaUserGameItem
-from .meta_user_movie_schema import MetaUserMovieBase, MetaUserMovieItem
-from .meta_user_serie_schema import MetaUserSerieBase, MetaUserSerieItem
+from .content_schema import ContentBase
+from .meta_user_content_schema import MetaUserContentBase, MetaUserContentItem

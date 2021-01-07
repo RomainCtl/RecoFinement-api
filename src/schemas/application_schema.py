@@ -7,9 +7,15 @@ from src.utils import SQLAlchemyAutoSchema
 
 class ApplicationMeta:
     model = ApplicationModel
+    include_fk = True
 
 
 class ApplicationBase(SQLAlchemyAutoSchema):
+    rating = fields.Function(lambda obj: obj.content.rating)
+    rating_count = fields.Function(lambda obj: obj.content.rating_count)
+    popularity_score = fields.Function(
+        lambda obj: obj.content.popularity_score)
+
     categorie = ma.Nested("GenreBase")
 
     class Meta(ApplicationMeta):
