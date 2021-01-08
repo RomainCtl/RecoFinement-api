@@ -3,32 +3,32 @@ from marshmallow import fields
 from src import ma
 from src.model import TrackModel
 from src.utils import SQLAlchemyAutoSchema
+from .genre_schema import GenreBase
 
 
 class TrackMeta:
     model = TrackModel
+    include_fk = True
 
 
 class TrackBase(SQLAlchemyAutoSchema):
+    rating = fields.Function(lambda obj: obj.content.rating)
+    rating_count = fields.Function(lambda obj: obj.content.rating_count)
+    popularity_score = fields.Function(
+        lambda obj: obj.content.popularity_score)
+
     class Meta(TrackMeta):
         pass
 
 
-class TrackObject(SQLAlchemyAutoSchema):
-    genres = ma.Nested("GenreBase", many=True)
+class TrackObject(TrackBase):
+    genres = fields.Method("build_genres")
 
-    class Meta(TrackMeta):
-        fields = ("track_id", "title", "year", "artist_name", "release", "track_mmid",
-                  "recording_mbid", "rating", "rating_count", "spotify_id", "covert_art_url", "genres")
+    def build_genres(self, obj):
+        return GenreBase.loads(obj.content.genres)
 
 
-class TrackExtra(SQLAlchemyAutoSchema):
-    genres = ma.Nested("GenreBase", many=True)
-
+class TrackExtra(TrackObject):
     # Extra fields from join with 'recommended_application'
     reco_engine = fields.String(attribute="engine", default=None)
     reco_score = fields.Float(attribute="score", default=None)
-
-    class Meta(TrackMeta):
-        fields = ("track_id", "title", "year", "artist_name", "release", "track_mmid", "recording_mbid", "rating",
-                  "rating_count", "spotify_id", "covert_art_url", "genres", "popularity_score", "reco_engine", "reco_score")
