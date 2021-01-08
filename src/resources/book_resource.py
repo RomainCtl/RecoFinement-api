@@ -3,7 +3,7 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.service import BookService
+from src.service import BookService, ContentService
 from src.dto import BookDto, UserDto
 
 api = BookDto.api
@@ -94,7 +94,7 @@ class BookSearchResource(Resource):
         return BookService.search_book_data(search_term, page, uuid)
 
 
-@api.route("/<string:isbn>/meta")
+@api.route("/<int:content_id>/meta")
 class bookMetaResource(Resource):
     @api.doc(
         "Get book-user (connected user) meta",
@@ -104,11 +104,11 @@ class bookMetaResource(Resource):
         }
     )
     @jwt_required
-    def get(self, isbn):
+    def get(self, content_id):
         """ Get book-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
-        return BookService.get_meta(user_uuid, isbn)
+        return ContentService.get_meta(user_uuid, content_id)
 
     content_meta = UserDto.content_meta
 
@@ -122,17 +122,17 @@ class bookMetaResource(Resource):
     )
     @jwt_required
     @api.expect(content_meta, validate=True)
-    def patch(self, isbn):
+    def patch(self, content_id):
         """ Update book-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return BookService.update_meta(user_uuid, isbn, data)
+        return ContentService.update_meta(user_uuid, content_id, data)
 
 
-@api.route("/<string:isbn>/bad_recommendation")
+@api.route("/<int:content_id>/bad_recommendation")
 class BookBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
 
@@ -145,11 +145,11 @@ class BookBadRecommendation(Resource):
     )
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
-    def post(self, isbn):
+    def post(self, content_id):
         """ Add Book-user (connected user) bad recommendation """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return BookService.add_bad_recommendation(user_uuid, isbn, data)
+        return BookService.add_bad_recommendation(user_uuid, content_id, data)
