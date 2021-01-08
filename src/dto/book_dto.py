@@ -38,3 +38,12 @@ class BookDto:
             "rating": fields.Integer(min=0, max=5),
         }
     )
+
+    book_bad_recommendation = api.model(
+        "BookBadRecommendationMetaExpected",
+        {
+            "author": fields.List(fields.String),
+            "publisher": fields.List(fields.String),
+            "year_of_publication": fields.List(fields.String)
+        }
+    )

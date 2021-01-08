@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import ApplicationService
-from src.dto import ApplicationDto, UserDto
+from src.dto import ApplicationDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
@@ -107,7 +107,7 @@ class ApplicationMetaResource(Resource):
 
 @api.route("/<int:app_id>/bad_recommendation")
 class ApplicationBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = ApplicationDto.application_bad_recommendation
     @api.doc(
         "Add application-user (connected user) bad recommendation",
         responses={

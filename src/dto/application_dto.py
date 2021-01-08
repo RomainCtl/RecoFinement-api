@@ -51,3 +51,10 @@ class ApplicationDto:
             "downloaded": fields.Boolean,
         }
     )
+
+    application_bad_recommendation = api.model(
+        "ApplicationBadRecommendationMetaExpected",
+        {
+            "categorie": fields.List(fields.String)
+        }
+    )

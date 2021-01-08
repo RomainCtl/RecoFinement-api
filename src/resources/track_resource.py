@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import TrackService
-from src.dto import TrackDto, UserDto
+from src.dto import TrackDto
 
 api = TrackDto.api
 data_resp = TrackDto.data_resp
@@ -132,7 +132,7 @@ class TrackHistoryResource(Resource):
 
 @api.route("/<int:track_id>/bad_recommendation")
 class TrackBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = TrackDto.track_bad_recommendation
     @api.doc(
         "Add Track-user (connected user) bad recommendation",
         responses={

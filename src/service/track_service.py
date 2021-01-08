@@ -236,14 +236,14 @@ class TrackService:
             return err_resp("Track not found!", 404)
         
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['track'] :
-                    for r in data['reason']:
+            for type , value  in  data.items():
+                if type in REASON_CATEGORIES['track'] :
+                    for r in value:
 
                         new_bad_reco = BadRecommendationTrackModel(
-                            user_id = user.id,
+                            user_id = user.user_id,
                             track_id = track.track_id,
-                            reason_categorie = rc,
+                            reason_categorie = type,
                             reason = r
                         )
 

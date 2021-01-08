@@ -651,3 +651,168 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    def test_game_user_meta_update_bad_field(self, test_client, headers, user_test1):
+        """Test game user meta update with bad field
+
+        Test:
+            PATCH: /api/game/<game_id>/meta
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+            user_test1 (User object): user test1
+        """
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.patch("/api/game/"+str(game.game_id)+"/meta", headers=headers, json=dict(
+            bad_field=5
+        ))
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False
+
+
+    ### GAME BAD RECOMMENDATION ###
+
+    def test_game_bad_recommendation(self, test_client, headers):
+        """Test game bad recommendation
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.post(
+            "/api/game/"+str(game.game_id)+"/bad_recommendation", headers=headers, json=dict(
+            developers=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_game_bad_recommendation_bad_game_id(self, test_client, headers):
+        """Test game bad recommendation with bad game ID
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.post(
+            "/api/game/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
+            developers=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_game_bad_recommendation_bad_jwt(self, test_client, headers_bad):
+        """Test game bad recommendation with bad JWT token
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.post(
+            "/api/game/"+str(game.game_id)+"/bad_recommendation", headers=headers_bad, json=dict(
+            developers=["2010"]
+        ))
+        #res = json.loads(response.data)
+
+        assert response.status_code == 422
+    
+    def test_game_bad_recommendation_fake_jwt(self, test_client, headers_fake):
+        """Test game bad recommendation with fake JWT token
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.post(
+            "/api/game/"+str(game.game_id)+"/bad_recommendation", headers=headers_fake, json=dict(
+            developers=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_game_bad_recommendation_no_jwt(self, test_client):
+        """Test game bad recommendation without JWT token
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.post(
+            "/api/game/"+str(game.game_id)+"/bad_recommendation", json=dict(
+            developers=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
+
+    def test_game_bad_recommendation_bad_field(self, test_client, headers):
+        """Test game bad recommendation with bad field
+
+        Test:
+            GET: /api/game/<int:game_id>/bad_recommendation
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        game = GameModel.query.filter_by(game_id=999999).first()
+        response = test_client.post(
+            "/api/game/"+str(game.game_id)+"/bad_recommendation", headers=headers, json=dict(
+            bad_field=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False

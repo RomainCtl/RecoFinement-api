@@ -215,14 +215,14 @@ class SerieService:
             return err_resp("Serie not found!", 404)
         
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['serie'] :
-                    for r in data['reason']:
+            for type , value in  data.items():
+                if type in REASON_CATEGORIES['serie'] :
+                    for r in value:
 
                         new_bad_reco = BadRecommendationSerieModel(
-                            user_id = user.id,
+                            user_id = user.user_id,
                             serie_id = serie.serie_id,
-                            reason_categorie = rc,
+                            reason_categorie = type,
                             reason = r
                         )
 

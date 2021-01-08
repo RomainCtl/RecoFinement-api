@@ -201,14 +201,14 @@ class GameService:
             return err_resp("Game not found!", 404)
         
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['game'] :
-                    for r in data['reason']:
+            for type, value in  data.items():
+                if type in REASON_CATEGORIES['game'] :
+                    for r in value:
 
                         new_bad_reco = BadRecommendationGameModel(
-                            user_id = user.id,
+                            user_id = user.user_id,
                             game_id = game.game_id,
-                            reason_categorie = rc,
+                            reason_categorie = type,
                             reason = r
                         )
 

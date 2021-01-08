@@ -71,3 +71,15 @@ class SerieDto:
             "rating": fields.Integer(min=0, max=5),
         }
     )
+
+    serie_bad_recommendation = api.model(
+        "SerieBadRecommendationMetaExpected",
+        {
+            "directors": fields.List(fields.String),
+            "writers": fields.List(fields.String),
+            "start_year": fields.List(fields.String),
+            "end_year": fields.List(fields.String),
+            "genres": fields.List(fields.String),
+            "actors": fields.List(fields.String)
+        }
+    )

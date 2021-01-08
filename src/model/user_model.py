@@ -222,7 +222,7 @@ class BadRecommendationApplicationModel(db.Model):
     app_id = db.Column(db.Integer, db.ForeignKey(
         "application.app_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 class BadRecommendationBookModel(db.Model):
     """
@@ -235,7 +235,7 @@ class BadRecommendationBookModel(db.Model):
     isbn = db.Column(db.String(13), db.ForeignKey(
         "book.isbn", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 
 class BadRecommendationGameModel(db.Model):
@@ -249,7 +249,7 @@ class BadRecommendationGameModel(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey(
         "game.game_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 
 class BadRecommendationMovieModel(db.Model):
@@ -263,7 +263,7 @@ class BadRecommendationMovieModel(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey(
         "movie.movie_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 
 class BadRecommendationSerieModel(db.Model):
@@ -277,7 +277,7 @@ class BadRecommendationSerieModel(db.Model):
     serie_id = db.Column(db.Integer, db.ForeignKey(
         "serie.serie_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 class BadRecommendationTrackModel(db.Model):
     """
@@ -290,7 +290,7 @@ class BadRecommendationTrackModel(db.Model):
     track_id = db.Column(db.Integer, db.ForeignKey(
         "track.track_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 class UserModel(db.Model):
     """

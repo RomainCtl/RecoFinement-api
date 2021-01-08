@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import GameService
-from src.dto import GameDto, UserDto
+from src.dto import GameDto
 
 api = GameDto.api
 data_resp = GameDto.data_resp
@@ -108,7 +108,7 @@ class GameMetaResource(Resource):
 
 @api.route("/<int:game_id>/bad_recommendation")
 class GameBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = GameDto.game_bad_recommendation
     @api.doc(
         "Add Game-user (connected user) bad recommendation",
         responses={

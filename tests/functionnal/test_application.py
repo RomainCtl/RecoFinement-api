@@ -654,3 +654,166 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    def test_application_user_meta_update_bad_field(self, test_client, headers):
+        """Test application user meta update with bad field
+
+        Test:
+            PATCH: /api/application/<app_id>/meta
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+            user_test1 (User object): user test1
+        """
+        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers, json=dict(
+            bad_field=5
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False
+
+    ### APPLICATION BAD RECOMMENDATION ###
+
+    def test_application_bad_recommendation(self, test_client, headers):
+        """Test application bad recommendation
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.post(
+            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers, json=dict(
+            categorie=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_application_bad_recommendation_bad_application_id(self, test_client, headers):
+        """Test application bad recommendation with bad application ID
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.post(
+            "/api/application/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
+            categorie=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_application_bad_recommendation_bad_jwt(self, test_client, headers_bad):
+        """Test application bad recommendation with bad JWT token
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.post(
+            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers_bad, json=dict(
+            categorie=["2010"]
+        ))
+        #res = json.loads(response.data)
+
+        assert response.status_code == 422
+    
+    def test_application_bad_recommendation_fake_jwt(self, test_client, headers_fake):
+        """Test application bad recommendation with fake JWT token
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.post(
+            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers_fake, json=dict(
+            categorie=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_application_bad_recommendation_no_jwt(self, test_client):
+        """Test application bad recommendation without JWT token
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.post(
+            "/api/application/"+str(application.app_id)+"/bad_recommendation", json=dict(
+            categorie=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
+
+    def test_application_bad_recommendation_bad_field(self, test_client, headers):
+        """Test application bad recommendation with bad field
+
+        Test:
+            GET: /api/application/<int:application_id>/bad_recommendation
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        response = test_client.post(
+            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers, json=dict(
+            bad_field=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False

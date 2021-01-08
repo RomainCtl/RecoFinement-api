@@ -199,14 +199,14 @@ class MovieService:
             return err_resp("Movie not found!", 404)
         
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['movie'] :
-                    for r in data['reason']:
+            for type, value in  data.items():
+                if type in REASON_CATEGORIES['movie'] :
+                    for r in value:
 
                         new_bad_reco = BadRecommendationMovieModel(
-                            user_id = user.id,
+                            user_id = user.user_id,
                             movie_id = movie.movie_id,
-                            reason_categorie = rc,
+                            reason_categorie = type,
                             reason = r
                         )
 

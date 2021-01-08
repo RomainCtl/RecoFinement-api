@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import SerieService
-from src.dto import SerieDto, UserDto
+from src.dto import SerieDto
 
 api = SerieDto.api
 data_resp = SerieDto.data_resp
@@ -124,7 +124,7 @@ class SerieMetaResource(Resource):
 
 @api.route("/<int:serie_id>/bad_recommendation")
 class SerieBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = SerieDto.serie_bad_recommendation
     @api.doc(
         "Add Serie-user (connected user) bad recommendation",
         responses={

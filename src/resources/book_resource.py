@@ -4,7 +4,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import BookService
-from src.dto import BookDto, UserDto
+from src.dto import BookDto
 
 api = BookDto.api
 data_resp = BookDto.data_resp
@@ -91,7 +91,7 @@ class bookMetaResource(Resource):
 
 @api.route("/<string:isbn>/bad_recommendation")
 class BookBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = BookDto.book_bad_recommendation
     @api.doc(
         "Add Book-user (connected user) bad recommendation",
         responses={

@@ -205,14 +205,14 @@ class ApplicationService:
             return err_resp("Application not found!", 404)
         
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['application'] :
-                    for r in data['reason']:
+            for type, value in  data.items():
+                if type in REASON_CATEGORIES['application'] :
+                    for r in value:
 
                         new_bad_reco = BadRecommendationApplicationModel(
-                            user_id = user.id,
+                            user_id = user.user_id,
                             app_id = app.app_id,
-                            reason_categorie = rc,
+                            reason_categorie = type,
                             reason = r
                         )
 
