@@ -7,8 +7,8 @@ from src.dto import GameDto, UserDto
 
 api = GameDto.api
 data_resp = GameDto.data_resp
-genres_resp = GameDto.genres_resp
-meta_resp = GameDto.meta_resp
+genres_resp = UserDto.genres_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -84,7 +84,7 @@ class GameMetaResource(Resource):
 
         return GameService.get_meta(user_uuid, game_id)
 
-    game_meta = GameDto.game_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update game-user (connected user) meta",
@@ -95,7 +95,7 @@ class GameMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(game_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, game_id):
         """ Update game-user (connected user) meta """
         user_uuid = get_jwt_identity()
@@ -109,6 +109,7 @@ class GameMetaResource(Resource):
 @api.route("/<int:game_id>/bad_recommendation")
 class GameBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
+
     @api.doc(
         "Add Game-user (connected user) bad recommendation",
         responses={
@@ -116,7 +117,6 @@ class GameBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
     def post(self, game_id):

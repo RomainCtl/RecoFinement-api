@@ -8,7 +8,7 @@ from src.dto import BookDto, UserDto
 
 api = BookDto.api
 data_resp = BookDto.data_resp
-meta_resp = BookDto.meta_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -48,7 +48,7 @@ class BookSearchResource(Resource):
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        uuid=get_jwt_identity()
+        uuid = get_jwt_identity()
         return BookService.search_book_data(search_term, page, uuid)
 
 
@@ -68,7 +68,7 @@ class bookMetaResource(Resource):
 
         return BookService.get_meta(user_uuid, isbn)
 
-    book_meta = BookDto.book_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update book-user (connected user) meta",
@@ -79,7 +79,7 @@ class bookMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(book_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, isbn):
         """ Update book-user (connected user) meta """
         user_uuid = get_jwt_identity()
@@ -89,9 +89,11 @@ class bookMetaResource(Resource):
 
         return BookService.update_meta(user_uuid, isbn, data)
 
+
 @api.route("/<string:isbn>/bad_recommendation")
 class BookBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
+
     @api.doc(
         "Add Book-user (connected user) bad recommendation",
         responses={
@@ -99,7 +101,6 @@ class BookBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
     def post(self, isbn):

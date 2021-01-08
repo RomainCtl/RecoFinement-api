@@ -7,8 +7,8 @@ from src.dto import MovieDto, UserDto
 
 api = MovieDto.api
 data_resp = MovieDto.data_resp
-genres_resp = MovieDto.genres_resp
-meta_resp = MovieDto.meta_resp
+genres_resp = UserDto.genres_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -84,7 +84,7 @@ class MovieMetaResource(Resource):
 
         return MovieService.get_meta(user_uuid, movie_id)
 
-    movie_meta = MovieDto.movie_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update movie-user (connected user) meta",
@@ -95,7 +95,7 @@ class MovieMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(movie_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, movie_id):
         """ Update movie-user (connected user) meta """
         user_uuid = get_jwt_identity()
@@ -105,9 +105,11 @@ class MovieMetaResource(Resource):
 
         return MovieService.update_meta(user_uuid, movie_id, data)
 
+
 @api.route("/<int:movie_id>/bad_recommendation")
 class MovieBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
+
     @api.doc(
         "Add Movie-user (connected user) bad recommendation",
         responses={
@@ -115,7 +117,6 @@ class MovieBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
     def post(self, movie_id):

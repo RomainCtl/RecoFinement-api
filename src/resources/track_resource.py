@@ -7,8 +7,8 @@ from src.dto import TrackDto, UserDto
 
 api = TrackDto.api
 data_resp = TrackDto.data_resp
-genres_resp = TrackDto.genres_resp
-meta_resp = TrackDto.meta_resp
+genres_resp = UserDto.genres_resp
+meta_resp = UserDto.meta_resp
 history_resp = TrackDto.history_resp
 
 
@@ -85,7 +85,7 @@ class TrackMetaResource(Resource):
 
         return TrackService.get_meta(user_uuid, track_id)
 
-    track_meta = TrackDto.track_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update track-user (connected user) meta",
@@ -96,7 +96,7 @@ class TrackMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(track_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, track_id):
         """ Update track-user (connected user) meta """
         user_uuid = get_jwt_identity()
@@ -133,6 +133,7 @@ class TrackHistoryResource(Resource):
 @api.route("/<int:track_id>/bad_recommendation")
 class TrackBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
+
     @api.doc(
         "Add Track-user (connected user) bad recommendation",
         responses={
@@ -140,7 +141,6 @@ class TrackBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
     def post(self, track_id):

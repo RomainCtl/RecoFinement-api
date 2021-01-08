@@ -27,11 +27,11 @@ GenreBaseObj = Model("Genre base", {
 })
 
 ApplicationBaseObj = Model("Application base", {
-    "app_id": fields.Integer,
+    "content_id": fields.Integer,
     "name": fields.String,
     "categorie": fields.Nested(GenreBaseObj),
     "rating": fields.Float,
-    "reviews": fields.String,
+    "rating_count": fields.String,
     "size": fields.String,
     "installs": fields.String,
     "type": fields.String,
@@ -43,6 +43,7 @@ ApplicationBaseObj = Model("Application base", {
 })
 
 BookBaseObj = Model("Book base", {
+    "content_id": fields.Integer,
     "isbn": fields.String,
     "title": fields.String,
     "author": fields.String,
@@ -56,7 +57,7 @@ BookBaseObj = Model("Book base", {
 })
 
 GameBaseObj = Model("Game base", {
-    "game_id": fields.Integer,
+    "content_id": fields.Integer,
     "steamid": fields.Integer,
     "name": fields.String,
     "short_description": fields.String,
@@ -67,10 +68,12 @@ GameBaseObj = Model("Game base", {
     "price": fields.String,
     "recommendations": fields.Integer,
     "release_date": fields.String,
+    "rating": fields.Float,
+    "rating_count": fields.Integer,
 })
 
 MovieBaseObj = Model("Movie base", {
-    "movie_id": fields.Integer,
+    "content_id": fields.Integer,
     "title": fields.String,
     "language": fields.String,
     "actors": fields.String,
@@ -86,7 +89,7 @@ MovieBaseObj = Model("Movie base", {
 })
 
 TrackBaseObj = Model("Track base", {
-    "track_id": fields.Integer,
+    "content_id": fields.Integer,
     "title": fields.String,
     "year": fields.Integer,
     "artist_name": fields.String,
@@ -100,7 +103,7 @@ TrackBaseObj = Model("Track base", {
 })
 
 SerieBaseObj = Model("Serie base", {
-    "serie_id": fields.Integer,
+    "content_id": fields.Integer,
     "imdbid": fields.String,
     "title": fields.String,
     "start_year": fields.Integer,
@@ -113,7 +116,7 @@ SerieBaseObj = Model("Serie base", {
 })
 
 EpisodeBaseObj = Model("Episode base", {
-    "episode_id": fields.Integer,
+    "content_id": fields.Integer,
     "imdbid": fields.String,
     "title": fields.String,
     "year": fields.Integer,
@@ -124,94 +127,16 @@ EpisodeBaseObj = Model("Episode base", {
     "rating_count": fields.Integer,
 })
 
-TrackGenresBaseObj = Model("TrackGenres base", {
-    "track_id": fields.Integer,
-    "tag": fields.String,
-    "frequency": fields.Integer,
-})
-
-MovieGenresBaseObj = Model("MovieGenres base", {
-    "movie_id": fields.Integer,
-    "tag": fields.String,
-    "frequency": fields.Integer,
-})
-
-SerieGenresBaseObj = Model("SerieGenres base", {
-    "serie_id": fields.Integer,
-    "tag": fields.String,
-    "frequency": fields.Integer,
-})
-
-GameGenresBaseObj = Model("GameGenres base", {
-    "game_id": fields.Integer,
-    "tag": fields.String,
-    "frequency": fields.Integer,
-})
-
-MetaUserApplicationBaseObj = Model("MetaUserApplication base", {
-    "review": fields.String,
+MetaUserContentBaseObj = Model("MetaUserContent base", {
     "rating": fields.Integer,
-    "downloaded": fields.Boolean,
+    "last_rating_date": fields.DateTime,
     "review_see_count": fields.Integer,
-})
-
-MetaUserBookBaseObj = Model("MetaUserBook base", {
-    "rating": fields.Integer,
-    "purchase": fields.Boolean,
-    "review_see_count": fields.Integer,
-})
-
-MetaUserGameBaseObj = Model("MetaUserGame base", {
-    "rating": fields.Integer,
-    "purchase": fields.Boolean,
-    "hours": fields.Integer,
-    "review_see_count": fields.Integer,
-})
-
-MetaUserMovieBaseObj = Model("MetaUserMovie base", {
-    "rating": fields.Integer,
-    "watch_count": fields.Integer,
-    "review_see_count": fields.Integer,
-})
-
-MetaUserSerieBaseObj = Model("MetaUserSerie base", {
-    "rating": fields.Integer,
-    "num_watched_episodes": fields.Integer,
-    "review_see_count": fields.Integer,
-})
-
-MetaUserTrackBaseObj = Model("MetaUserTrack base", {
-    "rating": fields.Integer,
-    "play_count": fields.Integer,
-    "last_played_date": fields.DateTime,
-    "review_see_count": fields.Integer,
+    "last_review_see_date": fields.DateTime,
+    "count": fields.Integer,
+    "last_count_increment": fields.DateTime,
 })
 
 # Item object
-
-MetaUserApplicationItemObj = Model.clone("MetaUserApplication item", MetaUserApplicationBaseObj, {
-    "app_id": fields.Integer,
-})
-
-MetaUserBookItemObj = Model.clone("MetaUserBook item", MetaUserBookBaseObj, {
-    "isbn": fields.String,
-})
-
-MetaUserGameItemObj = Model.clone("MetaUserGame item", MetaUserGameBaseObj, {
-    "game_id": fields.Integer,
-})
-
-MetaUserMovieItemObj = Model.clone("MetaUserMovie item", MetaUserMovieBaseObj, {
-    "movie_id": fields.Integer,
-})
-
-MetaUserSerieItemObj = Model.clone("MetaUserSerie item", MetaUserSerieBaseObj, {
-    "serie_id": fields.Integer,
-})
-
-MetaUserTrackItemObj = Model.clone("MetaUserTrack item", MetaUserTrackBaseObj, {
-    "track_id": fields.Integer,
-})
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
     "groups": fields.List(fields.Nested(GroupBaseObj)),
@@ -221,12 +146,7 @@ UserItemObj = Model.clone("User Item", UserBaseObj, {
 })
 
 UserExportObj = Model.clone("User Export Item", UserItemObj, {
-    "meta_user_applications": fields.List(fields.Nested(MetaUserApplicationItemObj)),
-    "meta_user_books": fields.List(fields.Nested(MetaUserBookItemObj)),
-    "meta_user_games": fields.List(fields.Nested(MetaUserGameItemObj)),
-    "meta_user_movies": fields.List(fields.Nested(MetaUserMovieItemObj)),
-    "meta_user_series": fields.List(fields.Nested(MetaUserSerieItemObj)),
-    "meta_user_tracks": fields.List(fields.Nested(MetaUserTrackItemObj)),
+    "meta_user_content": fields.List(fields.Nested(MetaUserContentBaseObj)),
     "linked_services": fields.List(fields.Nested(ExternalBaseObj)),
 })
 
@@ -236,19 +156,19 @@ GroupItemObj = Model.clone("Group Item", GroupBaseObj, {
 })
 
 SerieItemObj = Model.clone("Serie Item", SerieBaseObj, {
-    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+    "genres": fields.List(fields.Nested(GenreBaseObj)),
 })
 
 TrackItemObj = Model.clone("Track Item", TrackBaseObj, {
-    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+    "genres": fields.List(fields.Nested(GenreBaseObj)),
 })
 
-MovieItemObj = Model.clone("Movie Item", TrackBaseObj, {
-    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+MovieItemObj = Model.clone("Movie Item", MovieBaseObj, {
+    "genres": fields.List(fields.Nested(GenreBaseObj)),
 })
 
-GameItemObj = Model.clone("Game Item", TrackBaseObj, {
-    "genres": fields.List(fields.Nested(TrackGenresBaseObj)),
+GameItemObj = Model.clone("Game Item", GameBaseObj, {
+    "genres": fields.List(fields.Nested(GenreBaseObj)),
 })
 
 # Common Object

@@ -7,8 +7,8 @@ from src.dto import ApplicationDto, UserDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
-genres_resp = ApplicationDto.genres_resp
-meta_resp = ApplicationDto.meta_resp
+genres_resp = UserDto.genres_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -126,7 +126,7 @@ class ApplicationMetaResource(Resource):
 
         return ContentService.get_meta(user_uuid, content_id)
 
-    application_meta = ApplicationDto.application_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update application-user (connected user) meta",
@@ -137,7 +137,7 @@ class ApplicationMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(application_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, content_id):
         """ Update application-user (connected user) meta """
         user_uuid = get_jwt_identity()

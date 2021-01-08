@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import MovieBaseObj, paginationObj, GenreBaseObj, messageObj, MetaUserMovieBaseObj
+from .base import MovieBaseObj, paginationObj, messageObj
 
 
 class MovieDto:
@@ -10,12 +10,6 @@ class MovieDto:
     api.models[MovieBaseObj.name] = MovieBaseObj
     movie_base = MovieBaseObj
 
-    api.models[GenreBaseObj.name] = GenreBaseObj
-    genre_base = GenreBaseObj
-
-    api.models[MetaUserMovieBaseObj.name] = MetaUserMovieBaseObj
-    meta_user_movie_base = MetaUserMovieBaseObj
-
     # Responses
     data_resp = api.clone(
         "Movie list Data Response",
@@ -23,22 +17,6 @@ class MovieDto:
         {
             "content": fields.List(fields.Nested(movie_base)),
         },
-    )
-
-    genres_resp = api.clone(
-        "Movie genres Data Response",
-        messageObj,
-        {
-            "content": fields.List(fields.Nested(genre_base))
-        }
-    )
-
-    meta_resp = api.clone(
-        "MetaUserMovie Data Response",
-        messageObj,
-        {
-            "content": fields.Nested(meta_user_movie_base)
-        }
     )
 
     # Excepted data

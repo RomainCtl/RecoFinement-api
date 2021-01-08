@@ -7,9 +7,9 @@ from src.dto import SerieDto, UserDto
 
 api = SerieDto.api
 data_resp = SerieDto.data_resp
-genres_resp = SerieDto.genres_resp
+genres_resp = UserDto.genres_resp
 episodes_resp = SerieDto.episodes_resp
-meta_resp = SerieDto.meta_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -100,7 +100,7 @@ class SerieMetaResource(Resource):
 
         return SerieService.get_meta(user_uuid, serie_id)
 
-    serie_meta = SerieDto.serie_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update serie-user (connected user) meta",
@@ -111,7 +111,7 @@ class SerieMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(serie_meta, validate=True)
+    @api.expect(content_meta, validate=True)
     def patch(self, serie_id):
         """ Update serie-user (connected user) meta """
         user_uuid = get_jwt_identity()
@@ -125,6 +125,7 @@ class SerieMetaResource(Resource):
 @api.route("/<int:serie_id>/bad_recommendation")
 class SerieBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
+
     @api.doc(
         "Add Serie-user (connected user) bad recommendation",
         responses={
@@ -132,7 +133,6 @@ class SerieBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
     def post(self, serie_id):
