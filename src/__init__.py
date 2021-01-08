@@ -39,7 +39,7 @@ def create_app(config=None):
 
     @jwt.user_claims_loader
     def add_claims_to_access_token(user):
-        return {'permissions': user.role.permission}
+        return {'permissions': [p.permission for role in user.role for p in role.permission]}
 
     @jwt.expired_token_loader
     def custom_expired_token_loader_callback():

@@ -5,7 +5,7 @@ import datetime
 
 from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error, mailjet
-from src.model import UserModel, RevokedTokenModel
+from src.model import UserModel, RevokedTokenModel, RoleModel
 from src.schemas import UserBase
 from settings import URL_FRONT
 
@@ -64,17 +64,17 @@ class AuthService:
                 email=email,
                 username=username,
                 password=password,
-                role="user"
             )
+            default_role = RoleModel.query.filter_by(name="user").first()
+            if default_role:
+                new_user.role.append(default_role)
 
             db.session.add(new_user)
-            db.session.flush()
+            db.session.commit()
 
             # Load the new user's info
             user_info = user_base.dump(new_user)
 
-            # Commit changes to DB
-            db.session.commit()
             # Send welcome email
             mailjet.sendNewAccount(new_user, URL_FRONT)
             # Create an access token
@@ -127,10 +127,9 @@ class AuthService:
 
     @staticmethod
     def reset(data):
-
         reset_token = data['reset_password_token']
         password = data['password']
-        uuid = decode_token(reset_token)['identity']['uuid']
+        uuid = decode_token(reset_token)['identity']
         try:
             # Fetch user data
             if not (user := UserModel.query.filter_by(uuid=uuid).first()):
@@ -146,7 +145,7 @@ class AuthService:
             db.session.add(user)
             db.session.commit()
             resp = message(True, "Password reset successfully")
-            return resp,200
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)

@@ -364,7 +364,7 @@ class UserModel(db.Model):
         "GenreModel", secondary=LikedGenreModel, lazy="dynamic")
 
     role = db.relationship(
-        "RoleModel", secondary=UserRoleModel, lazy="dynamic")
+        "RoleModel", secondary=UserRoleModel, lazy="subquery")
 
     @property
     def password(self):

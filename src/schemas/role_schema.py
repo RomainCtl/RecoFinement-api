@@ -14,8 +14,5 @@ class RoleBase(SQLAlchemyAutoSchema):
         pass
 
 
-class SerieItem(SQLAlchemyAutoSchema):
+class RoleObject(RoleBase):
     permission = ma.Nested("PermissionBase", many=True)
-
-    class Meta(SerieMeta):
-        pass

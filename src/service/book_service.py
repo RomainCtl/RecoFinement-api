@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -14,7 +15,7 @@ class BookService:
     def search_book_data(search_term, page, connected_user_uuid):
         """ Search book data by title """
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
-                return err_resp("User not found!", 404)
+            return err_resp("User not found!", 404)
         books, total_pages = Paginator.get_from(
             BookModel.query.filter(BookModel.title.ilike(search_term+"%")).union(
                 BookModel.query.filter(BookModel.title.ilike("%"+search_term+"%"))),
@@ -39,10 +40,10 @@ class BookService:
     def get_recommended_books(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
-        
+
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "view_recommendation" not in permissions :
+        if "view_recommendation" not in permissions:
             return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
@@ -145,7 +146,7 @@ class BookService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "indicate_interest" not in permissions :
+        if "indicate_interest" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (book := BookModel.query.filter_by(isbn=isbn).first()):
@@ -180,7 +181,6 @@ class BookService:
             current_app.logger.error(error)
             return internal_err_resp()
 
-
     @staticmethod
     def add_bad_recommendation(user_uuid, isbn, data):
         """ Add bad user recommendation """
@@ -189,22 +189,22 @@ class BookService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "indicate_interest" not in permissions :
+        if "indicate_interest" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (book := BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['book'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['book']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationBookModel(
-                            user_id = user.id,
-                            isbn = book.isbn,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            isbn=book.isbn,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)
