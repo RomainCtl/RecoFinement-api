@@ -14,7 +14,7 @@ meta_resp = UserDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class BookResource(Resource):
     @api.doc(
-        "Get list of recommended Books",
+        "Get list of the most popular Books",
         responses={
             200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,14 +22,56 @@ class BookResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of recommended Books """
+        """ Get list of the most popular Books """
         user_uuid = get_jwt_identity()
 
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return BookService.get_recommended_books(page, user_uuid)
+        return BookService.get_popular_books(page, user_uuid)
+
+
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class BookUserRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended books for the connected user",
+        responses={
+            200: ("Application data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended books for the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return BookService.get_recommended_books_for_user(page, user_uuid)
+
+
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class BookGroupRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended books for the groups of the connected user",
+        responses={
+            200: ("Application data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended books for the groups of the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return BookService.get_recommended_books_for_group(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

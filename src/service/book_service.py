@@ -5,8 +5,8 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import BookModel, MetaUserBookModel, UserModel, RecommendedBookModel, RecommendedBookForGroupModel, BadRecommendationBookModel
-from src.schemas import BookBase, MetaUserBookBase, BookExtra
+from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.schemas import BookBase, BookExtra, MetaUserContentBase
 
 
 class BookService:
@@ -14,7 +14,7 @@ class BookService:
     def search_book_data(search_term, page, connected_user_uuid):
         """ Search book data by title """
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
-                return err_resp("User not found!", 404)
+            return err_resp("User not found!", 404)
         books, total_pages = Paginator.get_from(
             BookModel.query.filter(BookModel.title.ilike(search_term+"%")).union(
                 BookModel.query.filter(BookModel.title.ilike("%"+search_term+"%"))),
@@ -36,15 +36,71 @@ class BookService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_books(page, connected_user_uuid):
+    def get_popular_books(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        # Query for recommendation from user
-        for_user_query = db.session.query(RecommendedBookModel, BookModel)\
-            .select_from(RecommendedBookModel)\
-            .outerjoin(BookModel, BookModel.isbn == RecommendedBookModel.isbn)\
-            .filter(RecommendedBookModel.user_id == user.user_id)
+        books, total_pages = Paginator.get_from(
+            BookModel.query.join(BookModel.content, aliased=True).order_by(
+                ContentModel.popularity_score.desc().nullslast(),
+            ),
+            page,
+        )
+
+        try:
+            book_data = BookBase.loads(books)
+
+            return pagination_resp(
+                message="Most popular book data sent",
+                content=book_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_recommended_books_for_user(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        books, total_pages = Paginator.get_from(
+            db.session.query(RecommendedContentModel, BookModel)
+            .join(BookModel.content)
+            .join(RecommendedContentModel, RecommendedContentModel.content_id == ContentModel.content_id)
+            .filter(RecommendedContentModel.user_id == user.user_id)
+            .order_by(
+                ContentModel.popularity_score.desc().nullslast(),
+            ),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                book = BookExtra.load(row[1])
+                book["reco_engine"] = row[0].engine
+                book["reco_score"] = row[0].score
+                return book
+
+            book_data = list(map(c_load, books))
+
+            return pagination_resp(
+                message="Most popular book data sent",
+                content=book_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_recommended_books_for_group(page, connected_user_uuid):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
 
         # Query for recommendation from group
         groups_ids = [
@@ -52,44 +108,23 @@ class BookService:
             *list(map(lambda x: x.group_id, user.owned_groups))
         ]
 
-        for_group_query = db.session.query(RecommendedBookForGroupModel, BookModel)\
-            .select_from(RecommendedBookForGroupModel)\
-            .outerjoin(BookModel, BookModel.isbn == RecommendedBookForGroupModel.isbn)\
-            .filter(RecommendedBookForGroupModel.group_id.in_(groups_ids))
-
-        # Popularity
-        popularity_query = db.session.query(
-            func.cast(null(), db.Integer),
-            null(),
-            func.cast(null(), db.Float),
-            null(),
-            func.cast(null(), db.Integer),
-            BookModel
-        ).order_by(
-            BookModel.popularity_score.desc().nullslast(),
-        ).limit(200).subquery()
-
         books, total_pages = Paginator.get_from(
-            for_user_query
-            .union(for_group_query)
-            .union(select([popularity_query]))
+            db.session.query(RecommendedContentForGroupModel, BookModel)
+            .join(BookModel.content)
+            .join(RecommendedContentForGroupModel, RecommendedContentForGroupModel.content_id == ContentModel.content_id)
+            .filter(RecommendedContentForGroupModel.group_id.in_(groups_ids))
             .order_by(
-                RecommendedBookModel.engine_priority.desc().nullslast(),
-                RecommendedBookModel.score.desc(),
-                BookModel.popularity_score.desc().nullslast(),
+                ContentModel.popularity_score.desc().nullslast(),
             ),
             page,
         )
 
         try:
             def c_load(row):
-                if row[0] is None:
-                    book = BookExtra.load(row[1])
-                else:
-                    book = BookExtra.load(row[1])
-                    book["reco_engine"] = row[0].engine
-                    book["reco_score"] = row[0].score
-                return book
+                book = BookExtra.load(row[1])
+                book["reco_engine"] = row[0].engine
+                book["reco_score"] = row[0].score
+                return app
 
             book_data = list(map(c_load, books))
 
@@ -171,7 +206,6 @@ class BookService:
             current_app.logger.error(error)
             return internal_err_resp()
 
-
     @staticmethod
     def add_bad_recommendation(user_uuid, isbn, data):
         """ Add bad user recommendation """
@@ -180,17 +214,17 @@ class BookService:
 
         if not (book := BookModel.query.filter_by(isbn=isbn).first()):
             return err_resp("Book not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['book'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['book']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationBookModel(
-                            user_id = user.id,
-                            isbn = book.isbn,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            isbn=book.isbn,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

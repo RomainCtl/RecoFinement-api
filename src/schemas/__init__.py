@@ -14,5 +14,4 @@ from .track_schema import TrackBase, TrackObject, TrackExtra
 
 from .genre_schema import GenreBase, GenreObject
 
-from .content_schema import ContentBase
 from .meta_user_content_schema import MetaUserContentBase, MetaUserContentItem
