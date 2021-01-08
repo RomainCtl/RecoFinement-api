@@ -426,7 +426,7 @@ class TestTrack:
         """Test track user meta
 
         Test:
-            GET: /api/book/<track_id>/meta
+            GET: /api/track/<track_id>/meta
 
         Expected result: 
             200, {"status": True}
@@ -568,7 +568,6 @@ class TestTrack:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        track = TrackModel.query.filter_by(track_id=999999).first()
         response = test_client.patch("/api/track/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
             additional_play_count=5
@@ -598,7 +597,7 @@ class TestTrack:
             additional_play_count=5
 
         ))
-        res = json.loads(response.data)
+        #res = json.loads(response.data)
 
         assert response.status_code == 422
 
@@ -648,3 +647,168 @@ class TestTrack:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    def test_track_user_meta_update_bad_field(self, test_client, headers, user_test1):
+        """Test track user meta update with bad field
+
+        Test:
+            PATCH: /api/track/<track_id>/meta
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+            user_test1 (User object): user test1
+        """
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.patch("/api/track/"+str(track.track_id)+"/meta", headers=headers, json=dict(
+            bad_field=5
+        ))
+        res = json.loads(response.data)
+        meta = MetaUserTrackModel.query.filter_by(
+            user_id=user_test1.user_id, track_id=999999).first()
+
+        assert response.status_code == 400
+        assert res['status'] == False
+
+    ### TRACK BAD RECOMMENDATION ###
+
+    def test_track_bad_recommendation(self, test_client, headers):
+        """Test track bad recommendation
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.post(
+            "/api/track/"+str(track.track_id)+"/bad_recommendation", headers=headers, json=dict(
+            year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_track_bad_recommendation_bad_track_id(self, test_client, headers):
+        """Test track bad recommendation with bad track ID
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.post(
+            "/api/track/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
+            year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_track_bad_recommendation_bad_jwt(self, test_client, headers_bad):
+        """Test track bad recommendation with bad JWT token
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.post(
+            "/api/track/"+str(track.track_id)+"/bad_recommendation", headers=headers_bad, json=dict(
+            year=["2010"]
+        ))
+        #res = json.loads(response.data)
+
+        assert response.status_code == 422
+    
+    def test_track_bad_recommendation_fake_jwt(self, test_client, headers_fake):
+        """Test track bad recommendation with fake JWT token
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.post(
+            "/api/track/"+str(track.track_id)+"/bad_recommendation", headers=headers_fake, json=dict(
+            year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_track_bad_recommendation_no_jwt(self, test_client):
+        """Test track bad recommendation without JWT token
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.post(
+            "/api/track/"+str(track.track_id)+"/bad_recommendation", json=dict(
+            year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
+
+    def test_track_bad_recommendation_bad_field(self, test_client, headers):
+        """Test track bad recommendation with bad field
+
+        Test:
+            GET: /api/track/<int:track_id>/bad_recommendation
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        track = TrackModel.query.filter_by(track_id=999999).first()
+        response = test_client.post(
+            "/api/track/"+str(track.track_id)+"/bad_recommendation", headers=headers, json=dict(
+            bad_field=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False

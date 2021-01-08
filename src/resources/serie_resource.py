@@ -166,8 +166,7 @@ class SerieMetaResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class SerieBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = SerieDto.serie_bad_recommendation
     @api.doc(
         "Add Serie-user (connected user) bad recommendation",
         responses={

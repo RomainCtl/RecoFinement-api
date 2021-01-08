@@ -28,3 +28,13 @@ class GameDto:
             "rating": fields.Integer(min=0, max=5),
         }
     )
+
+    game_bad_recommendation = api.model(
+        "GameBadRecommendationMetaExpected",
+        {
+            "developers": fields.List(fields.String),
+            "publishers": fields.List(fields.String),
+            "genres": fields.List(fields.String),
+            "release_date": fields.List(fields.String)
+        }
+    )

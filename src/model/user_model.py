@@ -66,7 +66,7 @@ class BadRecommendationContentModel(db.Model):
     content_id = db.Column(db.Integer, db.ForeignKey(
         "content.content_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text)
+    reason = db.Column(db.Text, primary_key=True)
 
 
 class UserModel(db.Model):

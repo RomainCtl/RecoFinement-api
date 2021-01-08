@@ -1,3 +1,4 @@
+from src.dto.application_dto import ApplicationDto
 from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -150,8 +151,7 @@ class MovieMetaResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class MovieBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = ApplicationDto.application_bad_recommendation
     @api.doc(
         "Add Movie-user (connected user) bad recommendation",
         responses={

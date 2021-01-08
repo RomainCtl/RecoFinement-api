@@ -150,8 +150,7 @@ class ApplicationMetaResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class ApplicationBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = ApplicationDto.application_bad_recommendation
     @api.doc(
         "Add application-user (connected user) bad recommendation",
         responses={

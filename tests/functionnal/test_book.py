@@ -570,3 +570,166 @@ class TestBook:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    def test_book_user_meta_update_bad_field(self, test_client, headers):
+        """Test book user meta update with bad field
+
+        Test:
+            PATCH: /api/book/<isbn>/meta
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+            user_test1 (User object): user test1
+        """
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.patch("/api/book/"+str(book.isbn)+"/meta", headers=headers, json=dict(
+            bad_field=5
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False
+
+    ### BOOK BAD RECOMMENDATION ###
+
+    def test_book_bad_recommendation(self, test_client, headers):
+        """Test book bad recommendation
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.post(
+            "/api/book/"+str(book.isbn)+"/bad_recommendation", headers=headers, json=dict(
+            year_of_release=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_book_bad_recommendation_bad_isbn(self, test_client, headers):
+        """Test book bad recommendation with bad book ID
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.post(
+            "/api/book/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
+            year_of_release=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_book_bad_recommendation_bad_jwt(self, test_client, headers_bad):
+        """Test book bad recommendation with bad JWT token
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.post(
+            "/api/book/"+str(book.isbn)+"/bad_recommendation", headers=headers_bad, json=dict(
+            year_of_release=["2010"]
+        ))
+        #res = json.loads(response.data)
+
+        assert response.status_code == 422
+    
+    def test_book_bad_recommendation_fake_jwt(self, test_client, headers_fake):
+        """Test book bad recommendation with fake JWT token
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.post(
+            "/api/book/"+str(book.isbn)+"/bad_recommendation", headers=headers_fake, json=dict(
+            year_of_release=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_book_bad_recommendation_no_jwt(self, test_client):
+        """Test book bad recommendation without JWT token
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.post(
+            "/api/book/"+str(book.isbn)+"/bad_recommendation", json=dict(
+            year_of_release=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
+
+    def test_book_bad_recommendation_bad_field(self, test_client, headers):
+        """Test book bad recommendation with bad field
+
+        Test:
+            GET: /api/book/<int:isbn>/bad_recommendation
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
+        response = test_client.post(
+            "/api/book/"+str(book.isbn)+"/bad_recommendation", headers=headers, json=dict(
+            bad_field=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False

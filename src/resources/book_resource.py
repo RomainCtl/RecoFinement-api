@@ -134,8 +134,7 @@ class bookMetaResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class BookBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = BookDto.book_bad_recommendation
     @api.doc(
         "Add Book-user (connected user) bad recommendation",
         responses={

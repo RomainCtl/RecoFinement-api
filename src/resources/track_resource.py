@@ -174,8 +174,7 @@ class TrackHistoryResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class TrackBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = TrackDto.track_bad_recommendation
     @api.doc(
         "Add Track-user (connected user) bad recommendation",
         responses={

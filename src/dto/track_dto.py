@@ -34,3 +34,13 @@ class TrackDto:
             "content": fields.List(fields.Nested(track_history))
         }
     )
+
+    track_bad_recommendation = api.model(
+        "TrackBadRecommendationMetaExpected",
+        {
+            "year": fields.List(fields.String),
+            "artist_name": fields.List(fields.String),
+            "release": fields.List(fields.String),
+            "genres": fields.List(fields.String)
+        }
+    )

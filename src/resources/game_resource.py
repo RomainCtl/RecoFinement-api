@@ -150,8 +150,7 @@ class GameMetaResource(Resource):
 
 @api.route("/<int:content_id>/bad_recommendation")
 class GameBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
-
+    bad_recommendation = GameDto.game_bad_recommendation
     @api.doc(
         "Add Game-user (connected user) bad recommendation",
         responses={

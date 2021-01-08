@@ -79,10 +79,3 @@ class UserDto:
             "reason": fields.List(fields.String)
         }
     )
-    content_meta = api.model(
-        "ContentMetaExpected",
-        {
-            "additional_count": fields.Float(min=0.0),
-            "rating": fields.Integer(min=0, max=5),
-        }
-    )

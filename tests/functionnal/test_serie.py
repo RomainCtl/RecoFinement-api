@@ -569,7 +569,6 @@ class TestSerie:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        serie = SerieModel.query.filter_by(serie_id=999999).first()
         response = test_client.patch("/api/serie/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
             num_watched_episodes=5
@@ -649,3 +648,167 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    def test_serie_user_meta_update_bad_field(self, test_client, headers):
+        """Test serie user meta update with bad field
+
+        Test:
+            PATCH: /api/serie/<serie_id>/meta
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+            user_test1 (User object): user test1
+        """
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.patch("/api/serie/"+str(serie.serie_id)+"/meta", headers=headers, json=dict(
+            bad_field=5,
+        ))
+        res = json.loads(response.data)
+        
+        assert response.status_code == 400
+        assert res['status'] == False
+
+
+    ### SERIE BAD RECOMMENDATION ###
+
+    def test_serie_bad_recommendation(self, test_client, headers):
+        """Test serie bad recommendation
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.post(
+            "/api/serie/"+str(serie.serie_id)+"/bad_recommendation", headers=headers, json=dict(
+            start_year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_serie_bad_recommendation_bad_serie_id(self, test_client, headers):
+        """Test serie bad recommendation with bad serie ID
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.post(
+            "/api/serie/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
+            start_year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_serie_bad_recommendation_bad_jwt(self, test_client, headers_bad):
+        """Test serie bad recommendation with bad JWT token
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.post(
+            "/api/serie/"+str(serie.serie_id)+"/bad_recommendation", headers=headers_bad, json=dict(
+            start_year=["2010"]
+        ))
+        #res = json.loads(response.data)
+
+        assert response.status_code == 422
+    
+    def test_serie_bad_recommendation_fake_jwt(self, test_client, headers_fake):
+        """Test serie bad recommendation with fake JWT token
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.post(
+            "/api/serie/"+str(serie.serie_id)+"/bad_recommendation", headers=headers_fake, json=dict(
+            start_year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_serie_bad_recommendation_no_jwt(self, test_client):
+        """Test serie bad recommendation without JWT token
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.post(
+            "/api/serie/"+str(serie.serie_id)+"/bad_recommendation", json=dict(
+            start_year=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
+
+    def test_serie_bad_recommendation_bad_field(self, test_client, headers):
+        """Test serie bad recommendation with bad field
+
+        Test:
+            GET: /api/serie/<int:serie_id>/bad_recommendation
+
+        Expected result: 
+            400, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        serie = SerieModel.query.filter_by(serie_id=999999).first()
+        response = test_client.post(
+            "/api/serie/"+str(serie.serie_id)+"/bad_recommendation", headers=headers, json=dict(
+            bad_field=["2010"]
+        ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 400
+        assert res['status'] == False

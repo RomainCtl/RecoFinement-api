@@ -27,3 +27,15 @@ class MovieDto:
             "rating": fields.Integer(min=0, max=5),
         }
     )
+
+    movie_bad_recommendation = api.model(
+        "MovieBadRecommendationMetaExpected",
+        {
+            "year": fields.List(fields.String),
+            "producers": fields.List(fields.String),
+            "genres": fields.List(fields.String),
+            "director": fields.List(fields.String),
+            "writer": fields.List(fields.String),
+            "actors": fields.List(fields.String)
+        }
+    )
