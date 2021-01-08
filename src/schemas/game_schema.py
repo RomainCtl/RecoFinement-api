@@ -3,22 +3,29 @@ from marshmallow import fields
 from src import ma
 from src.model import GameModel
 from src.utils import SQLAlchemyAutoSchema
+from .genre_schema import GenreBase
 
 
 class GameMeta:
     model = GameModel
+    include_fk = True
 
 
 class GameBase(SQLAlchemyAutoSchema):
-    class Meta(GameMeta):
-        pass
-
-
-class GameObject(SQLAlchemyAutoSchema):
-    genres = ma.Nested("GenreBase", many=True)
+    rating = fields.Function(lambda obj: obj.content.rating)
+    rating_count = fields.Function(lambda obj: obj.content.rating_count)
+    popularity_score = fields.Function(
+        lambda obj: obj.content.popularity_score)
 
     class Meta(GameMeta):
         pass
+
+
+class GameObject(GameBase):
+    genres = fields.Method("build_genres")
+
+    def build_genres(self, obj):
+        return GenreBase.loads(obj.content.genres)
 
 
 class GameExtra(GameObject):
