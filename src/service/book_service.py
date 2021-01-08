@@ -154,7 +154,7 @@ class BookService:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id=user.id,
+                            user_id=user.user_id,
                             content_id=book.content_id,
                             reason_categorie=rc,
                             reason=r

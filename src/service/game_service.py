@@ -172,8 +172,8 @@ class GameService:
                 if rc in REASON_CATEGORIES['game']:
                     for r in data['reason']:
 
-                        new_bad_reco = BadRecommendationGameModel(
-                            user_id=user.id,
+                        new_bad_reco = BadRecommendationContentModel(
+                            user_id=user.user_id,
                             content_id=game.content_id,
                             reason_categorie=rc,
                             reason=r

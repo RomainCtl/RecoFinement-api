@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.service import SerieService
+from src.service import SerieService, ContentService
 from src.dto import SerieDto, UserDto
 
 api = SerieDto.api
@@ -15,7 +15,7 @@ meta_resp = UserDto.meta_resp
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class SerieResource(Resource):
     @api.doc(
-        "Get list of recommended Series",
+        "Get list of the most popular Series",
         responses={
             200: ("Serie data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -23,14 +23,56 @@ class SerieResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of recommended Series """
+        """ Get list of the most popular Series """
         user_uuid = get_jwt_identity()
 
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return SerieService.get_recommended_series(page, user_uuid)
+        return SerieService.get_popular_series(page, user_uuid)
+
+
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class SerieUserRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended Series for the connected user",
+        responses={
+            200: ("Serie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended Series for the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return SerieService.get_recommended_series_for_user(page, user_uuid)
+
+
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class SerieGroupRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended Series for the groups of the connected user",
+        responses={
+            200: ("Serie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended Series for the groups of the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return SerieService.get_recommended_series_for_group(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -69,7 +111,7 @@ class SerieGenreResource(Resource):
         return SerieService.get_ordered_genre(user_uuid)
 
 
-@api.route("/<int:serie_id>/episodes")
+@api.route("/<int:content_id>/episodes")
 class SerieEpisodeResource(Resource):
     @api.doc(
         "Get series episodes",
@@ -79,12 +121,12 @@ class SerieEpisodeResource(Resource):
         }
     )
     @jwt_required
-    def get(self, serie_id):
+    def get(self, content_id):
         """ Get series episodes """
-        return SerieService.get_episodes(serie_id)
+        return SerieService.get_episodes(content_id)
 
 
-@api.route("/<int:serie_id>/meta")
+@api.route("/<int:content_id>/meta")
 class SerieMetaResource(Resource):
     @api.doc(
         "Get serie-user (connected user) meta",
@@ -94,11 +136,11 @@ class SerieMetaResource(Resource):
         }
     )
     @jwt_required
-    def get(self, serie_id):
+    def get(self, content_id):
         """ Get serie-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
-        return SerieService.get_meta(user_uuid, serie_id)
+        return ContentService.get_meta(user_uuid, content_id)
 
     content_meta = UserDto.content_meta
 
@@ -112,17 +154,17 @@ class SerieMetaResource(Resource):
     )
     @jwt_required
     @api.expect(content_meta, validate=True)
-    def patch(self, serie_id):
+    def patch(self, content_id):
         """ Update serie-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return SerieService.update_meta(user_uuid, serie_id, data)
+        return ContentService.update_meta(user_uuid, content_id, data)
 
 
-@api.route("/<int:serie_id>/bad_recommendation")
+@api.route("/<int:content_id>/bad_recommendation")
 class SerieBadRecommendation(Resource):
     bad_recommendation = UserDto.bad_recommendation
 
@@ -135,11 +177,11 @@ class SerieBadRecommendation(Resource):
     )
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
-    def post(self, serie_id):
+    def post(self, content_id):
         """ Add Serie-user (connected user) bad recommendation """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return SerieService.add_bad_recommendation(user_uuid, serie_id, data)
+        return SerieService.add_bad_recommendation(user_uuid, content_id, data)
