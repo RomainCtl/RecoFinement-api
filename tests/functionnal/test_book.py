@@ -710,26 +710,3 @@ class TestBook:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-
-    def test_book_bad_recommendation_bad_field(self, test_client, headers):
-        """Test book bad recommendation with bad field
-
-        Test:
-            GET: /api/book/<int:isbn>/bad_recommendation
-
-        Expected result: 
-            400, {"status": False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
-        """
-        book = BookModel.query.filter_by(isbn=str(123456789012)).first()
-        response = test_client.post(
-            "/api/book/"+str(book.isbn)+"/bad_recommendation", headers=headers, json=dict(
-            bad_field=["2010"]
-        ))
-        res = json.loads(response.data)
-
-        assert response.status_code == 400
-        assert res['status'] == False

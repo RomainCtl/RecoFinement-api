@@ -794,26 +794,3 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-
-    def test_application_bad_recommendation_bad_field(self, test_client, headers):
-        """Test application bad recommendation with bad field
-
-        Test:
-            GET: /api/application/<int:application_id>/bad_recommendation
-
-        Expected result: 
-            400, {"status": False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
-        """
-        application = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.post(
-            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers, json=dict(
-            bad_field=["2010"]
-        ))
-        res = json.loads(response.data)
-
-        assert response.status_code == 400
-        assert res['status'] == False

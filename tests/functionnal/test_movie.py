@@ -789,26 +789,3 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-
-    def test_movie_bad_recommendation_bad_field(self, test_client, headers):
-        """Test movie bad recommendation with bad field
-
-        Test:
-            GET: /api/movie/<int:movie_id>/bad_recommendation
-
-        Expected result: 
-            400, {"status": False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
-        """
-        movie = MovieModel.query.filter_by(movie_id=999999).first()
-        response = test_client.post(
-            "/api/movie/"+str(movie.movie_id)+"/bad_recommendation", headers=headers, json=dict(
-            bad_field=["2010"]
-        ))
-        res = json.loads(response.data)
-
-        assert response.status_code == 400
-        assert res['status'] == False

@@ -789,26 +789,3 @@ class TestTrack:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-
-    def test_track_bad_recommendation_bad_field(self, test_client, headers):
-        """Test track bad recommendation with bad field
-
-        Test:
-            GET: /api/track/<int:track_id>/bad_recommendation
-
-        Expected result: 
-            400, {"status": False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
-        """
-        track = TrackModel.query.filter_by(track_id=999999).first()
-        response = test_client.post(
-            "/api/track/"+str(track.track_id)+"/bad_recommendation", headers=headers, json=dict(
-            bad_field=["2010"]
-        ))
-        res = json.loads(response.data)
-
-        assert response.status_code == 400
-        assert res['status'] == False
