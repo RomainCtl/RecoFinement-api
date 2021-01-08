@@ -49,7 +49,7 @@ class ContentModel(db.Model):
     popularity_score = db.Column(db.Float, default=0)
 
     genres = db.relationship(
-        "GenreModel", secondary=ContentGenresModel, lazy="dynamic")
+        "GenreModel", secondary=ContentGenresModel, lazy="subquery")
 
     similars = db.relationship("ContentModel", secondary=SimilarsContentModel.__table__,
                                primaryjoin=content_id == SimilarsContentModel.content_id0,

@@ -172,15 +172,15 @@ class ApplicationService:
             return err_resp("Application not found!", 404)
 
         try:
-            for type, value in  data.items():
-                if type in REASON_CATEGORIES['application'] :
+            for type, value in data.items():
+                if type in REASON_CATEGORIES['application']:
                     for r in value:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id = user.user_id,
+                            user_id=user.user_id,
                             content_id=app.content_id,
-                            reason_categorie = type,
-                            reason = r
+                            reason_categorie=type,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

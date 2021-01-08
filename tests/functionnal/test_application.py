@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import ApplicationModel, MetaUserApplicationModel
+from src.model import ApplicationModel, ContentModel, MetaUserContentModel
 from src import db
 
 
@@ -21,13 +21,13 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        if not (ApplicationModel.query.filter_by(app_id=999999).first()):
+        if not (ApplicationModel.query.filter_by(content_id=999999).first()):
+            content = ContentModel(
+                content_id=999999, rating=5.0, rating_count=4)
+            db.session.add(content)
+            db.session.flush()
             new_app = ApplicationModel(
-                app_id=999999,
                 name="test app",
-                genre_id=1,
-                rating=5.0,
-                reviews=4,
                 size="145mb",
                 installs="110k",
                 type="chat",
@@ -36,7 +36,8 @@ class TestApplication:
                 last_updated="11/10/2020",
                 current_version="1.4",
                 android_version="10.1",
-                cover="cover"
+                cover="cover",
+                content=content
             )
             db.session.add(new_app)
             db.session.flush()
@@ -431,7 +432,7 @@ class TestApplication:
         """Test application user meta
 
         Test:
-            GET: /api/book/<app_id>/meta
+            GET: /api/book/<content_id>/meta
 
         Expected result: 
             200, {"status": True}
@@ -440,19 +441,19 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
         response = test_client.get(
-            "/api/application/"+str(app.app_id)+"/meta", headers=headers)
+            "/api/application/"+str(app.content_id)+"/meta", headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 200
         assert res['status'] == True
 
-    def test_application_user_meta_bad_app_id(self, test_client, headers):
-        """Test application user meta with bad app_id
+    def test_application_user_meta_bad_content_id(self, test_client, headers):
+        """Test application user meta with bad content_id
 
         Test:
-            GET: /api/application/<bad_app_id>/meta
+            GET: /api/application/<bad_content_id>/meta
 
         Expected result: 
             404, {"status": False}
@@ -461,7 +462,7 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
         response = test_client.get(
             "/api/application/"+str(999999999999)+"/meta", headers=headers)
         res = json.loads(response.data)
@@ -473,7 +474,7 @@ class TestApplication:
         """Test application user meta with bad JWT token 
 
         Test:
-            GET: /api/application/<app_id>/meta
+            GET: /api/application/<content_id>/meta
 
         Expected result: 
             422
@@ -482,9 +483,9 @@ class TestApplication:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
         response = test_client.get(
-            "/api/application/"+str(app.app_id)+"/meta", headers=headers_bad)
+            "/api/application/"+str(app.content_id)+"/meta", headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -493,7 +494,7 @@ class TestApplication:
         """Test application user meta with fake JWT token 
 
         Test:
-            GET: /api/application/<app_id>/meta
+            GET: /api/application/<content_id>/meta
 
         Expected result: 
             404, {"status": False}
@@ -502,9 +503,9 @@ class TestApplication:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
         response = test_client.get(
-            "/api/application/"+str(app.app_id)+"/meta", headers=headers_fake)
+            "/api/application/"+str(app.content_id)+"/meta", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -514,7 +515,7 @@ class TestApplication:
         """Test application user mate without JWT token
 
         Test:
-            GET: /api/application/<app_id>/meta
+            GET: /api/application/<content_id>/meta
 
         Expected result: 
             401, {"msg" : "Missing Authorization Header"}
@@ -522,8 +523,9 @@ class TestApplication:
         Args:
             test_client (app context): Flask application
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.get("/api/application/"+str(app.app_id)+"/meta")
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
+        response = test_client.get(
+            "/api/application/"+str(app.content_id)+"/meta")
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -535,7 +537,7 @@ class TestApplication:
         """Test application user meta update
 
         Test:
-            PATCH: /api/application/<app_id>/meta
+            PATCH: /api/application/<content_id>/meta
 
         Expected result: 
             201, {"status": True}
@@ -545,27 +547,23 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
             user_test1 (User object): user test1
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers, json=dict(
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
+        response = test_client.patch("/api/application/"+str(app.content_id)+"/meta", headers=headers, json=dict(
             rating=5,
-            review="review test",
-            downloaded=True
         ))
         res = json.loads(response.data)
-        meta = MetaUserApplicationModel.query.filter_by(
-            user_id=user_test1.user_id, app_id=999999).first()
+        meta = MetaUserContentModel.query.filter_by(
+            user_id=user_test1.user_id, content_id=999999).first()
 
         assert response.status_code == 201
         assert res['status'] == True
-        assert meta.downloaded == True
         assert meta.rating == 5
-        assert meta.review == "review test"
 
-    def test_application_user_meta_update_bad_app_id(self, test_client, headers):
-        """Test application user meta update with bad app_id
+    def test_application_user_meta_update_bad_content_id(self, test_client, headers):
+        """Test application user meta update with bad content_id
 
         Test:
-            PATCH: /api/application/<bad_app_id>/meta
+            PATCH: /api/application/<bad_content_id>/meta
 
         Expected result: 
             404, {"status": False}
@@ -574,11 +572,9 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
         response = test_client.patch("/api/application/"+str(999999999)+"/meta", headers=headers, json=dict(
             rating=5,
-            review="review test",
-            downloaded=True
         ))
         res = json.loads(response.data)
 
@@ -589,7 +585,7 @@ class TestApplication:
         """Test application user meta update with bad JWT token 
 
         Test:
-            PATCH: /api/application/<app_id>/meta
+            PATCH: /api/application/<content_id>/meta
 
         Expected result: 
             422
@@ -598,11 +594,9 @@ class TestApplication:
             test_client (app context): Flask application
             headers_bad (dict): bad HTTP header, with bad access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers_bad, json=dict(
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
+        response = test_client.patch("/api/application/"+str(app.content_id)+"/meta", headers=headers_bad, json=dict(
             rating=5,
-            review="review test",
-            downloaded=True
         ))
         res = json.loads(response.data)
 
@@ -612,7 +606,7 @@ class TestApplication:
         """Test application user meta update with fake JWT token 
 
         Test:
-            PATCH: /api/application/<app_id>/meta
+            PATCH: /api/application/<content_id>/meta
 
         Expected result: 
             404, {"status": False}
@@ -621,11 +615,9 @@ class TestApplication:
             test_client (app context): Flask application
             headers_fake (dict): fake HTTP header, with invalid signed access token
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers_fake, json=dict(
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
+        response = test_client.patch("/api/application/"+str(app.content_id)+"/meta", headers=headers_fake, json=dict(
             rating=5,
-            review="review test",
-            downloaded=True
         ))
         res = json.loads(response.data)
 
@@ -636,7 +628,7 @@ class TestApplication:
         """Test application user meta update without JWT token 
 
         Test:
-            PATCH: /api/application/<app_id>/meta
+            PATCH: /api/application/<content_id>/meta
 
         Expected result: 
             401, {"msg" : "Missing Authorization Header"}
@@ -644,39 +636,14 @@ class TestApplication:
         Args:
             test_client (app context): Flask application
         """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", json=dict(
+        app = ApplicationModel.query.filter_by(content_id=999999).first()
+        response = test_client.patch("/api/application/"+str(app.content_id)+"/meta", json=dict(
             rating=5,
-            review="review test",
-            downloaded=True
         ))
         res = json.loads(response.data)
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
-
-    def test_application_user_meta_update_bad_field(self, test_client, headers):
-        """Test application user meta update with bad field
-
-        Test:
-            PATCH: /api/application/<app_id>/meta
-
-        Expected result: 
-            400, {"status": False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
-            user_test1 (User object): user test1
-        """
-        app = ApplicationModel.query.filter_by(app_id=999999).first()
-        response = test_client.patch("/api/application/"+str(app.app_id)+"/meta", headers=headers, json=dict(
-            bad_field=5
-        ))
-        res = json.loads(response.data)
-
-        assert response.status_code == 400
-        assert res['status'] == False
 
     ### APPLICATION BAD RECOMMENDATION ###
 
@@ -693,11 +660,12 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        application = ApplicationModel.query.filter_by(
+            content_id=999999).first()
         response = test_client.post(
-            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers, json=dict(
-            categorie=["2010"]
-        ))
+            "/api/application/"+str(application.content_id)+"/bad_recommendation", headers=headers, json=dict(
+                categorie=["2010"]
+            ))
         res = json.loads(response.data)
 
         assert response.status_code == 201
@@ -718,8 +686,8 @@ class TestApplication:
         """
         response = test_client.post(
             "/api/application/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
-            categorie=["2010"]
-        ))
+                categorie=["2010"]
+            ))
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -738,15 +706,16 @@ class TestApplication:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
         """
-        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        application = ApplicationModel.query.filter_by(
+            content_id=999999).first()
         response = test_client.post(
-            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers_bad, json=dict(
-            categorie=["2010"]
-        ))
+            "/api/application/"+str(application.content_id)+"/bad_recommendation", headers=headers_bad, json=dict(
+                categorie=["2010"]
+            ))
         #res = json.loads(response.data)
 
         assert response.status_code == 422
-    
+
     def test_application_bad_recommendation_fake_jwt(self, test_client, headers_fake):
         """Test application bad recommendation with fake JWT token
 
@@ -761,11 +730,12 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
 
-        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        application = ApplicationModel.query.filter_by(
+            content_id=999999).first()
         response = test_client.post(
-            "/api/application/"+str(application.app_id)+"/bad_recommendation", headers=headers_fake, json=dict(
-            categorie=["2010"]
-        ))
+            "/api/application/"+str(application.content_id)+"/bad_recommendation", headers=headers_fake, json=dict(
+                categorie=["2010"]
+            ))
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -785,11 +755,12 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
 
-        application = ApplicationModel.query.filter_by(app_id=999999).first()
+        application = ApplicationModel.query.filter_by(
+            content_id=999999).first()
         response = test_client.post(
-            "/api/application/"+str(application.app_id)+"/bad_recommendation", json=dict(
-            categorie=["2010"]
-        ))
+            "/api/application/"+str(application.content_id)+"/bad_recommendation", json=dict(
+                categorie=["2010"]
+            ))
         res = json.loads(response.data)
 
         assert response.status_code == 401
