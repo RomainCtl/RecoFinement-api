@@ -591,7 +591,7 @@ class TestBook:
         book = BookModel.query.filter_by(content_id=999999).first()
         response = test_client.post(
             "/api/book/"+str(book.content_id)+"/bad_recommendation", headers=headers, json=dict(
-                year_of_release=["2010"]
+                year_of_publication=["2010"]
             ))
         res = json.loads(response.data)
 
@@ -613,7 +613,7 @@ class TestBook:
         """
         response = test_client.post(
             "/api/book/"+str(999999999)+"/bad_recommendation", headers=headers, json=dict(
-                year_of_release=["2010"]
+                year_of_publication=["2010"]
             ))
         res = json.loads(response.data)
 
@@ -636,7 +636,7 @@ class TestBook:
         book = BookModel.query.filter_by(content_id=999999).first()
         response = test_client.post(
             "/api/book/"+str(book.content_id)+"/bad_recommendation", headers=headers_bad, json=dict(
-                year_of_release=["2010"]
+                year_of_publication=["2010"]
             ))
         #res = json.loads(response.data)
 
@@ -659,7 +659,7 @@ class TestBook:
         book = BookModel.query.filter_by(content_id=999999).first()
         response = test_client.post(
             "/api/book/"+str(book.content_id)+"/bad_recommendation", headers=headers_fake, json=dict(
-                year_of_release=["2010"]
+                year_of_publication=["2010"]
             ))
         res = json.loads(response.data)
 
@@ -683,7 +683,7 @@ class TestBook:
         book = BookModel.query.filter_by(content_id=999999).first()
         response = test_client.post(
             "/api/book/"+str(book.content_id)+"/bad_recommendation", json=dict(
-                year_of_release=["2010"]
+                year_of_publication=["2010"]
             ))
         res = json.loads(response.data)
 
