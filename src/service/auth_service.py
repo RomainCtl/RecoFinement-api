@@ -5,7 +5,7 @@ import datetime
 
 from src import db
 from src.utils import message, err_resp, internal_err_resp, validation_error, mailjet
-from src.model import UserModel, RevokedTokenModel
+from src.model import UserModel, RevokedTokenModel, RoleModel
 from src.schemas import UserBase
 from settings import URL_FRONT
 
@@ -30,7 +30,7 @@ class AuthService:
             elif user and user.verify_password(password):
                 user_info = user_base.dump(user)
 
-                access_token = create_access_token(identity=user.uuid)
+                access_token = create_access_token(identity=user)
 
                 resp = message(True, "Successfully logged in.")
                 resp["user"] = user_info
@@ -65,19 +65,20 @@ class AuthService:
                 username=username,
                 password=password,
             )
+            default_role = RoleModel.query.filter_by(name="user").first()
+            if default_role:
+                new_user.role.append(default_role)
 
             db.session.add(new_user)
-            db.session.flush()
+            db.session.commit()
 
             # Load the new user's info
             user_info = user_base.dump(new_user)
 
-            # Commit changes to DB
-            db.session.commit()
             # Send welcome email
             mailjet.sendNewAccount(new_user, URL_FRONT)
             # Create an access token
-            access_token = create_access_token(identity=new_user.uuid)
+            access_token = create_access_token(identity=new_user)
 
             resp = message(True, "User has been registered.")
             resp["user"] = user_info
@@ -113,7 +114,7 @@ class AuthService:
 
                 expires = datetime.timedelta(hours=24)
                 reset_token = create_access_token(
-                    identity=user.uuid, expires_delta=expires)
+                    identity=user, expires_delta=expires)
 
                 mailjet.sendForget(user, URL_FRONT+"/reset", reset_token)
 
@@ -126,7 +127,6 @@ class AuthService:
 
     @staticmethod
     def reset(data):
-
         reset_token = data['reset_password_token']
         password = data['password']
         uuid = decode_token(reset_token)['identity']
@@ -145,7 +145,7 @@ class AuthService:
             db.session.add(user)
             db.session.commit()
             resp = message(True, "Password reset successfully")
-            return resp,200
+            return resp, 200
 
         except Exception as error:
             current_app.logger.error(error)

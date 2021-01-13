@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, and_, select
 from sqlalchemy.sql.expression import null
 from datetime import datetime
@@ -40,6 +41,11 @@ class TrackService:
     def get_recommended_tracks(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions:
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedTrackModel, TrackModel)\
@@ -109,7 +115,7 @@ class TrackService:
 
     @staticmethod
     def get_ordered_genre(connected_user_uuid):
-        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.TRACK).order_by(GenreModel.count.desc()).all()
@@ -131,7 +137,7 @@ class TrackService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not ( TrackModel.query.filter_by(track_id=track_id).first()):
+        if not (TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Application not found!", 404)
 
         try:
@@ -159,6 +165,11 @@ class TrackService:
         """ Add 'additional_play_count' to 'play_count' or/and update 'rating' """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
 
         if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)
@@ -232,19 +243,24 @@ class TrackService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (track := TrackModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Track not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['track'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['track']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationTrackModel(
-                            user_id = user.id,
-                            track_id = track.track_id,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            track_id=track.track_id,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

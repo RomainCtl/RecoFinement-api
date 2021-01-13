@@ -12,3 +12,5 @@ from .external_model import ExternalModel
 
 from .user_model import UserModel, MetaUserTrackModel, MetaUserApplicationModel, MetaUserGameModel, MetaUserBookModel, MetaUserMovieModel, MetaUserSerieModel, RecommendedApplicationModel, RecommendedBookModel, RecommendedGameModel, RecommendedMovieModel, RecommendedSerieModel, RecommendedTrackModel, BadRecommendationApplicationModel, BadRecommendationBookModel, BadRecommendationGameModel, BadRecommendationMovieModel, BadRecommendationSerieModel, BadRecommendationTrackModel
 from .group_model import GroupModel, RecommendedApplicationForGroupModel, RecommendedBookForGroupModel, RecommendedGameForGroupModel, RecommendedMovieForGroupModel, RecommendedSerieForGroupModel, RecommendedTrackForGroupModel
+
+from .role_model import RoleModel, PermissionModel

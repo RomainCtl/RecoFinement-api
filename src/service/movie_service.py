@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -39,6 +40,11 @@ class MovieService:
     def get_recommended_movies(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions:
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedMovieModel, MovieModel)\
@@ -106,7 +112,7 @@ class MovieService:
 
     @staticmethod
     def get_ordered_genre(connected_user_uuid):
-        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.MOVIE).order_by(GenreModel.count.desc()).all()
@@ -128,7 +134,7 @@ class MovieService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not ( MovieModel.query.filter_by(movie_id=movie_id).first()):
+        if not (MovieModel.query.filter_by(movie_id=movie_id).first()):
             return err_resp("Application not found!", 404)
 
         try:
@@ -156,6 +162,11 @@ class MovieService:
         """ Updta 'additional_watch_count' or/and update 'rating' """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
 
         if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
             return err_resp("Movie not found!", 404)
@@ -195,19 +206,24 @@ class MovieService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (movie := MovieModel.query.filter_by(movie_id=movie_id).first()):
             return err_resp("Movie not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['movie'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['movie']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationMovieModel(
-                            user_id = user.id,
-                            movie_id = movie.movie_id,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            movie_id=movie.movie_id,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

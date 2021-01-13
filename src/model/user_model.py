@@ -211,6 +211,14 @@ class RecommendedTrackModel(db.Model):
     engine_priority = db.Column(db.Integer)
 
 
+UserRoleModel = db.Table("user_role",
+                         db.Column("user_id", db.Integer, db.ForeignKey(
+                             "user.user_id", ondelete="CASCADE"), primary_key=True),
+                         db.Column("role_id", db.Integer, db.ForeignKey(
+                             "role.role_id"), primary_key=True)
+                         )
+
+
 class BadRecommendationApplicationModel(db.Model):
     """
     BadRecommendationApplication Model for storing bad recommended applications for a user
@@ -223,6 +231,7 @@ class BadRecommendationApplicationModel(db.Model):
         "application.app_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)
+
 
 class BadRecommendationBookModel(db.Model):
     """
@@ -279,6 +288,7 @@ class BadRecommendationSerieModel(db.Model):
     reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)
 
+
 class BadRecommendationTrackModel(db.Model):
     """
     BadRecommendationTrack Model for storing bad recommended Tracks for a user
@@ -291,6 +301,7 @@ class BadRecommendationTrackModel(db.Model):
         "track.track_id", ondelete="CASCADE"), primary_key=True)
     reason_categorie = db.Column(db.Text, primary_key=True)
     reason = db.Column(db.Text)
+
 
 class UserModel(db.Model):
     """
@@ -327,7 +338,7 @@ class UserModel(db.Model):
         "RecommendedSerieModel", lazy="subquery")
     recommended_tracks = db.relationship(
         "RecommendedTrackModel", lazy="subquery")
-    
+
     bad_recommadation_applications = db.relationship(
         "BadRecommendationApplicationModel", lazy="subquery")
     bad_recommadation_books = db.relationship(
@@ -351,6 +362,9 @@ class UserModel(db.Model):
 
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreModel, lazy="dynamic")
+
+    role = db.relationship(
+        "RoleModel", secondary=UserRoleModel, lazy="subquery")
 
     @property
     def password(self):

@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -39,6 +40,11 @@ class ApplicationService:
     def get_recommended_applications(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions:
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedApplicationModel, ApplicationModel)\
@@ -108,9 +114,9 @@ class ApplicationService:
 
     @staticmethod
     def get_ordered_genres(connected_user_uuid):
-        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
-        
+
         genres = GenreModel.query.filter_by(
             content_type=ContentType.APPLICATION).order_by(GenreModel.count.desc()).all()
 
@@ -131,7 +137,7 @@ class ApplicationService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not ( ApplicationModel.query.filter_by(app_id=app_id).first()):
+        if not (ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
 
         try:
@@ -163,6 +169,11 @@ class ApplicationService:
 
         if not (app := ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
 
         try:
             if not (meta_user_application := MetaUserApplicationModel.query.filter_by(user_id=user.user_id, app_id=app_id).first()):
@@ -203,17 +214,22 @@ class ApplicationService:
 
         if not (app := ApplicationModel.query.filter_by(app_id=app_id).first()):
             return err_resp("Application not found!", 404)
-        
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['application'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['application']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationApplicationModel(
-                            user_id = user.id,
-                            app_id = app.app_id,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            app_id=app.app_id,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

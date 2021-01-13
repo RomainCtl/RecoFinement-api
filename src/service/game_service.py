@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -14,7 +15,7 @@ class GameService:
     def search_game_data(search_term, page, connected_user_uuid):
         """ Search game data by name """
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
-                return err_resp("User not found!", 404)
+            return err_resp("User not found!", 404)
         games, total_pages = Paginator.get_from(
             GameModel.query.filter(GameModel.name.ilike(search_term+"%")).union(
                 GameModel.query.filter(GameModel.name.ilike("%"+search_term+"%"))),
@@ -39,6 +40,11 @@ class GameService:
     def get_recommended_games(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions:
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedGameModel, GameModel)\
@@ -157,6 +163,11 @@ class GameService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (game := GameModel.query.filter_by(game_id=game_id).first()):
             return err_resp("Game not found!", 404)
 
@@ -197,19 +208,24 @@ class GameService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (game := GameModel.query.filter_by(game_id=game_id).first()):
             return err_resp("Game not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['game'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['game']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationGameModel(
-                            user_id = user.id,
-                            game_id = game.game_id,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            game_id=game.game_id,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

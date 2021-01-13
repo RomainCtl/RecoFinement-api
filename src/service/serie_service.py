@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -39,6 +40,11 @@ class SerieService:
     def get_recommended_series(page, connected_user_uuid):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "view_recommendation" not in permissions:
+            return err_resp("Permission missing", 403)
 
         # Query for recommendation from user
         for_user_query = db.session.query(RecommendedSerieModel, SerieModel)\
@@ -106,7 +112,7 @@ class SerieService:
 
     @staticmethod
     def get_ordered_genre(connected_user_uuid):
-        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         genres = GenreModel.query.filter_by(
             content_type=ContentType.SERIE).order_by(GenreModel.count.desc()).all()
@@ -173,6 +179,11 @@ class SerieService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (serie := SerieModel.query.filter_by(serie_id=serie_id).first()):
             return err_resp("Serie not found!", 404)
 
@@ -211,19 +222,24 @@ class SerieService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (serie := SerieModel.query.filter_by(serie_id=serie_id).first()):
             return err_resp("Serie not found!", 404)
-        
+
         try:
-            for rc in  data['reason_categorie']:
-                if rc in REASON_CATEGORIES['serie'] :
+            for rc in data['reason_categorie']:
+                if rc in REASON_CATEGORIES['serie']:
                     for r in data['reason']:
 
                         new_bad_reco = BadRecommendationSerieModel(
-                            user_id = user.id,
-                            serie_id = serie.serie_id,
-                            reason_categorie = rc,
-                            reason = r
+                            user_id=user.id,
+                            serie_id=serie.serie_id,
+                            reason_categorie=rc,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

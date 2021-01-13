@@ -5,7 +5,7 @@ import uuid
 
 import settings.testing
 from src import create_app, db
-from src.model import UserModel, GroupModel, GenreModel, ContentType
+from src.model import UserModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
 
 
 def pytest_html_report_title(report):
@@ -54,29 +54,59 @@ def genre_test1():
 
 
 @pytest.fixture(scope="function")
-def user_test1():
+def user_role():
+    if (role := RoleModel.query.filter_by(role_id=1).first()):
+        return role
+    else:
+        indicate_interest = PermissionModel(
+            permission="indicate_interest"
+        )
+        modify_user_profil = PermissionModel(
+            permission="modify_user_profil"
+        )
+        view_recommendation = PermissionModel(
+            permission="view_recommendation"
+        )
+        play_music = PermissionModel(
+            permission="play_music"
+        )
+        add_content = PermissionModel(
+            permission="add_content"
+        )
+        role = RoleModel(
+            role_id=1,
+            name="user",
+            permission=[indicate_interest, modify_user_profil,
+                        view_recommendation, play_music, add_content]
+        )
+        db.session.add(role)
+        db.session.commit()
+        return role
+
+
+@pytest.fixture(scope="function")
+def user_test1(user_role):
     """ create UserObject test1
 
     Returns:
         UserObject: user "test1"
     """
     if (user := UserModel.query.filter_by(username="test").first()):
-
         return user
     else:
         new_user = UserModel(
             email="test@test.com",
             username="test",
-            password="goodPassword!123"
+            password="goodPassword!123",
+            role=[user_role]
         )
         db.session.add(new_user)
-        db.session.flush()
         db.session.commit()
         return new_user
 
 
 @pytest.fixture(scope="function")
-def user_test2():
+def user_test2(user_role):
     """ create UserObject test1
 
     Returns:
@@ -88,10 +118,10 @@ def user_test2():
         new_user = UserModel(
             email="test2@test.com",
             username="test2",
-            password="goodPassword!123"
+            password="goodPassword!123",
+            role=[user_role]
         )
         db.session.add(new_user)
-        db.session.flush()
         db.session.commit()
         return new_user
 
@@ -106,7 +136,6 @@ def group_test(user_test2):
             owner=user_test2
         )
         db.session.add(new_group)
-        db.session.flush()
         db.session.commit()
         return new_group
 
@@ -121,7 +150,6 @@ def group_test2(user_test2):
             owner=user_test2
         )
         db.session.add(new_group)
-        db.session.flush()
         db.session.commit()
         return new_group
 
@@ -136,7 +164,7 @@ def headers(user_test1):
     Returns:
         Dict: Headers with the token access
     """
-    access_token = create_access_token(identity=user_test1.uuid)
+    access_token = create_access_token(identity=user_test1)
     return {
         "Authorization": "Bearer %s" % access_token
     }
@@ -162,7 +190,8 @@ def headers_fake():
     Returns:
         Dict: Headers with the fake token access
     """
-    access_token = str(create_access_token(identity=uuid.uuid4()))
+    fake_user = UserModel(uuid=uuid.uuid4())
+    access_token = str(create_access_token(identity=fake_user))
     return {
         "Authorization": "Bearer %s" % access_token
     }
