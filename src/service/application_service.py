@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, select
 from sqlalchemy.sql.expression import null
 
@@ -150,6 +151,11 @@ class ApplicationService:
 
         genres = GenreModel.query.filter_by(
             content_type=ContentType.APPLICATION).order_by(GenreModel.count.desc()).all()
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "indicate_interest" not in permissions:
+            return err_resp("Permission missing", 403)
 
         try:
             genres_data = GenreBase.loads(genres)

@@ -20,8 +20,10 @@ class UserMeta:
 
 
 class UserBase(SQLAlchemyAutoSchema):
+    role = ma.Nested("RoleBase")
+
     class Meta(UserMeta):
-        fields = ("uuid", "email", "username", "preferences_defined")
+        fields = ("uuid", "email", "username", "preferences_defined", "role")
 
 
 class UserObject(SQLAlchemyAutoSchema):

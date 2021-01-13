@@ -1,4 +1,5 @@
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy.orm import subqueryload
 import requests
 
@@ -13,7 +14,7 @@ class UserService:
     @staticmethod
     def search_user_data(search_term, page, connected_user_uuid):
         """ Search user data by username """
-        if not ( UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+        if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         users, total_pages = Paginator.get_from(
             UserModel.query.filter(UserModel.username.ilike(search_term+"%")).union(
@@ -36,7 +37,7 @@ class UserService:
             return internal_err_resp()
 
     @staticmethod
-    def get_user_data(uuid,connected_user_uuid):
+    def get_user_data(uuid, connected_user_uuid):
         """ Get user's data by uuid """
         if not (user := UserModel.query.filter_by(uuid=uuid).first()):
             return err_resp("User not found!", 404)
@@ -94,6 +95,11 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
             return err_resp("Genre not found!", 404)
 
@@ -114,6 +120,11 @@ class UserService:
         """" Unlike a genre """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions:
+            return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
             return err_resp("Genre not found!", 404)
@@ -138,7 +149,12 @@ class UserService:
         """ Update user data username - email - password """
         if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-        
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -169,6 +185,11 @@ class UserService:
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions:
+            return err_resp("Permission missing", 403)
+
         try:
             user.preferences_defined = True
 
@@ -191,7 +212,12 @@ class UserService:
         """" Delete user account """
         if not (UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-        
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "modify_user_profil" not in permissions:
+            return err_resp("Permission missing", 403)
+
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 

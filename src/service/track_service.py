@@ -1,5 +1,6 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
+from flask_jwt_extended import get_jwt_claims
 from sqlalchemy import func, text, and_, select
 from sqlalchemy.sql.expression import null
 from datetime import datetime
@@ -205,15 +206,15 @@ class TrackService:
             return err_resp("Track not found!", 404)
 
         try:
-            for type , value  in  data.items():
-                if type in REASON_CATEGORIES['track'] :
+            for type, value in data.items():
+                if type in REASON_CATEGORIES['track']:
                     for r in value:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id = user.user_id,
-                            content_id = track.content_id,
-                            reason_categorie = type,
-                            reason = r
+                            user_id=user.user_id,
+                            content_id=track.content_id,
+                            reason_categorie=type,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

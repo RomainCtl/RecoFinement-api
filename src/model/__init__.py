@@ -14,3 +14,5 @@ from .external_model import ExternalModel
 
 from .user_model import UserModel, MetaUserContentModel, RecommendedContentModel, BadRecommendationContentModel
 from .group_model import GroupModel, RecommendedContentForGroupModel
+
+from .role_model import RoleModel, PermissionModel

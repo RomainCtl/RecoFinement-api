@@ -5,6 +5,14 @@ from src import db, bcrypt
 from src.utils import GUID
 
 
+UserRoleModel = db.Table("user_role",
+                         db.Column("user_id", db.Integer, db.ForeignKey(
+                             "user.user_id", ondelete="CASCADE"), primary_key=True),
+                         db.Column("role_id", db.Integer, db.ForeignKey(
+                             "role.role_id"), primary_key=True)
+                         )
+
+
 class MetaUserContentModel(db.Model):
     """
     MetaUserContent Model for storing metadata between user and content
@@ -103,6 +111,9 @@ class UserModel(db.Model):
 
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreModel, lazy="dynamic")
+
+    role = db.relationship(
+        "RoleModel", secondary=UserRoleModel, lazy="subquery")
 
     @property
     def password(self):

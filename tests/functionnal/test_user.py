@@ -150,7 +150,7 @@ class TestUser:
             "/api/user/"+str(user.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
-        assert response.status_code == 404
+        assert response.status_code == 403
         assert res['status'] == False
 
     def test_delete_user_no_jwt(self, test_client):
@@ -301,7 +301,7 @@ class TestUser:
         res = json.loads(response.data)
         user = UserModel.query.filter_by(username="test").first()
 
-        assert response.status_code == 404
+        assert response.status_code == 403
         assert res['status'] == False
         assert user.email == "test@test.bzh"
 

@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import UserModel
+from src.model import UserModel, RoleModel
 from src import db
 from flask_jwt_extended import create_access_token
 import uuid
@@ -21,18 +21,15 @@ class TestAuth:
         Args:
             test_client (app context): Flask application
         """
-        if (user := UserModel.query.filter_by(username="test").first()):
-            UserModel.query.filter_by(username="test").delete()
-            db.session.commit()
         response = test_client.post('/api/auth/register', json=dict(
-            email="test@test.com",
+            email="testthisnewemail@email.com",
             username="test",
             password="goodPassword!123"
         ))
         res = json.loads(response.data)
 
         assert response.status_code == 201
-        assert res['user']['email'] == "test@test.com"
+        assert res['user']['email'] == "testthisnewemail@email.com"
         assert res['status'] == True
 
     def test_register_email_exist(self, test_client):
@@ -48,7 +45,7 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post('/api/auth/register', json=dict(
-            email="test@test.com",
+            email="testthisnewemail@email.com",
             username="test",
             password="goodPassword!123"
         ))
@@ -71,12 +68,12 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post("/api/auth/login", json=dict(
-            email="test@test.com",
+            email="testthisnewemail@email.com",
             password="goodPassword!123"))
         res = json.loads(response.data)
 
         assert response.status_code == 200
-        assert res['user']['email'] == "test@test.com"
+        assert res['user']['email'] == "testthisnewemail@email.com"
 
     def test_login_wrong_passd(self, test_client):
         """test user login with wrong password
@@ -91,7 +88,7 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post(
-            "/api/auth/login", json=dict(email="test@test.com", password="wrongPassword*"))
+            "/api/auth/login", json=dict(email="testthisnewemail@email.com", password="wrongPassword*"))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -168,7 +165,7 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post(
-            '/api/auth/forget', json=dict(email="test@test.com"))
+            '/api/auth/forget', json=dict(email="testthisnewemail@email.com"))
         res = json.loads(response.data)
 
         assert response.status_code == 200
@@ -208,7 +205,7 @@ class TestAuth:
             test_client (app context): Flask application
         """
         response = test_client.post('/api/auth/reset', json=dict(
-            reset_password_token=create_access_token(identity=user_test1.uuid),
+            reset_password_token=create_access_token(identity=user_test1),
             password="Azerty!123"
         ))
         res = json.loads(response.data)
@@ -230,7 +227,7 @@ class TestAuth:
         """
         response = test_client.post('/api/auth/reset', json=dict(
             reset_password_token=str(
-                create_access_token(identity=uuid.uuid4())),
+                create_access_token(identity=UserModel(uuid=uuid.uuid4()))),
             password="Azerty!123"))
         res = json.loads(response.data)
 
