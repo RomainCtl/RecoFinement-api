@@ -51,7 +51,7 @@ class ContentService:
         try:
             if not (meta_user_content := MetaUserContentModel.query.filter_by(user_id=user.user_id, content_id=content_id).first()):
                 meta_user_content = MetaUserContentModel(
-                    content_id=content_id, user_id=user.user_id)
+                    content_id=content_id, user_id=user.user_id, count=0)
 
             if 'rating' in data:
                 # Update average rating on object
