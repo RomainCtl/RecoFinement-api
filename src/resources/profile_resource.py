@@ -2,176 +2,156 @@ from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.service import UserService, ExternalService
-from src.dto import UserDto
+from src.service import ProfileService, ExternalService
+from src.dto import ProfileDto
 
-from src.schemas import UpdateUserDataSchema
+from src.schemas import UpdateProfileDataSchema
 from src.utils import validation_error
 
 
-api = UserDto.api
-data_resp = UserDto.data_resp
-export_user_resp = UserDto.export_user_resp
-search_data_resp = UserDto.search_data_resp
-update_schema = UpdateUserDataSchema()
+api = ProfileDto.api
+data_resp = ProfileDto.data_resp
+export_profile_resp = ProfileDto.export_profile_resp
+search_data_resp = ProfileDto.search_data_resp
+update_schema = UpdateProfileDataSchema()
 
 
 @api.route("/<uuid:uuid>")
-class UserResource(Resource):
+class ProfileResource(Resource):
     @api.doc(
-        "Get a specific user",
+        "Get a specific profile",
         responses={
-            200: ("User data successfully sent", data_resp),
+            200: ("Profile data successfully sent", data_resp),
             401: ("Authentication required"),
-            404: "User not found!",
+            404: "Profile not found!",
         },
     )
     @jwt_required
     def get(self, uuid):
-        """ Get a specific user's data by their uuid """
-        user_uuid = get_jwt_identity()
-        return UserService.get_user_data(uuid, user_uuid)
+        """ Get a specific profile's data by their uuid """
+        profile_uuid = get_jwt_identity()
+        return ProfileService.get_profile_data(uuid, profile_uuid)
 
     @api.doc(
-        "Delete a specific user account",
+        "Delete a specific profile account",
         responses={
-            200: ("User account successfully deleted", data_resp),
+            200: ("Profile account successfully deleted", data_resp),
             401: ("Authentication required"),
             403: ("Unable to delete an account which is not your's"),
-            404: "User not found!",
+            404: "Profile not found!",
         },
     )
     @jwt_required
     def delete(self, uuid):
-        """ Delete a specific user's account by their uuid """
-        user_uuid = get_jwt_identity()
-        return UserService.delete_account(uuid, user_uuid)
+        """ Delete a specific profile's account by their uuid """
+        profile_uuid = get_jwt_identity()
+        return ProfileService.delete_account(uuid, profile_uuid)
 
-    user_data = UserDto.user_data
+    profile_data = ProfileDto.profile_data
 
     @api.doc(
-        "Update a specific username",
+        "Update a specific profilename",
         responses={
-            200: ("Username successfully updated", data_resp),
+            200: ("Profilename successfully updated", data_resp),
             401: ("Authentication required"),
             403: ("Unable to update an account which is not your's"),
-            404: "User not found!",
+            404: "Profile not found!",
         },
     )
     @jwt_required
-    @api.expect(user_data, validate=True)
+    @api.expect(profile_data, validate=True)
     def patch(self, uuid):
-        user_uuid = get_jwt_identity()
+        profile_uuid = get_jwt_identity()
         data = request.get_json()
         # Validate data
         if (errors := update_schema.validate(data)):
             return validation_error(False, errors)
-        return UserService.update_user_data(uuid, user_uuid, data)
-
-
-@api.route("/preferences_defined")
-class UserResource(Resource):
-    @api.doc(
-        "Set preferences defined to true",
-        responses={
-            201: ("User data successfully sent"),
-            401: ("Authentication required"),
-            403: ("Unable to update an account which is not your's"),
-            404: "User not found!",
-        },
-    )
-    @jwt_required
-    def put(self):
-        """ Set preferences defined to true """
-        user_uuid = get_jwt_identity()
-
-        return UserService.set_preferences_defined(user_uuid)
-
+        return ProfileService.update_profile_data(uuid, profile_uuid, data)
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class UserSearchResource(Resource):
+class ProfileSearchResource(Resource):
     @api.doc(
-        "Search users",
+        "Search profiles",
         responses={
-            200: ("User data successfully sent", search_data_resp),
+            200: ("Profile data successfully sent", search_data_resp),
             401: ("Authentication required"),
         },
     )
     @jwt_required
     def get(self, search_term):
         """ Get list of track's data by term """
-        user_uuid = get_jwt_identity()
+        profile_uuid = get_jwt_identity()
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return UserService.search_user_data(search_term, page, user_uuid)
+        return ProfileService.search_profile_data(search_term, page, profile_uuid)
 
 
 @api.route("/genre")
-class UserGenresResource(Resource):
+class ProfileGenresResource(Resource):
     @api.doc(
-        "Get liked genres (connected user)",
+        "Get liked genres (connected profile)",
         responses={
             201: ("Successfully send"),
             401: ("Authentication required"),
-            404: "User not found!",
+            404: "Profile not found!",
         }
     )
     @jwt_required
     def get(self):
-        """ Get liked genres (connected user) """
-        user_uuid = get_jwt_identity()
+        """ Get liked genres (connected profile) """
+        profile_uuid = get_jwt_identity()
 
-        return UserService.get_genres(user_uuid)
+        return ProfileService.get_genres(profile_uuid)
 
 
 @api.route("/genre/<int:genre_id>")
-class UserGenreResource(Resource):
+class ProfileGenreResource(Resource):
     @api.doc(
-        "Like a genre (connected user)",
+        "Like a genre (connected profile)",
         responses={
             201: ("Successfully send"),
             401: ("Authentication required"),
-            404: "User or Genre not found!",
+            404: "Profile or Genre not found!",
         }
     )
     @jwt_required
     def put(self, genre_id):
-        """ Like a genre (connected user) """
-        user_uuid = get_jwt_identity()
+        """ Like a genre (connected profile) """
+        profile_uuid = get_jwt_identity()
 
-        return UserService.like_genre(genre_id, user_uuid)
+        return ProfileService.like_genre(genre_id, profile_uuid)
 
     @api.doc(
-        "Unlike a genre (connected user)",
+        "Unlike a genre (connected profile)",
         responses={
             201: ("Successfully send"),
             401: ("Authentication required"),
-            404: "User or Genre not found!",
+            404: "Profile or Genre not found!",
         }
     )
     @jwt_required
     def delete(self, genre_id):
-        """ Unlike a genre (connected user) """
-        user_uuid = get_jwt_identity()
+        """ Unlike a genre (connected profile) """
+        profile_uuid = get_jwt_identity()
 
-        return UserService.unlike_genre(genre_id, user_uuid)
+        return ProfileService.unlike_genre(genre_id, profile_uuid)
 
 
 @api.route("/export")
-class UserExportResource(Resource):
+class ProfileExportResource(Resource):
     @api.doc(
-        "Export data of a specific user",
+        "Export data of a specific profile",
         responses={
-            200: ("User data successfully sent", export_user_resp),
+            200: ("Profile data successfully sent", export_profile_resp),
             401: ("Authentication required"),
-            404: "User not found!",
+            404: "Profile not found!",
         },
     )
     @jwt_required
     def get(self):
-        """ Export data of a specific user """
-        user_uuid = get_jwt_identity()
+        """ Export data of a specific profile """
+        profile_uuid = get_jwt_identity()
 
-        return UserService.export_all_user_data(user_uuid)
+        return ProfileService.export_all_profile_data(profile_uuid)
