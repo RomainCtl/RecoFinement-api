@@ -1,17 +1,6 @@
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from src import db
-
-
-class SimilarsBooksModel(db.Model):
-    """
-    SimilarsBooks Model for storing similars Book
-    """
-    __tablename__ = "similars_book"
-
-    isbn0 = db.Column(db.String(13), db.ForeignKey(
-        "book.isbn"), primary_key=True)
-    isbn1 = db.Column(db.String(13), db.ForeignKey(
-        "book.isbn"), primary_key=True)
-    similarity = db.Column(db.Float)
 
 
 class BookModel(db.Model):
@@ -20,7 +9,11 @@ class BookModel(db.Model):
     """
     __tablename__ = "book"
 
-    isbn = db.Column(db.String(13), primary_key=True,
+    content_id = db.Column(
+        db.Integer,
+        db.ForeignKey('content.content_id', ondelete="CASCADE"),
+        primary_key=True, index=True)
+    isbn = db.Column(db.String(13), unique=True,
                      nullable=False, index=True)
     title = db.Column(db.String(255), index=True)
     author = db.Column(db.String(255), index=True)
@@ -29,11 +22,10 @@ class BookModel(db.Model):
     image_url_s = db.Column(db.Text)
     image_url_m = db.Column(db.Text)
     image_url_l = db.Column(db.Text)
-    rating = db.Column(db.Float)
-    rating_count = db.Column(db.Integer, default=0)
-    popularity_score = db.Column(db.Float, default=0)
 
-    similars = db.relationship("BookModel", secondary=SimilarsBooksModel.__table__,
-                               primaryjoin=isbn == SimilarsBooksModel.isbn0,
-                               secondaryjoin=isbn == SimilarsBooksModel.isbn1,
-                               lazy="subquery")
+    content = db.relationship(
+        "ContentModel", backref=db.backref("book", uselist=False))
+
+    @hybrid_property
+    def book_id(self):
+        return self.content_id

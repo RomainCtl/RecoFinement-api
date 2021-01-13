@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import GameBaseObj, paginationObj, GenreBaseObj, messageObj, MetaUserGameBaseObj
+from .base import GameBaseObj, paginationObj, messageObj
 
 
 class GameDto:
@@ -9,12 +9,6 @@ class GameDto:
     # Objects
     api.models[GameBaseObj.name] = GameBaseObj
     game_base = GameBaseObj
-
-    api.models[GenreBaseObj.name] = GenreBaseObj
-    genre_base = GenreBaseObj
-
-    api.models[MetaUserGameBaseObj.name] = MetaUserGameBaseObj
-    meta_user_game_base = MetaUserGameBaseObj
 
     # Responses
     data_resp = api.clone(
@@ -25,22 +19,6 @@ class GameDto:
         },
     )
 
-    genres_resp = api.clone(
-        "Game genres Data Response",
-        messageObj,
-        {
-            "content": fields.List(fields.Nested(genre_base))
-        }
-    )
-
-    meta_resp = api.clone(
-        "MetaUserGame Data Response",
-        messageObj,
-        {
-            "content": fields.Nested(meta_user_game_base)
-        }
-    )
-
     # Excepted data
     game_meta = api.model(
         "GameMetaExpected",
@@ -48,5 +26,15 @@ class GameDto:
             "purchase": fields.Boolean,
             "additional_hours": fields.Float(min=0.0),
             "rating": fields.Integer(min=0, max=5),
+        }
+    )
+
+    game_bad_recommendation = api.model(
+        "GameBadRecommendationMetaExpected",
+        {
+            "developers": fields.List(fields.String),
+            "publishers": fields.List(fields.String),
+            "genres": fields.List(fields.String),
+            "release_date": fields.List(fields.String)
         }
     )

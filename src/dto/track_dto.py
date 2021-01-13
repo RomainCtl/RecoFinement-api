@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import TrackBaseObj, TrackItemObj, paginationObj, TrackGenresBaseObj, GenreBaseObj, messageObj, MetaUserTrackBaseObj
+from .base import TrackBaseObj, TrackItemObj, paginationObj, messageObj
 
 
 class TrackDto:
@@ -12,15 +12,6 @@ class TrackDto:
 
     api.models[TrackItemObj.name] = TrackItemObj
     track_item = TrackItemObj
-
-    api.models[TrackGenresBaseObj.name] = TrackGenresBaseObj
-    track_genres_base = TrackGenresBaseObj
-
-    api.models[GenreBaseObj.name] = GenreBaseObj
-    genre_base = GenreBaseObj
-
-    api.models[MetaUserTrackBaseObj.name] = MetaUserTrackBaseObj
-    meta_user_track_base = MetaUserTrackBaseObj
 
     track_history = api.model("TrackHistory", {
         "last_played_date": fields.DateTime,
@@ -36,22 +27,6 @@ class TrackDto:
         },
     )
 
-    genres_resp = api.clone(
-        "Track genres Data Response",
-        messageObj,
-        {
-            "content": fields.List(fields.Nested(genre_base))
-        }
-    )
-
-    meta_resp = api.clone(
-        "MetaUserTrack Data Response",
-        messageObj,
-        {
-            "content": fields.Nested(meta_user_track_base)
-        }
-    )
-
     history_resp = api.clone(
         "TrackListenedHistory Data Response",
         paginationObj,
@@ -60,11 +35,12 @@ class TrackDto:
         }
     )
 
-    # Excepted data
-    track_meta = api.model(
-        "TrackMetaExpected",
+    track_bad_recommendation = api.model(
+        "TrackBadRecommendationMetaExpected",
         {
-            "additional_play_count": fields.Integer(min=1),
-            "rating": fields.Integer(min=0, max=5),
+            "year": fields.List(fields.String),
+            "artist_name": fields.List(fields.String),
+            "release": fields.List(fields.String),
+            "genres": fields.List(fields.String)
         }
     )

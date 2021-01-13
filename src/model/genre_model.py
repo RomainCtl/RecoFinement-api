@@ -1,17 +1,5 @@
 from src import db
-import enum
-
-
-class ContentType(enum.Enum):
-    APPLICATION = "application"
-    BOOK = "book"
-    GAME = "game"
-    MOVIE = "movie"
-    SERIE = "serie"
-    TRACK = "track"
-
-    def __str__(self):
-        return self.value
+from .content_model import ContentType
 
 
 class LinkedGenreModel(db.Model):

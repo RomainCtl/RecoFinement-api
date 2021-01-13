@@ -3,6 +3,8 @@ from .group_service import GroupService
 from .user_service import UserService
 from .external_service import ExternalService
 
+from .content_service import ContentService
+
 from .application_service import ApplicationService
 from .book_service import BookService
 from .game_service import GameService

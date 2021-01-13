@@ -1,20 +1,21 @@
+from src.dto.application_dto import ApplicationDto
 from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from src.service import MovieService
+from src.service import MovieService, ContentService
 from src.dto import MovieDto, UserDto
 
 api = MovieDto.api
 data_resp = MovieDto.data_resp
-genres_resp = MovieDto.genres_resp
-meta_resp = MovieDto.meta_resp
+genres_resp = UserDto.genres_resp
+meta_resp = UserDto.meta_resp
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class MovieResource(Resource):
     @api.doc(
-        "Get list of recommended Movies",
+        "Get list of the most popular Movies",
         responses={
             200: ("Movie data successfully sent", data_resp),
             401: ("Authentication required"),
@@ -22,14 +23,56 @@ class MovieResource(Resource):
     )
     @jwt_required
     def get(self):
-        """ Get list of recommended Movies """
+        """ Get list of the most popular Movies """
         user_uuid = get_jwt_identity()
 
         try:
             page = int(request.args.get('page'))
         except (ValueError, TypeError):
             page = 1
-        return MovieService.get_recommended_movies(page, user_uuid)
+        return MovieService.get_popular_movies(page, user_uuid)
+
+
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class MovieUserRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended Movies for the connected user",
+        responses={
+            200: ("Movie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended Movies for the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return MovieService.get_recommended_movies_for_user(page, user_uuid)
+
+
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class MovieGroupRecommendationResource(Resource):
+    @api.doc(
+        "Get list of the recommended Movies for the groups of the connected user",
+        responses={
+            200: ("Movie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the recommended Movies for the groups of the connected user """
+        user_uuid = get_jwt_identity()
+
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+        return MovieService.get_recommended_movies_for_group(page, user_uuid)
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -68,7 +111,7 @@ class MovieGenresResource(Resource):
         return MovieService.get_ordered_genre(user_uuid)
 
 
-@api.route("/<int:movie_id>/meta")
+@api.route("/<int:content_id>/meta")
 class MovieMetaResource(Resource):
     @api.doc(
         "Get movie-user (connected user) meta",
@@ -78,13 +121,13 @@ class MovieMetaResource(Resource):
         }
     )
     @jwt_required
-    def get(self, movie_id):
+    def get(self, content_id):
         """ Get movie-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
-        return MovieService.get_meta(user_uuid, movie_id)
+        return ContentService.get_meta(user_uuid, content_id)
 
-    movie_meta = MovieDto.movie_meta
+    content_meta = UserDto.content_meta
 
     @api.doc(
         "Update movie-user (connected user) meta",
@@ -95,19 +138,20 @@ class MovieMetaResource(Resource):
         },
     )
     @jwt_required
-    @api.expect(movie_meta, validate=True)
-    def patch(self, movie_id):
+    @api.expect(content_meta, validate=True)
+    def patch(self, content_id):
         """ Update movie-user (connected user) meta """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return MovieService.update_meta(user_uuid, movie_id, data)
+        return ContentService.update_meta(user_uuid, content_id, data)
 
-@api.route("/<int:movie_id>/bad_recommendation")
+
+@api.route("/<int:content_id>/bad_recommendation")
 class MovieBadRecommendation(Resource):
-    bad_recommendation = UserDto.bad_recommendation
+    bad_recommendation = ApplicationDto.application_bad_recommendation
     @api.doc(
         "Add Movie-user (connected user) bad recommendation",
         responses={
@@ -115,14 +159,13 @@ class MovieBadRecommendation(Resource):
             401: ("Authentication required"),
         }
     )
-
     @jwt_required
     @api.expect(bad_recommendation, validate=True)
-    def post(self, movie_id):
+    def post(self, content_id):
         """ Add Movie-user (connected user) bad recommendation """
         user_uuid = get_jwt_identity()
 
         # Grab the json data
         data = request.get_json()
 
-        return MovieService.add_bad_recommendation(user_uuid, movie_id, data)
+        return MovieService.add_bad_recommendation(user_uuid, content_id, data)

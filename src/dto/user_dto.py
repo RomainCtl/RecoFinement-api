@@ -1,12 +1,18 @@
 from flask_restx import Namespace, fields
 
-from .base import UserBaseObj, GroupBaseObj, UserItemObj, UserExportObj, messageObj, paginationObj, GenreBaseObj, MetaUserApplicationItemObj, MetaUserBookItemObj, MetaUserGameItemObj, MetaUserMovieItemObj, MetaUserSerieItemObj, MetaUserTrackItemObj
+from .base import UserBaseObj, GroupBaseObj, UserItemObj, UserExportObj, messageObj, paginationObj, GenreBaseObj, MetaUserContentBaseObj
 
 
 class UserDto:
     api = Namespace("user", description="User related operations.")
 
     # Objects
+    api.models[GenreBaseObj.name] = GenreBaseObj
+    genre_base = GenreBaseObj
+
+    api.models[MetaUserContentBaseObj.name] = MetaUserContentBaseObj
+    meta_user_content_base = MetaUserContentBaseObj
+
     api.models[UserBaseObj.name] = UserBaseObj
     user_base = UserBaseObj
 
@@ -15,27 +21,6 @@ class UserDto:
 
     api.models[UserExportObj.name] = UserExportObj
     user_full_obj = UserExportObj
-
-    api.models[GenreBaseObj.name] = GenreBaseObj
-    genre_base = GenreBaseObj
-
-    api.models[MetaUserApplicationItemObj.name] = MetaUserApplicationItemObj
-    meta_user_app_item = MetaUserApplicationItemObj
-
-    api.models[MetaUserBookItemObj.name] = MetaUserBookItemObj
-    meta_user_book_item = MetaUserBookItemObj
-
-    api.models[MetaUserGameItemObj.name] = MetaUserGameItemObj
-    meta_user_game_item = MetaUserGameItemObj
-
-    api.models[MetaUserMovieItemObj.name] = MetaUserMovieItemObj
-    meta_user_movie_item = MetaUserMovieItemObj
-
-    api.models[MetaUserSerieItemObj.name] = MetaUserSerieItemObj
-    meta_user_serie_item = MetaUserSerieItemObj
-
-    api.models[MetaUserTrackItemObj.name] = MetaUserTrackItemObj
-    meta_user_track_item = MetaUserTrackItemObj
 
     # Responses
     data_resp = api.clone(
@@ -61,6 +46,21 @@ class UserDto:
             "content": fields.List(fields.Nested(user_base))
         }
     )
+    genres_resp = api.clone(
+        "Content genres Data Response",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(genre_base))
+        }
+    )
+
+    meta_resp = api.clone(
+        "MetaUserContent Data Response",
+        messageObj,
+        {
+            "content": fields.Nested(meta_user_content_base)
+        }
+    )
 
     # Expected data
     user_data = api.model(
@@ -77,5 +77,12 @@ class UserDto:
         {
             "reason_categorie": fields.List(fields.String),
             "reason": fields.List(fields.String)
+        }
+    )
+    content_meta = api.model(
+        "ContentMetaExpected",
+        {
+            "additional_count": fields.Float(min=0.0),
+            "rating": fields.Integer(min=0, max=5),
         }
     )

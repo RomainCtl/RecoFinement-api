@@ -34,7 +34,8 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_html_results_table_html(report, data):
-    data.insert(0, report.description)
+    if hasattr(report, 'description'):
+        data.insert(0, report.description)
 
 
 @pytest.fixture(scope="function")

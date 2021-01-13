@@ -1,24 +1,6 @@
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from src import db
-
-GameGenresModel = db.Table("game_genres",
-                           db.Column("game_id", db.Integer, db.ForeignKey(
-                               "game.game_id"), primary_key=True),
-                           db.Column("genre_id", db.Integer, db.ForeignKey(
-                               "genre.genre_id"), primary_key=True)
-                           )
-
-
-class SimilarsGamesModel(db.Model):
-    """
-    SimilarsGames Model for storing similars Game
-    """
-    __tablename__ = "similars_game"
-
-    game_id0 = db.Column(db.Integer, db.ForeignKey(
-        "game.game_id"), primary_key=True)
-    game_id1 = db.Column(db.Integer, db.ForeignKey(
-        "game.game_id"), primary_key=True)
-    similarity = db.Column(db.Float)
 
 
 class GameModel(db.Model):
@@ -27,8 +9,10 @@ class GameModel(db.Model):
     """
     __tablename__ = "game"
 
-    game_id = db.Column(db.Integer, primary_key=True,
-                        autoincrement=True, index=True)
+    content_id = db.Column(
+        db.Integer,
+        db.ForeignKey('content.content_id', ondelete="CASCADE"),
+        primary_key=True, index=True)
     steamid = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String(255), index=True)
     short_description = db.Column(db.Text)
@@ -39,14 +23,10 @@ class GameModel(db.Model):
     price = db.Column(db.String(255))
     recommendations = db.Column(db.Integer)
     release_date = db.Column(db.String(255))
-    rating = db.Column(db.Float)
-    rating_count = db.Column(db.Integer, default=0)
-    popularity_score = db.Column(db.Float, default=0)
 
-    genres = db.relationship(
-        "GenreModel", secondary=GameGenresModel, lazy="dynamic")
+    content = db.relationship(
+        "ContentModel", backref=db.backref("game", uselist=False))
 
-    similars = db.relationship("GameModel", secondary=SimilarsGamesModel.__table__,
-                               primaryjoin=game_id == SimilarsGamesModel.game_id0,
-                               secondaryjoin=game_id == SimilarsGamesModel.game_id1,
-                               lazy="subquery")
+    @hybrid_property
+    def game_id(self):
+        return self.content_id
