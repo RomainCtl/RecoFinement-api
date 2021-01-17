@@ -1,7 +1,7 @@
 from .content_model import ContentModel, ContentType, SimilarsContentModel
 
-from .application_model import ApplicationModel
-from .book_model import BookModel
+from .application_model import ApplicationModel, ApplicationAdditionalModel
+from .book_model import BookModel, BookAdditionalModel
 from .episode_model import EpisodeModel
 from .game_model import GameModel
 from .movie_model import MovieModel
