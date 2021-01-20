@@ -2,6 +2,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from src import db
 
+ApplicationAdditionalGenresModel = db.Table("application_additional_genres",
+                              db.Column("app_id", db.Integer, db.ForeignKey(
+                                  "application_additional.app_id"), primary_key=True),
+                              db.Column("genre_id", db.Integer, db.ForeignKey(
+                                  "genre.genre_id"), primary_key=True)
+                              )
 
 class ApplicationModel(db.Model):
     """
@@ -52,3 +58,5 @@ class ApplicationAdditionalModel(db.Model):
     current_version = db.Column(db.String(255))
     android_version = db.Column(db.String(255))
     cover = db.Column(db.Text)
+
+    genres = db.relationship("GenreModel", secondary=ApplicationAdditionalGenresModel, lazy="dynamic")

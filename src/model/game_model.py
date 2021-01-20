@@ -2,6 +2,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from src import db
 
+GameAdditionalGenresModel = db.Table("game_additional_genres",
+                              db.Column("steamid", (db.Integer, db.ForeignKey(
+                                  "game_additional.steamid"), primary_key=True),
+                              db.Column("genre_id", db.Integer, db.ForeignKey(
+                                  "genre.genre_id"), primary_key=True)
+                              )
 
 class GameModel(db.Model):
     """
@@ -30,3 +36,24 @@ class GameModel(db.Model):
     @hybrid_property
     def game_id(self):
         return self.content_id
+
+
+class GameAdditionalModel(db.Model):
+    """
+    Game Model for storing game related details added by a user
+    """
+    __tablename__ = "game_additional"
+
+    steamid = db.Column(db.Integer, nullable=True, primary_key=True)
+    name = db.Column(db.String(255), index=True)
+    short_description = db.Column(db.Text)
+    header_image = db.Column(db.String(255))
+    website = db.Column(db.String(255))
+    developers = db.Column(db.String(255))
+    publishers = db.Column(db.String(255))
+    price = db.Column(db.String(255))
+    recommendations = db.Column(db.Integer)
+    release_date = db.Column(db.String(255))
+
+    genres = db.relationship(
+        "GenreModel", secondary=GameAdditionalGenresModel, lazy="dynamic")

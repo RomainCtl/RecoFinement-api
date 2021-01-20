@@ -2,6 +2,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from src import db
 
+SerieAdditionalGenresModel = db.Table("serie_additional_genres",
+                              db.Column("imdbid", db.String(255), db.ForeignKey(
+                                  "serie_additional.imdbid"), primary_key=True),
+                              db.Column("genre_id", db.Integer, db.ForeignKey(
+                                  "genre.genre_id"), primary_key=True)
+                              )
 
 class SerieModel(db.Model):
     """
@@ -32,3 +38,26 @@ class SerieModel(db.Model):
     @hybrid_property
     def serie_id(self):
         return self.content_id
+
+
+class SerieAdditionalModel(db.Model):
+    """
+    Serie Model for storing serie related details  added by a user
+    """
+    __tablename__ = "serie_additional"
+
+    imdbid = db.Column(db.String(255), primary_key=True, index=True)
+    title = db.Column(db.String(255), index=True)
+    start_year = db.Column(db.Integer)
+    end_year = db.Column(db.Integer)
+    writers = db.Column(db.Text)
+    directors = db.Column(db.Text)
+    actors = db.Column(db.Text)
+    cover = db.Column(db.Text)
+    plot_outline = db.Column(db.Text)
+
+    episodes = db.relationship(
+        "EpisodeAdditionalModel", backref="serie",  lazy="dynamic")
+
+    genres = db.relationship(
+        "GenreModel", secondary=SerieAdditionalGenresModel, lazy="dynamic")
