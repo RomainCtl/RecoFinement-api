@@ -3,7 +3,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from src import db
 
 MovieAdditionalGenresModel = db.Table("movie_additional_genres",
-                              db.Column("movie_id", (db.Integer, db.ForeignKey(
+                              db.Column("movie_id", db.Integer, db.ForeignKey(
                                   "movie_additional.movie_id"), primary_key=True),
                               db.Column("genre_id", db.Integer, db.ForeignKey(
                                   "genre.genre_id"), primary_key=True)

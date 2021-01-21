@@ -1,7 +1,7 @@
 # Book Schemas
 from marshmallow import fields
 from src import ma
-from src.model import BookModel, BookAdditionalMeta
+from src.model import BookModel, BookAdditionalModel
 from src.utils import SQLAlchemyAutoSchema
 
 
@@ -28,7 +28,7 @@ class BookExtra(BookBase):
 # ----
 
 class BookAdditionalMeta:
-    model = BookAdditionalMeta
+    model = BookAdditionalModel
     include_fk = True
 
 class BookAdditionalBase(SQLAlchemyAutoSchema):

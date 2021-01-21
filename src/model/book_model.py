@@ -42,7 +42,7 @@ class BookAdditionalModel(db.Model):
     """
     __tablename__ = "book_additional"
 
-    isbn = db.Column(db.String(13), unique=True, primary_key=True
+    isbn = db.Column(db.String(13), unique=True, primary_key=True,
                      nullable=False, index=True)
     title = db.Column(db.String(255), index=True)
     author = db.Column(db.String(255), index=True)

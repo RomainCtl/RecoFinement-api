@@ -1,7 +1,7 @@
 # Application Schemas
 from marshmallow import fields
 from src import ma
-from src.model import ApplicationModel, ApplicationAdditionalMeta
+from src.model import ApplicationModel, ApplicationAdditionalModel
 from src.utils import SQLAlchemyAutoSchema
 
 
@@ -30,7 +30,7 @@ class ApplicationExtra(ApplicationBase):
 # ----
 
 class ApplicationAdditionalMeta:
-    model = ApplicationAdditionalMeta
+    model = ApplicationAdditionalModel
     include_fk = True
 
 class ApplicationAdditionalBase(SQLAlchemyAutoSchema):
