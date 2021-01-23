@@ -1,7 +1,7 @@
 from flask_restx import Namespace, fields
 
 from .base import BookBaseObj, messageObj, paginationObj
-
+from .base import BookAdditionalBaseObj
 
 class BookDto:
     api = Namespace("book", description="Book related operations.")
@@ -36,3 +36,10 @@ class BookDto:
             "year_of_publication": fields.List(fields.String)
         }
     )
+
+class BookAdditionalDto:
+    api = Namespace("book_additional", description="Additional book related operations.")
+
+    #Objects
+    api.models[BookAdditionalBaseObj.name] = BookAdditionalBaseObj
+    book_additional_base = BookAdditionalBaseObj

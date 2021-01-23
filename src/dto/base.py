@@ -190,3 +190,18 @@ paginationObj = Model("Pagination Object", {
     "page": fields.Integer,
     "total_pages": fields.Integer,
 })
+
+# Additional Objects
+
+
+BookAdditionalBaseObj = Model("Book additional base", {
+    "isbn": fields.String,
+    "title": fields.String,
+    "author": fields.String,
+    "year_of_publication": fields.Integer,
+    "publisher": fields.String,
+    "image_url_s": fields.String,
+    "image_url_m": fields.String,
+    "image_url_l": fields.String,
+    "genres": fields.List(fields.String)
+})

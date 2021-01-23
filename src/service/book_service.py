@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, BookAdditionalModel
 from src.schemas import BookBase, BookExtra, MetaUserContentBase
 
 
@@ -166,6 +166,45 @@ class BookService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_book(user_uuid, data):
+        """ Add additional book"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+            
+        try:
+
+            book = data.items()
+            
+            new_additional_book = BookAdditionalModel(
+                    isbn = book.isbn,
+                    title = book.title,
+                    author = book.author,
+                    year_of_publication = book.year_of_publication,
+                    publisher = book.publisher,
+                    image_url_s = book.image_url_s,
+                    image_url_m = book.image_url_m,
+                    image_url_l = book.image_url_l,
+                    genres = book.genres
+            )
+
+            db.session.add(new_bad_reco)
+            db.session.flush()
+
+            db.session.commit()
+
+            resp = message(True, "Book have been added to validation.")
             return resp, 201
 
         except Exception as error:
