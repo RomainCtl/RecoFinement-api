@@ -3,6 +3,7 @@ import uuid
 
 from src import db, bcrypt
 from src.utils import GUID
+from .content_model import ContentType
 
 
 UserRoleModel = db.Table("user_role",
@@ -61,6 +62,7 @@ class RecommendedContentModel(db.Model):
     score = db.Column(db.Float)
     engine = db.Column(db.String)
     engine_priority = db.Column(db.Integer)
+    content_type = db.Column(db.Enum(ContentType))
 
 
 class BadRecommendationContentModel(db.Model):

@@ -45,6 +45,8 @@ class TrackService:
         # NOTE IMDB measure of popularity does not seem to be relevant for this media.
         tracks, total_pages = Paginator.get_from(
             TrackModel.query.join(TrackModel.content, aliased=True).order_by(
+                ContentModel.rating_count.desc().nullslast(),
+                ContentModel.rating.desc().nullslast(),
             ),
             page,
         )
