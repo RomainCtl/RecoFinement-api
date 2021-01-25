@@ -202,6 +202,5 @@ BookAdditionalBaseObj = Model("Book additional base", {
     "publisher": fields.String,
     "image_url_s": fields.String,
     "image_url_m": fields.String,
-    "image_url_l": fields.String,
-    "genres": fields.List(fields.String)
+    "image_url_l": fields.String
 })

@@ -185,23 +185,18 @@ class BookService:
             
         try:
 
-            book = data.items()
-            
             new_additional_book = BookAdditionalModel(
-                    isbn = book.isbn,
-                    title = book.title,
-                    author = book.author,
-                    year_of_publication = book.year_of_publication,
-                    publisher = book.publisher,
-                    image_url_s = book.image_url_s,
-                    image_url_m = book.image_url_m,
-                    image_url_l = book.image_url_l,
-                    genres = book.genres
+                    isbn = data.isbn,
+                    title = data.title,
+                    author = data.author,
+                    year_of_publication = data.year_of_publication,
+                    publisher = data.publisher,
+                    image_url_s = data.image_url_s,
+                    image_url_m = data.image_url_m,
+                    image_url_l = data.image_url_l
             )
 
             db.session.add(new_bad_reco)
-            db.session.flush()
-
             db.session.commit()
 
             resp = message(True, "Book have been added to validation.")

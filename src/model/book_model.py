@@ -2,13 +2,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from src import db
 
-BookAdditionalGenresModel = db.Table("book_additional_genres",
-                              db.Column("isbn", db.String(13), db.ForeignKey(
-                                  "book_additional.isbn"), primary_key=True),
-                              db.Column("genre_id", db.Integer, db.ForeignKey(
-                                  "genre.genre_id"), primary_key=True)
-                              )
-
 class BookModel(db.Model):
     """
     Book Model for storing book related details
@@ -51,6 +44,3 @@ class BookAdditionalModel(db.Model):
     image_url_s = db.Column(db.Text)
     image_url_m = db.Column(db.Text)
     image_url_l = db.Column(db.Text)
-
-    genres = db.relationship(
-        "GenreModel", secondary=BookAdditionalGenresModel, lazy="dynamic")

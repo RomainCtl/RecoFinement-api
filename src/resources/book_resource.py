@@ -153,7 +153,7 @@ class BookBadRecommendation(Resource):
 
         return BookService.add_bad_recommendation(user_uuid, content_id, data)
 
-@api.route("/additional_book")
+@api.route("/book")
 class BookAdditional(Resource):
     book_additional = BookAdditionalDto.book_additional_base
     @api.doc(
