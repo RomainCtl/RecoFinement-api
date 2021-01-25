@@ -196,7 +196,7 @@ class BookService:
                     image_url_l = data['image_url_l']
             )
 
-            db.session.add(new_bad_reco)
+            db.session.add(new_additional_book)
             db.session.commit()
 
             resp = message(True, "Book have been added to validation.")
