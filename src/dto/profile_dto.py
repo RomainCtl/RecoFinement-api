@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import ProfileBaseObj, GroupBaseObj, ProfileItemObj, ProfileExportObj, messageObj, paginationObj, GenreBaseObj, MetaProfileContentBaseObj
+from .base import ProfileBaseObj, GroupBaseObj, ProfileItemObj, messageObj, paginationObj, GenreBaseObj, MetaProfileContentBaseObj
 
 
 class ProfileDto:
@@ -19,23 +19,12 @@ class ProfileDto:
     api.models[ProfileItemObj.name] = ProfileItemObj
     profile_item = ProfileItemObj
 
-    api.models[ProfileExportObj.name] = ProfileExportObj
-    profile_full_obj = ProfileExportObj
-
     # Responses
     data_resp = api.clone(
         "Profile Data Response",
         messageObj,
         {
             "profile": fields.Nested(profile_item)
-        }
-    )
-
-    export_profile_resp = api.clone(
-        "Profile Exportation Data Response",
-        messageObj,
-        {
-            "profile": fields.Nested(profile_full_obj)
         }
     )
 

@@ -11,7 +11,6 @@ from src.utils import validation_error
 
 api = ProfileDto.api
 data_resp = ProfileDto.data_resp
-export_profile_resp = ProfileDto.export_profile_resp
 search_data_resp = ProfileDto.search_data_resp
 update_schema = UpdateProfileDataSchema()
 
@@ -137,21 +136,3 @@ class ProfileGenreResource(Resource):
         profile_uuid = get_jwt_identity()
 
         return ProfileService.unlike_genre(genre_id, profile_uuid)
-
-
-@api.route("/export")
-class ProfileExportResource(Resource):
-    @api.doc(
-        "Export data of a specific profile",
-        responses={
-            200: ("Profile data successfully sent", export_profile_resp),
-            401: ("Authentication required"),
-            404: "Profile not found!",
-        },
-    )
-    @jwt_required
-    def get(self):
-        """ Export data of a specific profile """
-        profile_uuid = get_jwt_identity()
-
-        return ProfileService.export_all_profile_data(profile_uuid)

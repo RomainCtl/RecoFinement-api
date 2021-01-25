@@ -13,6 +13,7 @@ from .genre_model import GenreModel, LinkedGenreModel, ContentType
 from .external_model import ExternalModel
 
 from .user_model import UserModel, MetaUserContentModel, RecommendedContentModel, BadRecommendationContentModel
-from .group_model import GroupModel, RecommendedContentForGroupModel
+from .profile_model import ProfileModel, MetaProfileContentModel, RecommendedContentProfileModel, BadRecommendationContentProfileModel
+from .group_model import GroupModel, RecommendedContentForGroupModel#, GroupProfileModel
 
 from .role_model import RoleModel, PermissionModel

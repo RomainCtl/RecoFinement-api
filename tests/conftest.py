@@ -5,7 +5,7 @@ import uuid
 
 import settings.testing
 from src import create_app, db
-from src.model import UserModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
+from src.model import UserModel, ProfileModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
 
 
 def pytest_html_report_title(report):
@@ -108,10 +108,10 @@ def user_test1(user_role):
 
 @pytest.fixture(scope="function")
 def user_test2(user_role):
-    """ create UserObject test1
+    """ create UserObject test2
 
     Returns:
-        UserObject: user "test1"
+        UserObject: user "test2"
     """
     if (user := UserModel.query.filter_by(username="test2").first()):
         return user
@@ -126,6 +126,45 @@ def user_test2(user_role):
         db.session.commit()
         return new_user
 
+
+@pytest.fixture(scope="function")
+def profile_test1():
+    """ create ProfileObject test1
+
+    Returns:
+        ProfileObject: user "test1"
+    """
+    if (profile := ProfileModel.query.filter_by(profilename="test").first()):
+        return profile
+    else:
+        user = UserModel.query.filter_by(username="test").first()
+        new_profile = ProfileModel(
+            profilename="test",
+            user_id=user.user_id
+        )
+        db.session.add(new_profile)
+        db.session.commit()
+        return new_profile
+
+@pytest.fixture(scope="function")
+def profile_test2():
+    """ create ProfileObject test2
+
+    Returns:
+        ProfileObject: user "test2"
+    """
+    if (profile := ProfileModel.query.filter_by(profilename="test2").first()):
+        return profile
+    else:
+    
+        user = UserModel.query.filter_by(username="test2").first()
+        new_profile = ProfileModel(
+            profilename="test2",
+            user_id=user.user_id
+        )
+        db.session.add(new_profile)
+        db.session.commit()
+        return new_profile
 
 @pytest.fixture(scope="function")
 def group_test(user_test2):
@@ -170,6 +209,20 @@ def headers(user_test1):
         "Authorization": "Bearer %s" % access_token
     }
 
+@pytest.fixture(scope="function")
+def headers_profile(profile_test1):
+    """Create header with access token from profile test 1
+
+    Args:
+        profile_test1 (UserObject): profile "test1"
+
+    Returns:
+        Dict: Headers with the token access
+    """
+    access_token = create_access_token(identity=profile_test1)
+    return {
+        "Authorization": "Bearer %s" % access_token
+    }
 
 @pytest.fixture(scope="function")
 def headers_bad():

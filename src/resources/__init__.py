@@ -4,6 +4,7 @@ from flask import Blueprint
 from .auth_resource import api as auth_ns
 from .group_resource import api as group_ns
 from .user_resource import api as user_ns
+from .profile_resource import api as profile_ns
 from .external_resource import api as external_ns
 
 from .application_resource import api as app_ns
@@ -28,6 +29,7 @@ api = Api(api_bp, title="RecoFinement API", description="Main routes.", security
 api.add_namespace(auth_ns)
 api.add_namespace(group_ns)
 api.add_namespace(user_ns)
+api.add_namespace(profile_ns)
 api.add_namespace(external_ns)
 
 api.add_namespace(app_ns)
