@@ -708,7 +708,7 @@ class TestBook:
 
         response = test_client.post(
             "/api/book/", headers=headers, json=dict(
-                isbn=-1,
+                isbn="isbn",
                 title="title",
                 author="author",
                 year_of_publication=1900,

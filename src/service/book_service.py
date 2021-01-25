@@ -186,14 +186,14 @@ class BookService:
         try:
 
             new_additional_book = BookAdditionalModel(
-                    isbn = data.isbn,
-                    title = data.title,
-                    author = data.author,
-                    year_of_publication = data.year_of_publication,
-                    publisher = data.publisher,
-                    image_url_s = data.image_url_s,
-                    image_url_m = data.image_url_m,
-                    image_url_l = data.image_url_l
+                    isbn = data['isbn'],
+                    title = data['title'],
+                    author = data['author'],
+                    year_of_publication = data['year_of_publication'],
+                    publisher = data['publisher'],
+                    image_url_s = data['image_url_s'],
+                    image_url_m = data['image_url_m'],
+                    image_url_l = data['image_url_l']
             )
 
             db.session.add(new_bad_reco)
