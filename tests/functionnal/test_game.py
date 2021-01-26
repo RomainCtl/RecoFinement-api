@@ -780,6 +780,7 @@ class TestGame:
         response = test_client.post(
             "/api/game", headers=headers, json=dict(
                 steamid=-1,
+                name="name",
                 short_description="short_description",
                 header_image="header_image",
                 website="website",
