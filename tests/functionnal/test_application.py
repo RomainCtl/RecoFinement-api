@@ -767,7 +767,7 @@ class TestApplication:
         assert res['msg'] == "Missing Authorization Header"
 
     ### APPLICATION ADD CONTENT ###
-    def test_application_add_content(self, test_client, headers):
+    def test_application_add_content(self, test_client, headers, genre_test1):
         """Test application add additional content
         Test:
             POST: /api/application/
@@ -790,7 +790,7 @@ class TestApplication:
                 current_version="current_version",
                 android_version="android_version",
                 cover="cover",
-                genres=["0","1"],
+                genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
 

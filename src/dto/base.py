@@ -204,7 +204,7 @@ ApplicationAdditionalBaseObj = Model("Application additional base", {
     "current_version": fields.String,
     "android_version": fields.String,
     "cover": fields.String,
-    "genres": fields.List(fields.String),
+    "genres": fields.List(fields.Integer),
 })
 
 BookAdditionalBaseObj = Model("Book additional base", {

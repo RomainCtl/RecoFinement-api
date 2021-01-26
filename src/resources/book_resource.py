@@ -4,7 +4,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import BookService, ContentService
-from src.dto import BookDto, BookAdditionalDto, UserDto
+from src.dto import BookDto, UserDto
 
 api = BookDto.api
 data_resp = BookDto.data_resp
@@ -31,8 +31,8 @@ class BookResource(Resource):
             page = 1
         return BookService.get_popular_books(page, user_uuid)
 
+    book_additional = BookDto.book_additional_base
 
-    book_additional = BookAdditionalDto.book_additional_base
     @api.doc(
         "Add additional Book for validation",
         responses={
@@ -155,6 +155,7 @@ class bookMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class BookBadRecommendation(Resource):
     bad_recommendation = BookDto.book_bad_recommendation
+
     @api.doc(
         "Add Book-user (connected user) bad recommendation",
         responses={
@@ -172,4 +173,3 @@ class BookBadRecommendation(Resource):
         data = request.get_json()
 
         return BookService.add_bad_recommendation(user_uuid, content_id, data)
-

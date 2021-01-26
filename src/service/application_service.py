@@ -214,23 +214,23 @@ class ApplicationService:
         try:
 
             new_additional_application = ApplicationAdditionalModel(
-                name = data['name'],
-                size = data['size'],
-                installs = data['installs'],
-                type = data['type'],
-                price = data['price'],
-                content_rating = data['content_rating'],
-                last_updated = data['last_updated'],
-                current_version = data['current_version'],
-                android_version = data['android_version'],
-                cover = data['cover'],
-                genres = []
+                name=data['name'],
+                size=data['size'],
+                installs=data['installs'],
+                type=data['type'],
+                price=data['price'],
+                content_rating=data['content_rating'],
+                last_updated=data['last_updated'],
+                current_version=data['current_version'],
+                android_version=data['android_version'],
+                cover=data['cover']
             )
 
             for genre_id in data["genres"]:
-                new_additional_application.genres.append(
-                    GenreModel.query.filter_by(genre_id=genre_id).first()
-                )
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_application.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
 
             db.session.add(new_additional_application)
             db.session.commit()
@@ -240,4 +240,4 @@ class ApplicationService:
 
         except Exception as error:
             current_app.logger.error(error)
-            return internal_err_resp() 
+            return internal_err_resp()

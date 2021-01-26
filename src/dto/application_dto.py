@@ -1,7 +1,7 @@
 from flask_restx import Namespace, fields
 
-from .base import ApplicationBaseObj, GenreBaseObj, paginationObj, messageObj, MetaUserContentBaseObj
-from .base import ApplicationAdditionalBaseObj
+from .base import ApplicationBaseObj, GenreBaseObj, paginationObj, messageObj, MetaUserContentBaseObj, ApplicationAdditionalBaseObj
+
 
 class ApplicationDto:
     api = Namespace(
@@ -10,6 +10,9 @@ class ApplicationDto:
     # Objects
     api.models[ApplicationBaseObj.name] = ApplicationBaseObj
     app_base = ApplicationBaseObj
+
+    api.models[ApplicationAdditionalBaseObj.name] = ApplicationAdditionalBaseObj
+    application_additional_base = ApplicationAdditionalBaseObj
 
     # Responses
     data_resp = api.clone(
@@ -26,10 +29,3 @@ class ApplicationDto:
             "categorie": fields.List(fields.String)
         }
     )
-
-class ApplicationAdditionalDto:
-    api = Namespace("application_additional", description="Additional application related operations.")
-
-    #Objects
-    api.models[ApplicationAdditionalBaseObj.name] = ApplicationAdditionalBaseObj
-    application_additional_base = ApplicationAdditionalBaseObj 
