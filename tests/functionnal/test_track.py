@@ -765,3 +765,33 @@ class TestTrack:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+
+    ### TRACK ADD CONTENT ###
+    def test_track_add_content(self, test_client, headers, genre_test1):
+        """Test track add additional content
+        Test:
+            POST: /api/track/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/track", headers=headers, json=dict(
+                title="title",
+                year=-1,
+                artist_name="artist_name",
+                release="release",
+                track_mmid="track_mmid",
+                recording_mbid="recording_mbid",
+                spotify_id=-1,
+                covert_art_url="covert_art_url",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

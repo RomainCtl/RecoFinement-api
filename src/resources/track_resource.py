@@ -32,6 +32,24 @@ class TrackResource(Resource):
             page = 1
         return TrackService.get_popular_tracks(page, user_uuid)
 
+    track_additional = TrackDto.track_additional_base
+    @api.doc(
+        "Add additional Track for validation",
+        responses={
+            200: ("Additional track added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(track_additional, validate=True)
+    def post(self):
+        """ Add additional Track for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return TrackService.add_additional_track(user_uuid, data)
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class TrackUserRecommendationResource(Resource):

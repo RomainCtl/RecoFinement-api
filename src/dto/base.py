@@ -245,3 +245,15 @@ MovieAdditionalBaseObj = Model("Movie additional base", {
     "plot_outline": fields.String,
     "genres": fields.List(fields.Integer),
 })
+
+TrackAdditionalBaseObj = Model("Track additional base", {
+    "title": fields.String,
+    "year": fields.Integer,
+    "artist_name": fields.String,
+    "release": fields.String,
+    "track_mmid": fields.String,
+    "recording_mbid": fields.String,
+    "spotify_id": fields.Float,
+    "covert_art_url": fields.String,
+    "genres": fields.List(fields.Integer),
+})

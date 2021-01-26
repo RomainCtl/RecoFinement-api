@@ -36,7 +36,7 @@ class MovieResource(Resource):
     @api.doc(
         "Add additional Movie for validation",
         responses={
-            200: ("Additional game added for validation", meta_resp),
+            200: ("Additional movie added for validation", meta_resp),
             401: ("Authentication required"),
         }
     )

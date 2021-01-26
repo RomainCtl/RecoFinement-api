@@ -7,7 +7,7 @@ from datetime import datetime
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import TrackModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import TrackModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, TrackAdditionalModel
 from src.schemas import TrackBase, TrackObject, GenreBase, TrackExtra, MetaUserContentBase
 
 
@@ -222,6 +222,46 @@ class TrackService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_track(user_uuid, data):
+        """ Add additional track"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_track = TrackAdditionalModel(
+                title=data['title'],
+                year=data['year'],
+                artist_name=data['artist_name'],
+                release=data['release'],
+                track_mmid=data['track_mmid'],
+                recording_mbid=data['recording_mbid'],
+                spotify_id=data['spotify_id'],
+                covert_art_url=data['covert_art_url'],
+            )
+
+            for genre_id in data["genres"]:
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_track.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
+
+            db.session.add(new_additional_track)
+            db.session.commit()
+
+            resp = message(True, "Track have been added to validation.")
             return resp, 201
 
         except Exception as error:
