@@ -786,7 +786,7 @@ class TestTrack:
                 artist_name="artist_name",
                 release="release",
                 track_mmid="track_mmid",
-                recording_mbid="recording_mbid",
+                recording_mbid="00010203-0405-0607-0809-0a0b0c0d0e0f",
                 spotify_id=-1,
                 covert_art_url="covert_art_url",
                 genres=[genre_test1.genre_id],
