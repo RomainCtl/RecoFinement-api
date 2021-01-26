@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import ApplicationService, ContentService
-from src.dto import ApplicationDto, ApplicationAdditionalBaseObj, UserDto
+from src.dto import ApplicationDto, ApplicationAdditionalDto, UserDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
@@ -31,7 +31,7 @@ class ApplicationResource(Resource):
             page = 1
         return ApplicationService.get_popular_applications(page, user_uuid)
 
-    application_additional = ApplicationAdditionalBaseObj.application_additional_base
+    application_additional = ApplicationAdditionalDto.application_additional_base
     @api.doc(
         "Add additional Application for validation",
         responses={

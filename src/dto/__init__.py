@@ -3,7 +3,7 @@ from .group_dto import GroupDto
 from .user_dto import UserDto
 from .external_dto import ExternalDto
 
-from .application_dto import ApplicationDto, ApplicationAdditionalBaseObj
+from .application_dto import ApplicationDto, ApplicationAdditionalDto
 from .book_dto import BookDto, BookAdditionalDto
 from .game_dto import GameDto
 from .movie_dto import MovieDto
