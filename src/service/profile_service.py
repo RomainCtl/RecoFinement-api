@@ -49,7 +49,7 @@ class ProfileService:
         
         if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(user_id=user.user_id).first()):
+        if not (ProfileModel.query.filter_by(uuid=uuid,user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         try:
@@ -87,7 +87,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_profile_profil" not in permissions:
+        if "modify_user_profil" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -113,7 +113,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_profile_profil" not in permissions:
+        if "modify_user_profil" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -137,18 +137,16 @@ class ProfileService:
     @staticmethod
     def update_profile_data(profile_uuid, connected_profile_uuid, data):
         """ Update profile data profilename """
-        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid).first()):
+
+        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+            return err_resp("User not found!", 404)
+        if not (profile:=ProfileModel.query.filter_by(uuid=profile_uuid,user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_profile_profil" not in permissions:
+        if "modify_user_profil" not in permissions:
             return err_resp("Permission missing", 403)
-
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
-            return err_resp("User not found!", 404)
-        if not (profile:=ProfileModel.query.filter_by(user_id=user.user_id).first()):
-            return err_resp("Profile not found!", 404)
 
         if str(user.uuid) != connected_profile_uuid:
             return err_resp("Unable to update an account which is not your's", 403)
@@ -170,20 +168,18 @@ class ProfileService:
     @staticmethod
     def delete_account(profile_uuid, connected_profile_uuid):
         """" Delete profile account """
-        if not (ProfileModel.query.filter_by(uuid=profile_uuid).first()):
+
+        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+            return err_resp("User not found!", 404)
+        if not (ProfileModel.query.filter_by(uuid=profile_uuid,user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_profile_profil" not in permissions:
+        if "modify_user_profil" not in permissions:
             return err_resp("Permission missing", 403)
 
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
-            return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(user_id=user.user_id).first()):
-            return err_resp("Profile not found!", 404)
-
-        if not (ProfileModel.query.filter_by(user_id=user.user_id, profile_uuid=profile_uuid).first()):
+        if not (ProfileModel.query.filter_by(user_id=user.user_id, uuid=profile_uuid).first()):
             return err_resp("Unable to delete an account which is not your's", 403)
             
         try:

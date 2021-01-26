@@ -87,12 +87,20 @@ def user_role():
 
 @pytest.fixture(scope="function")
 def user_test1(user_role):
-    """ create UserObject test1
+    """ create UserObject test1 & profile test1
 
     Returns:
         UserObject: user "test1"
     """
     if (user := UserModel.query.filter_by(username="test").first()):
+        if not (ProfileModel.query.filter_by(profilename="test").first()):
+            user = UserModel.query.filter_by(username="test").first()
+            new_profile = ProfileModel(
+                profilename="test",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return user
     else:
         new_user = UserModel(
@@ -103,17 +111,33 @@ def user_test1(user_role):
         )
         db.session.add(new_user)
         db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="test").first()):
+            user = UserModel.query.filter_by(username="test").first()
+            new_profile = ProfileModel(
+                profilename="test",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return new_user
 
 
 @pytest.fixture(scope="function")
 def user_test2(user_role):
-    """ create UserObject test2
+    """ create UserObject test2 & profile test2
 
     Returns:
         UserObject: user "test2"
     """
     if (user := UserModel.query.filter_by(username="test2").first()):
+        if not (ProfileModel.query.filter_by(profilename="test2").first()):
+            user = UserModel.query.filter_by(username="test2").first()
+            new_profile = ProfileModel(
+                profilename="test2",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return user
     else:
         new_user = UserModel(
@@ -124,47 +148,15 @@ def user_test2(user_role):
         )
         db.session.add(new_user)
         db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="test2").first()):
+            user = UserModel.query.filter_by(username="test2").first()
+            new_profile = ProfileModel(
+                profilename="test2",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return new_user
-
-
-@pytest.fixture(scope="function")
-def profile_test1():
-    """ create ProfileObject test1
-
-    Returns:
-        ProfileObject: user "test1"
-    """
-    if (profile := ProfileModel.query.filter_by(profilename="test").first()):
-        return profile
-    else:
-        user = UserModel.query.filter_by(username="test").first()
-        new_profile = ProfileModel(
-            profilename="test",
-            user_id=user.user_id
-        )
-        db.session.add(new_profile)
-        db.session.commit()
-        return new_profile
-
-@pytest.fixture(scope="function")
-def profile_test2():
-    """ create ProfileObject test2
-
-    Returns:
-        ProfileObject: user "test2"
-    """
-    if (profile := ProfileModel.query.filter_by(profilename="test2").first()):
-        return profile
-    else:
-    
-        user = UserModel.query.filter_by(username="test2").first()
-        new_profile = ProfileModel(
-            profilename="test2",
-            user_id=user.user_id
-        )
-        db.session.add(new_profile)
-        db.session.commit()
-        return new_profile
 
 @pytest.fixture(scope="function")
 def group_test(user_test2):
