@@ -6,7 +6,7 @@ from .external_schema import ExternalBase
 
 from .application_schema import ApplicationBase, ApplicationExtra, ApplicationAdditionalBase
 from .book_schema import BookBase, BookExtra, BookAdditionalBase
-from .episode_schema import EpisodeBase, EpisodeBase, EpisodeAdditionalBase
+from .episode_schema import EpisodeBase, EpisodeAdditionalBase
 from .game_schema import GameBase, GameObject, GameExtra, GameAdditionalBase
 from .movie_schema import MovieBase, MovieObject, MovieExtra, MovieAdditionalBase
 from .serie_schema import SerieBase, SerieItem, SerieExtra, SerieAdditionalBase

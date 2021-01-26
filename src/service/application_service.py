@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import ApplicationModel, UserModel, GenreModel, ContentType, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import ApplicationModel, UserModel, GenreModel, ContentType, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, ApplicationAdditionalModel
 from src.schemas import ApplicationBase, GenreBase, MetaUserContentBase, ApplicationExtra
 
 
@@ -199,3 +199,45 @@ class ApplicationService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def add_additional_application(user_uuid, data):
+        """ Add additional application"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_application = ApplicationAdditionalModel(
+                name = data['name'],
+                size = data['size'],
+                installs = data['installs'],
+                type = data['type'],
+                price = data['price'],
+                content_rating = data['content_rating'],
+                last_updated = data['last_updated'],
+                current_version = data['current_version'],
+                android_version = data['android_version'],
+                cover = data['cover'],
+                genres = []
+            )
+
+            for genre_id in data["genres"]:
+                new_additional_application.genres.append(
+                    GenreModel.query.filter_by(genre_id=genre_id).first()
+                )
+
+            db.session.add(new_additional_application)
+            db.session.commit()
+
+            resp = message(True, "Application have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp() 

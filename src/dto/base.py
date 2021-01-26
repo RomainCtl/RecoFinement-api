@@ -193,6 +193,19 @@ paginationObj = Model("Pagination Object", {
 
 # Additional Objects
 
+ApplicationAdditionalBaseObj = Model("Application additional base", {
+    "name": fields.String,
+    "size": fields.String,
+    "installs": fields.String,
+    "type": fields.String,
+    "price": fields.String,
+    "content_rating": fields.String,
+    "last_updated": fields.String,
+    "current_version": fields.String,
+    "android_version": fields.String,
+    "cover": fields.String,
+    "genres": fields.List(fields.String),
+})
 
 BookAdditionalBaseObj = Model("Book additional base", {
     "isbn": fields.String,

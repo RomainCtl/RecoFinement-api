@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import ApplicationService, ContentService
-from src.dto import ApplicationDto, UserDto
+from src.dto import ApplicationDto, ApplicationAdditionalBaseObj, UserDto
 
 api = ApplicationDto.api
 data_resp = ApplicationDto.data_resp
@@ -30,6 +30,25 @@ class ApplicationResource(Resource):
         except (ValueError, TypeError):
             page = 1
         return ApplicationService.get_popular_applications(page, user_uuid)
+
+    application_additional = ApplicationAdditionalBaseObj.application_additional_base
+    @api.doc(
+        "Add additional Application for validation",
+        responses={
+            200: ("Additional application added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(application_additional, validate=True)
+    def post(self):
+        """ Add additional Application for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return ApplicationService.add_additional_application(user_uuid, data)
 
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
