@@ -429,7 +429,7 @@ class TestGame:
         """Test game user meta
 
         Test:
-            GET: /api/book/<content_id>/meta
+            GET: /api/game/<content_id>/meta
 
         Expected result: 
             200, {"status": True}
