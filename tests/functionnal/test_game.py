@@ -764,3 +764,32 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### GAME ADD CONTENT ###
+    def test_game_add_content(self, test_client, headers, genre_test1):
+        """Test game add additional content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers, json=dict(
+                steamid=-1,
+                short_description="short_description",
+                header_image="header_image",
+                website="website",
+                developers="developers",
+                publishers="publishers",
+                price="price",
+                release_date="release_date",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

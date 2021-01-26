@@ -52,7 +52,6 @@ class GameAdditionalModel(db.Model):
     developers = db.Column(db.String(255))
     publishers = db.Column(db.String(255))
     price = db.Column(db.String(255))
-    recommendations = db.Column(db.Integer)
     release_date = db.Column(db.String(255))
 
     genres = db.relationship(

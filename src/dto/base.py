@@ -217,3 +217,16 @@ BookAdditionalBaseObj = Model("Book additional base", {
     "image_url_m": fields.String,
     "image_url_l": fields.String
 })
+
+GameAdditionalBaseObj = Model("Game additional base", {
+    "steamid": fields.Integer,
+    "name": fields.String,
+    "short_description": fields.String,
+    "header_image": fields.String,
+    "website": fields.String,
+    "developers": fields.String,
+    "publishers": fields.String,
+    "price": fields.String,
+    "release_date": fields.String,
+    "genres": fields.List(fields.Integer),
+})

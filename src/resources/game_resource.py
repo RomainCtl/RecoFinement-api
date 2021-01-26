@@ -31,6 +31,25 @@ class GameResource(Resource):
             page = 1
         return GameService.get_popular_games(page, user_uuid)
 
+    game_additional = GameDto.game_additional_base
+    @api.doc(
+        "Add additional Game for validation",
+        responses={
+            200: ("Additional game added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(game_additional, validate=True)
+    def post(self):
+        """ Add additional Game for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return GameService.add_additional_game(user_uuid, data)
+
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class GameUserRecommendationResource(Resource):
