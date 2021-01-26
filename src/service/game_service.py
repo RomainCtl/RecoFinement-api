@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import GameModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, GameAdditionalMode
+from src.model import GameModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, GameAdditionalModel
 from src.schemas import GameBase, GameObject, GenreBase, GameExtra, MetaUserContentBase
 
 
