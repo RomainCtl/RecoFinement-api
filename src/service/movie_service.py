@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import MovieModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import MovieModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, MovieAdditionalModel
 from src.schemas import MovieBase, MovieObject, GenreBase, MovieExtra, MetaUserContentBase
 
 
@@ -184,6 +184,50 @@ class MovieService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+
+    @staticmethod
+    def add_additional_movie(user_uuid, data):
+        """ Add additional movie"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_movie = MovieAdditionalModel(
+                title=data['title'],
+                language=data['language'],
+                actors=data['actors'],
+                year=data['year'],
+                producers=data['producers'],
+                director=data['director'],
+                writer=data['writer'],
+                imdbid=data['imdbid'],
+                tmdbid=data['tmdbid'],
+                cover=data['cover'],
+                plot_outline=data['plot_outline'],
+            )
+
+            for genre_id in data["genres"]:
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_movie.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
+
+            db.session.add(new_additional_movie)
+            db.session.commit()
+
+            resp = message(True, "Movie have been added to validation.")
             return resp, 201
 
         except Exception as error:

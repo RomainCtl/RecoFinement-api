@@ -230,3 +230,18 @@ GameAdditionalBaseObj = Model("Game additional base", {
     "release_date": fields.String,
     "genres": fields.List(fields.Integer),
 })
+
+MovieAdditionalBaseObj = Model("Movie additional base", {
+    "title": fields.String,
+    "language": fields.String,
+    "actors": fields.String,
+    "year": fields.String,
+    "producers": fields.String,
+    "director": fields.String,
+    "writer": fields.String,
+    "imdbid": fields.String,
+    "tmdbid": fields.String,
+    "cover": fields.String,
+    "plot_outline": fields.String,
+    "genres": fields.List(fields.Integer),
+})
