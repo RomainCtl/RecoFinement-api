@@ -783,6 +783,7 @@ class TestApplication:
                 name="name",
                 size="size",
                 installs="installs",
+                type="type",
                 price="price",
                 content_rating="content_rating",
                 last_updated="last_updated",
