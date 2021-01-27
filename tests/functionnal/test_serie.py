@@ -783,8 +783,8 @@ class TestSerie:
             "/api/serie", headers=headers, json=dict(
                 title="title",
                 imdbid="imdbid",
-                start_year="start_year",
-                end_year="end_year",
+                start_year=1900,
+                end_year=1900,
                 writers="writer1 | writer2",
                 directors="director1 | director2",
                 actors="actor1 | actor2",
@@ -792,9 +792,9 @@ class TestSerie:
                 episodes=[dict(
                     title="title",
                     imdbid="imdbid",
-                    year="year",
-                    season_number="season_number",
-                    episode_number="episode_number",
+                    year=1900,
+                    season_number=1,
+                    episode_number=1,
                     genres=[genre_test1.genre_id],
                 )],
                 genres=[genre_test1.genre_id],
