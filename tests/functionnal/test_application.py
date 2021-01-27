@@ -810,7 +810,7 @@ class TestApplication:
 
         response = test_client.post(
             "/api/application", headers=headers, json=dict(
-                name="name",
+                name="name1",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
