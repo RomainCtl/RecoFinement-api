@@ -243,22 +243,29 @@ class TrackService:
 
             new_additional_track = TrackAdditionalModel(
                 title=data['title'],
+                # year=data['year'],
+                # artist_name=data['artist_name'],
+                # release=data['release'],
+                # track_mmid=data['track_mmid'],
+                # recording_mbid=data['recording_mbid'],
+                # spotify_id=data['spotify_id'],
+                # covert_art_url=data['covert_art_url'],
             )
 
             if 'year' in data :
-                new_additional_track.year.append(data['year'])
+                new_additional_track.year = data['year']
             if 'artist_name' in data :
-                new_additional_track.artist_name.append(data['artist_name'])
+                new_additional_track.artist_name = data['artist_name']
             if 'release' in data :
-                new_additional_track.release.append(data['release'])
+                new_additional_track.release = data['release']
             if 'track_mmid' in data :
-                new_additional_track.track_mmid.append(data['track_mmid'])
+                new_additional_track.track_mmid = data['track_mmid']
             if 'recording_mbid' in data :
-                new_additional_track.recording_mbid.append(data['recording_mbid'])
+                new_additional_track.recording_mbid = data['recording_mbid']
             if 'spotify_id' in data :
-                new_additional_track.spotify_id.append(data['spotify_id'])
+                new_additional_track.spotify_id = data['spotify_id']
             if 'covert_art_url' in data :
-                new_additional_track.covert_art_url.append(data['covert_art_url'])
+                new_additional_track.covert_art_url = data['covert_art_url']
 
             for genre_id in data["genres"]:
                 if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
