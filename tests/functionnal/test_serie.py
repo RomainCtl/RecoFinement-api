@@ -796,7 +796,7 @@ class TestSerie:
                     season_number="season_number",
                     episode_number="episode_number",
                     genres=[genre_test1.genre_id],
-                )]
+                )],
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
