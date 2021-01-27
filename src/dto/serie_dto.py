@@ -16,7 +16,7 @@ class SerieDto:
     api.models[EpisodeBaseObj.name] = EpisodeBaseObj
     episode_base = EpisodeBaseObj
 
-    api.model[SerieAdditionalBaseObj.name] = SerieAdditionalBaseObj
+    api.models[SerieAdditionalBaseObj.name] = SerieAdditionalBaseObj
     serie_additional_base = SerieAdditionalBaseObj
 
     # Responses
