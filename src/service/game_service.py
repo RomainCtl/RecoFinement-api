@@ -206,10 +206,9 @@ class GameService:
 
             new_additional_game = GameAdditionalModel(
                 name=data['name'],
+                steamid=data['steamid'],
             )
 
-            if 'steamid' in data:
-                new_additional_game.steamid = data['steamid']
             if 'short_description' in data:
                 new_additional_game.short_description = data['short_description']
             if 'header_image' in data:

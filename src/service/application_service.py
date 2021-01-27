@@ -218,23 +218,23 @@ class ApplicationService:
             )
 
             if 'size' in data:
-                new_additional_game.size = data['size']
+                new_additional_application.size = data['size']
             if 'installs' in data:
-                new_additional_game.installs = data['installs']
+                new_additional_application.installs = data['installs']
             if 'type' in data:
-                new_additional_game.type = data['type']
+                new_additional_application.type = data['type']
             if 'price' in data:
-                new_additional_game.price = data['price']
+                new_additional_application.price = data['price']
             if 'content_rating' in data:
-                new_additional_game.content_rating = data['content_rating']
+                new_additional_application.content_rating = data['content_rating']
             if 'last_updated' in data:
-                new_additional_game.last_updated = data['last_updated']
+                new_additional_application.last_updated = data['last_updated']
             if 'current_version' in data:
-                new_additional_game.current_version = data['current_version']
+                new_additional_application.current_version = data['current_version']
             if 'android_version' in data:
-                new_additional_game.android_version = data['android_version']
+                new_additional_application.android_version = data['android_version']
             if 'cover' in data:
-                new_additional_game.cover = data['cover']
+                new_additional_application.cover = data['cover']
 
             for genre_id in data["genres"]:
                 if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):

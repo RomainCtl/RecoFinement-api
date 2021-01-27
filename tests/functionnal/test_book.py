@@ -738,6 +738,7 @@ class TestBook:
 
         response = test_client.post(
             "/api/book", headers=headers, json=dict(
+                isbn="isbn",
                 title="title",
             ))
         res = json.loads(response.data)

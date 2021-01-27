@@ -187,22 +187,21 @@ class BookService:
 
             new_additional_book = BookAdditionalModel(
                     title = data['title'],
+                    isbn = data['isbn'],
             )
 
-            if 'isbn' in data:
-                new_additional_game.isbn = data['isbn']
             if 'author' in data:
-                new_additional_game.author = data['author']
+                new_additional_book.author = data['author']
             if 'year_of_publication' in data:
-                new_additional_game.year_of_publication = data['year_of_publication']
+                new_additional_book.year_of_publication = data['year_of_publication']
             if 'publisher' in data:
-                new_additional_game.publisher = data['publisher']
+                new_additional_book.publisher = data['publisher']
             if 'image_url_s' in data:
-                new_additional_game.image_url_s = data['image_url_s']
+                new_additional_book.image_url_s = data['image_url_s']
             if 'image_url_m' in data:
-                new_additional_game.image_url_m = data['image_url_m']
+                new_additional_book.image_url_m = data['image_url_m']
             if 'image_url_l' in data:
-                new_additional_game.image_url_l = data['image_url_l']
+                new_additional_book.image_url_l = data['image_url_l']
 
             db.session.add(new_additional_book)
             db.session.commit()
