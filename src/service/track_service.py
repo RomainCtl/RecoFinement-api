@@ -243,13 +243,6 @@ class TrackService:
 
             new_additional_track = TrackAdditionalModel(
                 title=data['title'],
-                # year=data['year'],
-                # artist_name=data['artist_name'],
-                # release=data['release'],
-                # track_mmid=data['track_mmid'],
-                # recording_mbid=data['recording_mbid'],
-                # spotify_id=data['spotify_id'],
-                # covert_art_url=data['covert_art_url'],
             )
 
             if 'year' in data :

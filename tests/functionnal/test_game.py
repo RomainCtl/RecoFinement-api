@@ -794,3 +794,24 @@ class TestGame:
 
         assert response.status_code == 201
         assert res['status'] == True
+
+    def test_game_add_minimal_content(self, test_client, headers, genre_test1):
+        """Test game add additional minimal content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers, json=dict(
+                name="name",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

@@ -205,16 +205,25 @@ class GameService:
         try:
 
             new_additional_game = GameAdditionalModel(
-                steamid=data['steamid'],
                 name=data['name'],
-                short_description=data['short_description'],
-                header_image=data['header_image'],
-                website=data['website'],
-                developers=data['developers'],
-                publishers=data['publishers'],
-                price=data['price'],
-                release_date=data['release_date'],
             )
+
+            if 'steamid' in data:
+                new_additional_game.steamid = data['steamid']
+            if 'short_description' in data:
+                new_additional_game.short_description = data['short_description']
+            if 'header_image' in data:
+                new_additional_game.header_image = data['header_image']
+            if 'website' in data:
+                new_additional_game.website = data['website']
+            if 'developers' in data:
+                new_additional_game.developers = data['developers']
+            if 'publishers' in data:
+                new_additional_game.publishers = data['publishers']
+            if 'price' in data:
+                new_additional_game.price = data['price']
+            if 'release_date' in data:
+                new_additional_game.release_date = data['release_date']
 
             for genre_id in data["genres"]:
                 if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):

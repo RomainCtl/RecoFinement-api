@@ -206,17 +206,28 @@ class MovieService:
 
             new_additional_movie = MovieAdditionalModel(
                 title=data['title'],
-                language=data['language'],
-                actors=data['actors'],
-                year=data['year'],
-                producers=data['producers'],
-                director=data['director'],
-                writer=data['writer'],
-                imdbid=data['imdbid'],
-                tmdbid=data['tmdbid'],
-                cover=data['cover'],
-                plot_outline=data['plot_outline'],
             )
+
+            if 'language' in data:
+                new_additional_movie.language = data['language']
+            if 'actors' in data:
+                new_additional_movie.actors = data['actors']
+            if 'year' in data:
+                new_additional_movie.year = data['year']
+            if 'producers' in data:
+                new_additional_movie.producers = data['producers']
+            if 'director' in data:
+                new_additional_movie.director = data['director']
+            if 'writer' in data:
+                new_additional_movie.writer = data['writer']
+            if 'imdbid' in data:
+                new_additional_movie.imdbid = data['imdbid']
+            if 'tmdbid' in data:
+                new_additional_movie.tmdbid = data['tmdbid']
+            if 'cover' in data:
+                new_additional_movie.cover = data['cover']
+            if 'plot_outline' in data:
+                new_additional_movie.plot_outline = data['plot_outline']
 
             for genre_id in data["genres"]:
                 if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):

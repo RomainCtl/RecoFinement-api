@@ -215,16 +215,26 @@ class ApplicationService:
 
             new_additional_application = ApplicationAdditionalModel(
                 name=data['name'],
-                size=data['size'],
-                installs=data['installs'],
-                type=data['type'],
-                price=data['price'],
-                content_rating=data['content_rating'],
-                last_updated=data['last_updated'],
-                current_version=data['current_version'],
-                android_version=data['android_version'],
-                cover=data['cover']
             )
+
+            if 'size' in data:
+                new_additional_game.size = data['size']
+            if 'installs' in data:
+                new_additional_game.installs = data['installs']
+            if 'type' in data:
+                new_additional_game.type = data['type']
+            if 'price' in data:
+                new_additional_game.price = data['price']
+            if 'content_rating' in data:
+                new_additional_game.content_rating = data['content_rating']
+            if 'last_updated' in data:
+                new_additional_game.last_updated = data['last_updated']
+            if 'current_version' in data:
+                new_additional_game.current_version = data['current_version']
+            if 'android_version' in data:
+                new_additional_game.android_version = data['android_version']
+            if 'cover' in data:
+                new_additional_game.cover = data['cover']
 
             for genre_id in data["genres"]:
                 if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):

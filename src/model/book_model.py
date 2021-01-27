@@ -35,8 +35,8 @@ class BookAdditionalModel(db.Model):
     """
     __tablename__ = "book_additional"
 
-    isbn = db.Column(db.String(13), unique=True, primary_key=True,
-                     nullable=False, index=True)
+    book_id = db.Column(db.Integer, primary_key=True, index=True)
+    isbn = db.Column(db.String(13), unique=True, nullable=False, index=True)
     title = db.Column(db.String(255), index=True)
     author = db.Column(db.String(255), index=True)
     year_of_publication = db.Column(db.Integer)

@@ -186,15 +186,23 @@ class BookService:
         try:
 
             new_additional_book = BookAdditionalModel(
-                    isbn = data['isbn'],
                     title = data['title'],
-                    author = data['author'],
-                    year_of_publication = data['year_of_publication'],
-                    publisher = data['publisher'],
-                    image_url_s = data['image_url_s'],
-                    image_url_m = data['image_url_m'],
-                    image_url_l = data['image_url_l']
             )
+
+            if 'isbn' in data:
+                new_additional_game.isbn = data['isbn']
+            if 'author' in data:
+                new_additional_game.author = data['author']
+            if 'year_of_publication' in data:
+                new_additional_game.year_of_publication = data['year_of_publication']
+            if 'publisher' in data:
+                new_additional_game.publisher = data['publisher']
+            if 'image_url_s' in data:
+                new_additional_game.image_url_s = data['image_url_s']
+            if 'image_url_m' in data:
+                new_additional_game.image_url_m = data['image_url_m']
+            if 'image_url_l' in data:
+                new_additional_game.image_url_l = data['image_url_l']
 
             db.session.add(new_additional_book)
             db.session.commit()

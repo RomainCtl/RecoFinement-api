@@ -44,7 +44,8 @@ class GameAdditionalModel(db.Model):
     """
     __tablename__ = "game_additional"
 
-    steamid = db.Column(db.Integer, nullable=True, primary_key=True)
+    game_id = db.Column(db.Integer, primary_key=True, index=True)
+    steamid = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String(255), index=True)
     short_description = db.Column(db.Text)
     header_image = db.Column(db.String(255))
