@@ -46,7 +46,8 @@ class SerieAdditionalModel(db.Model):
     """
     __tablename__ = "serie_additional"
 
-    imdbid = db.Column(db.String(255), primary_key=True, index=True)
+    serie_id = db.Column(db.Integer, index=True, primary_key=True)
+    imdbid = db.Column(db.String(255), index=True)
     title = db.Column(db.String(255), index=True)
     start_year = db.Column(db.Integer)
     end_year = db.Column(db.Integer)

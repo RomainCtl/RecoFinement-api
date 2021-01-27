@@ -32,6 +32,24 @@ class SerieResource(Resource):
             page = 1
         return SerieService.get_popular_series(page, user_uuid)
 
+    serie_additional = SerieDto.serie_additional_base
+    @api.doc(
+        "Add additional Serie for validation",
+        responses={
+            200: ("Additional serie added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(serie_additional, validate=True)
+    def post(self):
+        """ Add additional Serie for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return SerieService.add_additional_serie(user_uuid, data)
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class SerieUserRecommendationResource(Resource):

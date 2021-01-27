@@ -39,7 +39,8 @@ class EpisodeAdditionalModel(db.Model):
     """
     __tablename__ = "episode_additional"
 
-    imdbid = db.Column(db.String(255), primary_key=True)
+    episode_id = db.Column(db.Integer, index=True, primary_key=True)
+    imdbid = db.Column(db.String(255))
     title = db.Column(db.String(512), index=True)
     year = db.Column(db.Integer)
     season_number = db.Column(db.Integer)

@@ -257,3 +257,25 @@ TrackAdditionalBaseObj = Model("Track additional base", {
     "covert_art_url": fields.String,
     "genres": fields.List(fields.Integer),
 })
+
+EpisodeAdditionalBaseObj = Model("Episode additional base", {
+    "title": fields.String,
+    "imdbid": fields.String,
+    "year": fields.Integer,
+    "season_number": fields.Integer,
+    "episode_number": fields.Integer,
+    "genres": fields.List(fields.Integer),
+})
+
+SerieAdditionalBaseObj = Model("Serie additional base", {
+    "title": fields.String,
+    "imdbid": fields.String,
+    "start_year": fields.Integer,
+    "end_year": fields.Integer,
+    "writers": fields.String,
+    "directors": fields.String,
+    "actors": fields.String,
+    "cover": fields.String,
+    "episodes": fields.List(fields.Nested(EpisodeAdditionalBaseObj)),
+    "genres": fields.List(fields.Integer),
+})
