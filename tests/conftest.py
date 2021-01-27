@@ -84,6 +84,50 @@ def user_role():
         db.session.commit()
         return role
 
+@pytest.fixture(scope="function")
+def admin_role():
+    if (role := RoleModel.query.filter_by(role_id=2).first()):
+        return role
+    else:
+        indicate_interest = PermissionModel(
+            permission="indicate_interest"
+        )
+        modify_user_profil = PermissionModel(
+            permission="modify_user_profil"
+        )
+        view_recommendation = PermissionModel(
+            permission="view_recommendation"
+        )
+        play_music = PermissionModel(
+            permission="play_music"
+        )
+        add_content = PermissionModel(
+            permission="add_content"
+        )
+        access_sandbox = PermissionModel(
+            permission="access_sandbox"
+        )
+        modify_content = PermissionModel(
+            permission="modify_content"
+        )
+        validate_added_content = PermissionModel(
+            permission="validate_added_content"
+        )
+        delete_content = PermissionModel(
+            permission="delete_content"
+        )
+        role = RoleModel(
+            role_id=2,
+            name="admin",
+            permission=[indicate_interest, modify_user_profil,
+                        view_recommendation, play_music, add_content,
+                        access_sandbox, modify_content, delete_content, 
+                        validate_added_content]
+        )
+        db.session.add(role)
+        db.session.commit()
+        return role
+
 
 @pytest.fixture(scope="function")
 def user_test1(user_role):
@@ -152,6 +196,43 @@ def user_test2(user_role):
             user = UserModel.query.filter_by(username="test2").first()
             new_profile = ProfileModel(
                 profilename="test2",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
+        return new_user
+
+
+@pytest.fixture(scope="function")
+def admin_test1(admin_role):
+    """ create UserObject admin1 & profile admin1
+
+    Returns:
+        UserObject: user "admin1"
+    """
+    if (user := UserModel.query.filter_by(username="admin1").first()):
+        if not (ProfileModel.query.filter_by(profilename="admin1").first()):
+            user = UserModel.query.filter_by(username="admin1").first()
+            new_profile = ProfileModel(
+                profilename="admin1",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
+        return user
+    else:
+        new_user = UserModel(
+            email="admin1@test.com",
+            username="admin1",
+            password="goodPassword!123",
+            role=[admin_role]
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="admin1").first()):
+            user = UserModel.query.filter_by(username="admin1").first()
+            new_profile = ProfileModel(
+                profilename="admin1",
                 user_id=user.user_id
             )
             db.session.add(new_profile)
