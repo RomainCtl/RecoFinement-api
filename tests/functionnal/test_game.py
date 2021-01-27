@@ -808,7 +808,7 @@ class TestGame:
 
         response = test_client.post(
             "/api/game", headers=headers, json=dict(
-                steamid=-1,
+                steamid=-2,
                 name="name",
                 genres=[genre_test1.genre_id],
             ))
