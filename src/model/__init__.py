@@ -9,7 +9,7 @@ from .revokedtoken_model import RevokedTokenModel
 from .serie_model import SerieModel, SerieAdditionalModel
 from .track_model import TrackModel, TrackAdditionalModel
 
-from .genre_model import GenreModel, LinkedGenreModel, ContentType
+from .genre_model import GenreModel, LinkedGenreModel
 from .external_model import ExternalModel
 
 from .user_model import UserModel, MetaUserContentModel, RecommendedContentModel, BadRecommendationContentModel

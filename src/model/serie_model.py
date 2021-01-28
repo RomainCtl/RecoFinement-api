@@ -3,8 +3,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from src import db
 
 SerieAdditionalGenresModel = db.Table("serie_additional_genres",
-                              db.Column("imdbid", db.String(255), db.ForeignKey(
-                                  "serie_additional.imdbid"), primary_key=True),
+                              db.Column("serie_id", db.Integer, db.ForeignKey(
+                                  "serie_additional.serie_id"), primary_key=True),
                               db.Column("genre_id", db.Integer, db.ForeignKey(
                                   "genre.genre_id"), primary_key=True)
                               )
@@ -47,7 +47,7 @@ class SerieAdditionalModel(db.Model):
     __tablename__ = "serie_additional"
 
     serie_id = db.Column(db.Integer, index=True, primary_key=True)
-    imdbid = db.Column(db.String(255), index=True)
+    imdbid = db.Column(db.String(255))  
     title = db.Column(db.String(255), index=True)
     start_year = db.Column(db.Integer)
     end_year = db.Column(db.Integer)
@@ -57,8 +57,7 @@ class SerieAdditionalModel(db.Model):
     cover = db.Column(db.Text)
     plot_outline = db.Column(db.Text)
 
-    episodes = db.relationship(
-        "EpisodeAdditionalModel", backref="serie",  lazy="dynamic")
+    episodes = db.relationship("EpisodeAdditionalModel", backref="serie",  lazy="dynamic")
 
     genres = db.relationship(
         "GenreModel", secondary=SerieAdditionalGenresModel, lazy="dynamic")

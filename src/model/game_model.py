@@ -3,8 +3,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from src import db
 
 GameAdditionalGenresModel = db.Table("game_additional_genres",
-                              db.Column("steamid", db.Integer, db.ForeignKey(
-                                  "game_additional.steamid"), primary_key=True),
+                              db.Column("game_id", db.Integer, db.ForeignKey(
+                                  "game_additional.game_id"), primary_key=True),
                               db.Column("genre_id", db.Integer, db.ForeignKey(
                                   "genre.genre_id"), primary_key=True)
                               )

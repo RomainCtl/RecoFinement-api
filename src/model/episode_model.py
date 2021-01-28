@@ -3,8 +3,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from src import db
 
 EpisodeAdditionalGenresModel = db.Table("episode_additional_genres",
-                              db.Column("imdbid", db.String(255), db.ForeignKey(
-                                  "episode_additional.imdbid"), primary_key=True),
+                              db.Column("episode_id", db.Integer, db.ForeignKey(
+                                  "episode_additional.episode_id"), primary_key=True),
                               db.Column("genre_id", db.Integer, db.ForeignKey(
                                   "genre.genre_id"), primary_key=True)
                               )
@@ -45,7 +45,7 @@ class EpisodeAdditionalModel(db.Model):
     year = db.Column(db.Integer)
     season_number = db.Column(db.Integer)
     episode_number = db.Column(db.Integer)
-    serie_id = db.Column(db.Integer, db.ForeignKey("serie_additional.imdbid"))
+    serie_id = db.Column(db.Integer, db.ForeignKey("serie_additional.serie_id"))
 
     genres = db.relationship(
         "GenreModel", secondary=EpisodeAdditionalGenresModel, lazy="dynamic")
