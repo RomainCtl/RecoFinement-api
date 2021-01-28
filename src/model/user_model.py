@@ -59,6 +59,7 @@ def receive_after_update(mapper, connection, target):
         # hist.deleted holds old value
         # hist.added holds new value
         connection.execute(ChangedEvent.__table__.insert().values(
+            occured_by=target.user_id,
             object_id=target.content_id,
             model_name=MetaUserContentModel.__tablename__,
             attribute_name=attr.key,

@@ -57,9 +57,9 @@ clean: ## Delete all generated files in project folder
 	rm -Rf **/__pycache__
 	$(PIPENV) --rm
 
-test: ## Run all unit tests
+test: ## Run all unit tests (usage: "make test [-- <args>]")
 	rm test.db .coverage || true
-	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html --cov=src --cov-report html:build/coverage --cov-report term:skip-covered tests/
+	$(PYTEST) -v --html=$(TEST_OUTPUT_FILE) --self-contained-html --cov=src --cov-report html:build/coverage --cov-report term:skip-covered tests/ $(filter-out $@,$(MAKECMDGOALS))
 	rm test.db .coverage
 
 db-update: ## Update database to the last migration

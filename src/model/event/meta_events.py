@@ -12,6 +12,7 @@ class MetaAddedEvent(Event, db.Model):
     @classmethod
     def insert(cls, target):
         return cls.__table__.insert().values(
+            occured_by=target.user_id,
             object_id=target.content_id,
             rating=target.rating,
             review_see_count=target.review_see_count,
