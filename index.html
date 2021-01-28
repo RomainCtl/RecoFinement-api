@@ -429,7 +429,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>Recofinement tests result</h1>
-    <p>Report generated on 28-Jan-2021 at 18:09:23 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <p>Report generated on 28-Jan-2021 at 19:40:56 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
@@ -452,8 +452,8 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <td>3.8.7</td></tr></table>
     <h2>Summary</h2>
     <p><b>Coverage details: </b><a href="./coverage/index.html">here</a></p>
-    <p>297 tests ran in 20.23 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">297 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <p>309 tests ran in 23.61 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">309 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
       <thead id="results-table-head">
@@ -467,7 +467,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_recommended</td>
-          <td class="col-duration">0.96</td></tr>
+          <td class="col-duration">1.14</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application recommended
@@ -547,7 +547,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_recommended_negative_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application get recommended application page -1
@@ -626,7 +626,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_search</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application search
@@ -646,7 +646,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_search_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application search get page 1
@@ -979,12 +979,34 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
             headers (dict): HTTP header, to get the access token
             user_test1 (User object): user test1
         </pre>
-            <div class="empty log">No log output captured.</div></td></tr></tbody>
+            <div class="log"> -------------------------------Captured log call-------------------------------- <br/>ERROR    flask_restx.api:api.py:543 Unable to render schema
+Traceback (most recent call last):
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/api.py&quot;, line 538, in __schema__
+    self._schema = Swagger(self).as_dict()
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 239, in as_dict
+    serialized = self.serialize_resource(
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 433, in serialize_resource
+    doc = self.extract_resource_doc(resource, url, route_doc=route_doc)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 338, in extract_resource_doc
+    method_params = self.expected_params(method_doc)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 392, in expected_params
+    &quot;schema&quot;: self.serialize_schema(expect),
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 632, in serialize_schema
+    self.register_model(model)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 661, in register_model
+    self.register_field(field)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 671, in register_field
+    self.register_field(field.container)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 669, in register_field
+    self.register_model(field.nested)
+  File &quot;/home/runner/.local/share/virtualenvs/RecoFinement-api-eoQAjkj3/lib/python3.8/site-packages/flask_restx/swagger.py&quot;, line 653, in register_model
+    raise ValueError(&quot;Model {0} not registered&quot;.format(name))
+ValueError: Model Episode additional base not registered<br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_user_meta_update_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application user meta update with bad content_id
@@ -1063,7 +1085,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_bad_recommendation</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application bad recommendation
@@ -1083,7 +1105,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_bad_recommendation_bad_application_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application bad recommendation with bad application ID
@@ -1143,7 +1165,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_application.py::TestApplication::test_application_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.09</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test application bad recommendation without JWT token
@@ -1162,8 +1184,42 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_application.py::TestApplication::test_application_add_content</td>
+          <td class="col-duration">0.11</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test application add additional content
+        Test:
+            POST: /api/application/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_application.py::TestApplication::test_application_add_minimal_content</td>
+          <td class="col-duration">0.16</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test application add additional content
+        Test:
+            POST: /api/application/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_register</td>
-          <td class="col-duration">0.90</td></tr>
+          <td class="col-duration">0.98</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user registration
@@ -1182,7 +1238,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_register_email_exist</td>
-          <td class="col-duration">0.02</td></tr>
+          <td class="col-duration">0.01</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user registration with already used email
@@ -1201,7 +1257,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_login_ok</td>
-          <td class="col-duration">0.37</td></tr>
+          <td class="col-duration">0.36</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user login
@@ -1220,7 +1276,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_login_wrong_passd</td>
-          <td class="col-duration">0.34</td></tr>
+          <td class="col-duration">0.35</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user login with wrong password
@@ -1258,7 +1314,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_logout</td>
-          <td class="col-duration">0.02</td></tr>
+          <td class="col-duration">0.03</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user logout 
@@ -1296,7 +1352,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_forget_passwd</td>
-          <td class="col-duration">0.37</td></tr>
+          <td class="col-duration">0.36</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user forgot password
@@ -1334,7 +1390,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_reset_passwd</td>
-          <td class="col-duration">0.74</td></tr>
+          <td class="col-duration">0.69</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user reset password
@@ -1353,7 +1409,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_auth.py::TestAuth::test_reset_passwd_bad_token</td>
-          <td class="col-duration">0.08</td></tr>
+          <td class="col-duration">0.14</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>test user reset password bad token
@@ -1372,7 +1428,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_recommended</td>
-          <td class="col-duration">0.62</td></tr>
+          <td class="col-duration">0.68</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book recommended
@@ -1432,7 +1488,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_recommended_zero_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book get recommended book page 0
@@ -1690,7 +1746,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_user_meta</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book user meta
@@ -1710,7 +1766,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_user_meta_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book user meta with bad content_id
@@ -1810,7 +1866,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_user_meta_update_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book user meta update with bad content_id
@@ -1889,7 +1945,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_bad_recommendation</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book bad recommendation
@@ -1969,7 +2025,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_book.py::TestBook::test_book_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.07</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test book bad recommendation without JWT token
@@ -1988,8 +2044,48 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_book.py::TestBook::test_book_add_content</td>
+          <td class="col-duration">0.04</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test book add additional content
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            201, {&quot;status&quot;: True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_book.py::TestBook::test_book_add_minimal_content</td>
+          <td class="col-duration">0.17</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test book add additional minimal content
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            201, {&quot;status&quot;: True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_recommended</td>
-          <td class="col-duration">0.58</td></tr>
+          <td class="col-duration">0.70</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game recommended
@@ -2009,7 +2105,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_recommended_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game get recommended game page 1
@@ -2029,7 +2125,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_recommended_big_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game get recommended game page 9999999
@@ -2049,7 +2145,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_recommended_zero_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game get recommended game page 0
@@ -2069,7 +2165,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_recommended_negative_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game get recommended game page -1
@@ -2148,7 +2244,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_search</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game search
@@ -2168,7 +2264,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_search_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game search get page 1
@@ -2392,7 +2488,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
             <pre>Test game user meta
 
         Test:
-            GET: /api/book/&lt;content_id&gt;/meta
+            GET: /api/game/&lt;content_id&gt;/meta
 
         Expected result: 
             200, {&quot;status&quot;: True}
@@ -2406,7 +2502,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_user_meta_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game user meta with bad content_id
@@ -2506,7 +2602,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_user_meta_update_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game user meta update with bad content_id
@@ -2585,7 +2681,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_bad_recommendation</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game bad recommendation
@@ -2605,7 +2701,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_bad_recommendation_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game bad recommendation with bad game ID
@@ -2665,7 +2761,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_game.py::TestGame::test_game_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.07</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test game bad recommendation without JWT token
@@ -2684,8 +2780,42 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_game.py::TestGame::test_game_add_content</td>
+          <td class="col-duration">0.05</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test game add additional content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_game.py::TestGame::test_game_add_minimal_content</td>
+          <td class="col-duration">0.19</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test game add additional minimal content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_create_bad_jwt</td>
-          <td class="col-duration">0.20</td></tr>
+          <td class="col-duration">0.33</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group creation with bad JWT token 
@@ -2825,7 +2955,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_get_id</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group by id
@@ -2846,7 +2976,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_invitation_bad_group_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group invitation with bad group id
@@ -2868,7 +2998,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_invitation_bad_owner_group_id</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group invitation send from no group owner
@@ -2932,7 +3062,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_invitation</td>
-          <td class="col-duration">0.11</td></tr>
+          <td class="col-duration">0.12</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group invitation 
@@ -2998,7 +3128,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_invitation_owner_invite_itself</td>
-          <td class="col-duration">0.06</td></tr>
+          <td class="col-duration">0.08</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group invitation owner invite itself
@@ -3085,7 +3215,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_accept_invitation_fake_jwt</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group accept invitation with fake JWT token
@@ -3150,7 +3280,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_accept_invitation_no_invitation</td>
-          <td class="col-duration">0.08</td></tr>
+          <td class="col-duration">0.09</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group accept nonexistent invitation
@@ -3172,7 +3302,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_accept_invitation</td>
-          <td class="col-duration">0.12</td></tr>
+          <td class="col-duration">0.15</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group accept invitation
@@ -3194,7 +3324,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation_bad_group</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.03</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete invitation with bad group id
@@ -3238,7 +3368,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation_fake_jwt</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete invitation with fake JWT token
@@ -3260,7 +3390,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation_no_jwt</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.10</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete invitation with fake JWT token
@@ -3281,7 +3411,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation_other_user</td>
-          <td class="col-duration">0.06</td></tr>
+          <td class="col-duration">0.07</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete invitation beloging to another user
@@ -3303,7 +3433,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation_no_invitation</td>
-          <td class="col-duration">0.09</td></tr>
+          <td class="col-duration">0.11</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete nonexistent invitation
@@ -3325,7 +3455,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_invitation</td>
-          <td class="col-duration">0.09</td></tr>
+          <td class="col-duration">0.12</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete invitation
@@ -3367,7 +3497,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_fake_jwt</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete group with fake JWT token
@@ -3388,7 +3518,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete_bad_jwt</td>
-          <td class="col-duration">0.01</td></tr>
+          <td class="col-duration">0.02</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete group with bad JWT token
@@ -3429,7 +3559,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_leave</td>
-          <td class="col-duration">0.10</td></tr>
+          <td class="col-duration">0.12</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group leave group
@@ -3451,7 +3581,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_group.py::TestGroup::test_group_delete</td>
-          <td class="col-duration">0.16</td></tr>
+          <td class="col-duration">0.23</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test group delete group
@@ -3472,7 +3602,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_recommended</td>
-          <td class="col-duration">0.58</td></tr>
+          <td class="col-duration">0.72</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie recommended
@@ -3512,7 +3642,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_recommended_big_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie get recommended movie page 9999999
@@ -3532,7 +3662,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_recommended_zero_page</td>
-          <td class="col-duration">0.09</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie get recommended movie page 0
@@ -3552,7 +3682,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_recommended_negative_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie get recommended movie page -1
@@ -3631,7 +3761,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_search</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie search
@@ -3651,7 +3781,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_search_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie search get page 1
@@ -3671,7 +3801,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_search_zero_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie search get page 0
@@ -3691,7 +3821,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_search_big_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie search get page 9999999
@@ -3989,7 +4119,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_user_meta_update_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie user meta update with bad content_id
@@ -4088,7 +4218,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_bad_recommendation_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie bad recommendation with bad movie ID
@@ -4148,7 +4278,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.07</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test movie bad recommendation without JWT token
@@ -4167,8 +4297,42 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_add_content</td>
+          <td class="col-duration">0.05</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test movie add additional content
+        Test:
+            POST: /api/movie/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_movie.py::TestMovie::test_movie_add_minimal_content</td>
+          <td class="col-duration">0.15</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test movie add additional minimal content
+        Test:
+            POST: /api/movie/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_recommended</td>
-          <td class="col-duration">0.58</td></tr>
+          <td class="col-duration">0.70</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie recommended
@@ -4188,7 +4352,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_recommended_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie get recommended serie page 1
@@ -4228,7 +4392,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_recommended_zero_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie get recommended serie page 0
@@ -4248,7 +4412,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_recommended_negative_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie get recommended serie page -1
@@ -4347,7 +4511,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_search_one_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie search get page 1
@@ -4367,7 +4531,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_search_zero_page</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie search get page 0
@@ -4486,7 +4650,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_genre</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie genre
@@ -4585,7 +4749,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_user_meta_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie user meta with bad content_id
@@ -4664,7 +4828,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_user_meta_update</td>
-          <td class="col-duration">0.04</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie user meta update
@@ -4764,7 +4928,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_bad_recommendation</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie bad recommendation
@@ -4784,7 +4948,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_bad_recommendation_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie bad recommendation with bad serie ID
@@ -4844,7 +5008,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.07</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test serie bad recommendation without JWT token
@@ -4863,8 +5027,42 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_add_content</td>
+          <td class="col-duration">0.05</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test serie add additional content
+        Test:
+            POST: /api/serie/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_serie.py::TestSerie::test_serie_add_minimal_content</td>
+          <td class="col-duration">0.16</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test serie add additional minimal content
+        Test:
+            POST: /api/serie/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_recommended</td>
-          <td class="col-duration">0.58</td></tr>
+          <td class="col-duration">0.72</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track recommended
@@ -4904,7 +5102,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_recommended_big_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track get recommended track page 9999999
@@ -4924,7 +5122,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_recommended_zero_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.05</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track get recommended track page 0
@@ -4944,7 +5142,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_recommended_negative_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track get recommended track page -1
@@ -5063,7 +5261,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_search_zero_page</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track search get page 0
@@ -5281,7 +5479,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_user_meta_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track user meta with bad content_id
@@ -5360,7 +5558,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_user_meta_update</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track user meta update
@@ -5381,7 +5579,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_user_meta_update_bad_content_id</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track user meta update with bad content_id
@@ -5460,7 +5658,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_bad_recommendation</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track bad recommendation
@@ -5540,7 +5738,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_track.py::TestTrack::test_track_bad_recommendation_no_jwt</td>
-          <td class="col-duration">0.07</td></tr>
+          <td class="col-duration">0.00</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test track bad recommendation without JWT token
@@ -5559,8 +5757,42 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_track.py::TestTrack::test_track_add_content</td>
+          <td class="col-duration">0.05</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test track add additional content
+        Test:
+            POST: /api/track/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">functionnal/test_track.py::TestTrack::test_track_add_minimal_content</td>
+          <td class="col-duration">0.17</td></tr>
+        <tr>
+          <td class="extra" colspan="3">
+            <pre>Test track add additional minimal content
+        Test:
+            POST: /api/track/
+        Expected result: 
+            201, {&quot;status&quot;: True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        </pre>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_resource</td>
-          <td class="col-duration">0.59</td></tr>
+          <td class="col-duration">0.71</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre> Test user get resource
@@ -5580,7 +5812,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_resource_bad_jwt</td>
-          <td class="col-duration">0.01</td></tr>
+          <td class="col-duration">0.02</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test user get resource with bad access token
@@ -5679,7 +5911,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_delete_user_fake_jwt</td>
-          <td class="col-duration">0.02</td></tr>
+          <td class="col-duration">0.03</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test delete user resource with fake access token
@@ -5718,7 +5950,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_delete_user_bad_uuid</td>
-          <td class="col-duration">0.38</td></tr>
+          <td class="col-duration">0.37</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test delete user resource with bad uuid
@@ -5738,7 +5970,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_delete_user_other_user</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.14</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test delete other user resource with access token
@@ -5758,7 +5990,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_delete_user</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre> Test user delete resource
@@ -5778,7 +6010,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_update_user</td>
-          <td class="col-duration">0.48</td></tr>
+          <td class="col-duration">0.39</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre> Test user update resource
@@ -5798,7 +6030,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_update_user_bad_jwt</td>
-          <td class="col-duration">0.01</td></tr>
+          <td class="col-duration">0.02</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test user update with bad access token
@@ -5857,7 +6089,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_update_user_bad_uuid</td>
-          <td class="col-duration">0.05</td></tr>
+          <td class="col-duration">0.06</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test update user resource with bad uuid
@@ -5995,7 +6227,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_search</td>
-          <td class="col-duration">0.06</td></tr>
+          <td class="col-duration">0.07</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test user search with access token
@@ -6015,7 +6247,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_search_bad_jwt</td>
-          <td class="col-duration">0.01</td></tr>
+          <td class="col-duration">0.02</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test user search with bad access token
@@ -6055,7 +6287,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_genre</td>
-          <td class="col-duration">0.03</td></tr>
+          <td class="col-duration">0.04</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test get user genres with access token
@@ -6392,7 +6624,7 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
         <tr>
           <td class="col-result">Passed</td>
           <td class="col-name">functionnal/test_user.py::TestUser::test_user_export_data_no_jwt</td>
-          <td class="col-duration">0.06</td></tr>
+          <td class="col-duration">0.16</td></tr>
         <tr>
           <td class="extra" colspan="3">
             <pre>Test  user export resource without access token
