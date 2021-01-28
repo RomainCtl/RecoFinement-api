@@ -17,6 +17,8 @@ class TrackBase(SQLAlchemyAutoSchema):
     popularity_score = fields.Function(
         lambda obj: obj.content.popularity_score)
 
+    track_id = ma.Function(lambda obj: obj.track_id)
+
     class Meta(TrackMeta):
         pass
 

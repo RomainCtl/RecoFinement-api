@@ -41,3 +41,20 @@ class GroupModel(db.Model):
 
     recommended_contents = db.relationship(
         "RecommendedContentForGroupModel", lazy="subquery")
+
+#class GroupProfileModel(db.Model):
+    """
+    Group Model for storing group related details
+    """
+    """ __tablename__ = "group_profile"
+
+    group_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(45), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey(
+        "profile.profile_id", ondelete="CASCADE"))
+
+    invitations = db.relationship("ProfileModel", secondary=InvitationModel,
+                                  lazy="dynamic", backref=db.backref("invitations", lazy="dynamic"))
+
+    recommended_contents = db.relationship(
+        "RecommendedContentForGroupModel", lazy="subquery") """

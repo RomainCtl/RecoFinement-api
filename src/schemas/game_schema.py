@@ -17,6 +17,8 @@ class GameBase(SQLAlchemyAutoSchema):
     popularity_score = fields.Function(
         lambda obj: obj.content.popularity_score)
 
+    game_id = ma.Function(lambda obj: obj.game_id)
+
     class Meta(GameMeta):
         pass
 

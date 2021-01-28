@@ -9,6 +9,12 @@ UserBaseObj = Model("User Base", {
     "preferences_defined": fields.Boolean,
 })
 
+ProfileBaseObj = Model("Profile Base", {
+    "uuid": fields.String,
+    "username": fields.String,
+    "user_id": fields.Integer,
+})
+
 ExternalBaseObj = Model("External service Base", {
     "service_id":  fields.Integer,
     "service_name": fields.String,
@@ -17,7 +23,7 @@ ExternalBaseObj = Model("External service Base", {
 GroupBaseObj = Model("Group base", {
     "group_id": fields.Integer,
     "name": fields.String,
-    "owner": fields.Nested(UserBaseObj)
+    "owner": fields.Nested(UserBaseObj),
 })
 
 GenreBaseObj = Model("Genre base", {
@@ -136,12 +142,25 @@ MetaUserContentBaseObj = Model("MetaUserContent base", {
     "last_count_increment": fields.DateTime,
 })
 
+MetaProfileContentBaseObj = Model("MetaProfileContent base", {
+    "rating": fields.Integer,
+    "last_rating_date": fields.DateTime,
+    "review_see_count": fields.Integer,
+    "last_review_see_date": fields.DateTime,
+    "count": fields.Integer,
+    "last_count_increment": fields.DateTime,
+})
+
 # Item object
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
     "groups": fields.List(fields.Nested(GroupBaseObj)),
     "invitations": fields.List(fields.Nested(GroupBaseObj)),
     "owned_groups": fields.List(fields.Nested(GroupBaseObj)),
+    "liked_genres": fields.List(fields.Nested(GenreBaseObj))
+})
+
+ProfileItemObj = Model.clone("Profile Item", ProfileBaseObj, {
     "liked_genres": fields.List(fields.Nested(GenreBaseObj))
 })
 

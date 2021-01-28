@@ -2,6 +2,7 @@ from .auth_schema import LoginSchema, RegisterSchema, ResetSchema, ForgetSchema
 
 from .group_schema import GroupBase, GroupObject, GroupCreateSchema, GroupAddMemberSchema
 from .user_schema import UserBase, UserObject, UserFullObject, UpdateUserDataSchema
+from .profile_schema import ProfileBase, ProfileObject, ProfileFullObject, UpdateProfileDataSchema
 from .external_schema import ExternalBase
 
 from .application_schema import ApplicationBase, ApplicationExtra, ApplicationAdditionalBase

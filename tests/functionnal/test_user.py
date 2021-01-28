@@ -139,7 +139,7 @@ class TestUser:
             DELETE: /api/user/<uuid>
 
         Expected result:
-            404, {"status" : False}
+            403, {"status" : False}
 
         Args:
             test_client (app context): Flask application

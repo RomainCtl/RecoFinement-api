@@ -5,7 +5,7 @@ import uuid
 
 import settings.testing
 from src import create_app, db
-from src.model import UserModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
+from src.model import UserModel, ProfileModel, GroupModel, GenreModel, ContentType, RoleModel, PermissionModel
 
 
 def pytest_html_report_title(report):
@@ -84,15 +84,67 @@ def user_role():
         db.session.commit()
         return role
 
+@pytest.fixture(scope="function")
+def admin_role():
+    if (role := RoleModel.query.filter_by(role_id=2).first()):
+        return role
+    else:
+        indicate_interest = PermissionModel(
+            permission="indicate_interest"
+        )
+        modify_user_profil = PermissionModel(
+            permission="modify_user_profil"
+        )
+        view_recommendation = PermissionModel(
+            permission="view_recommendation"
+        )
+        play_music = PermissionModel(
+            permission="play_music"
+        )
+        add_content = PermissionModel(
+            permission="add_content"
+        )
+        access_sandbox = PermissionModel(
+            permission="access_sandbox"
+        )
+        modify_content = PermissionModel(
+            permission="modify_content"
+        )
+        validate_added_content = PermissionModel(
+            permission="validate_added_content"
+        )
+        delete_content = PermissionModel(
+            permission="delete_content"
+        )
+        role = RoleModel(
+            role_id=2,
+            name="admin",
+            permission=[indicate_interest, modify_user_profil,
+                        view_recommendation, play_music, add_content,
+                        access_sandbox, modify_content, delete_content, 
+                        validate_added_content]
+        )
+        db.session.add(role)
+        db.session.commit()
+        return role
+
 
 @pytest.fixture(scope="function")
 def user_test1(user_role):
-    """ create UserObject test1
+    """ create UserObject test1 & profile test1
 
     Returns:
         UserObject: user "test1"
     """
     if (user := UserModel.query.filter_by(username="test").first()):
+        if not (ProfileModel.query.filter_by(profilename="test").first()):
+            user = UserModel.query.filter_by(username="test").first()
+            new_profile = ProfileModel(
+                profilename="test",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return user
     else:
         new_user = UserModel(
@@ -103,17 +155,33 @@ def user_test1(user_role):
         )
         db.session.add(new_user)
         db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="test").first()):
+            user = UserModel.query.filter_by(username="test").first()
+            new_profile = ProfileModel(
+                profilename="test",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return new_user
 
 
 @pytest.fixture(scope="function")
 def user_test2(user_role):
-    """ create UserObject test1
+    """ create UserObject test2 & profile test2
 
     Returns:
-        UserObject: user "test1"
+        UserObject: user "test2"
     """
     if (user := UserModel.query.filter_by(username="test2").first()):
+        if not (ProfileModel.query.filter_by(profilename="test2").first()):
+            user = UserModel.query.filter_by(username="test2").first()
+            new_profile = ProfileModel(
+                profilename="test2",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return user
     else:
         new_user = UserModel(
@@ -124,8 +192,52 @@ def user_test2(user_role):
         )
         db.session.add(new_user)
         db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="test2").first()):
+            user = UserModel.query.filter_by(username="test2").first()
+            new_profile = ProfileModel(
+                profilename="test2",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
         return new_user
 
+
+@pytest.fixture(scope="function")
+def admin_test1(admin_role):
+    """ create UserObject admin1 & profile admin1
+
+    Returns:
+        UserObject: user "admin1"
+    """
+    if (user := UserModel.query.filter_by(username="admin1").first()):
+        if not (ProfileModel.query.filter_by(profilename="admin1").first()):
+            user = UserModel.query.filter_by(username="admin1").first()
+            new_profile = ProfileModel(
+                profilename="admin1",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
+        return user
+    else:
+        new_user = UserModel(
+            email="admin1@test.com",
+            username="admin1",
+            password="goodPassword!123",
+            role=[admin_role]
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        if not (ProfileModel.query.filter_by(profilename="admin1").first()):
+            user = UserModel.query.filter_by(username="admin1").first()
+            new_profile = ProfileModel(
+                profilename="admin1",
+                user_id=user.user_id
+            )
+            db.session.add(new_profile)
+            db.session.commit()
+        return new_user
 
 @pytest.fixture(scope="function")
 def group_test(user_test2):
@@ -169,7 +281,6 @@ def headers(user_test1):
     return {
         "Authorization": "Bearer %s" % access_token
     }
-
 
 @pytest.fixture(scope="function")
 def headers_bad():

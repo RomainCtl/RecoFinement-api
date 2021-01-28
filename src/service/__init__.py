@@ -1,6 +1,7 @@
 from .auth_service import AuthService
 from .group_service import GroupService
 from .user_service import UserService
+from .profile_service import ProfileService
 from .external_service import ExternalService
 
 from .content_service import ContentService
