@@ -87,7 +87,7 @@ class ProfileSearchResource(Resource):
         return ProfileService.search_profile_data(search_term, page, profile_uuid)
 
 
-@api.route("/genre")
+@api.route("/genre/<uuid:profile_uuid>")
 class ProfileGenresResource(Resource):
     @api.doc(
         "Get liked genres (connected profile)",
@@ -98,14 +98,14 @@ class ProfileGenresResource(Resource):
         }
     )
     @jwt_required
-    def get(self):
+    def get(self,profile_uuid):
         """ Get liked genres (connected profile) """
-        profile_uuid = get_jwt_identity()
+        uuid = get_jwt_identity()
 
-        return ProfileService.get_genres(profile_uuid)
+        return ProfileService.get_genres(uuid, profile_uuid)
 
 
-@api.route("/genre/<int:genre_id>")
+@api.route("/genre/<uuid:profile_uuid>/<int:genre_id>")
 class ProfileGenreResource(Resource):
     @api.doc(
         "Like a genre (connected profile)",
@@ -116,11 +116,11 @@ class ProfileGenreResource(Resource):
         }
     )
     @jwt_required
-    def put(self, genre_id):
+    def put(self, genre_id, profile_uuid):
         """ Like a genre (connected profile) """
-        profile_uuid = get_jwt_identity()
+        user_uuid = get_jwt_identity()
 
-        return ProfileService.like_genre(genre_id, profile_uuid)
+        return ProfileService.like_genre(genre_id,user_uuid, profile_uuid)
 
     @api.doc(
         "Unlike a genre (connected profile)",
@@ -131,8 +131,8 @@ class ProfileGenreResource(Resource):
         }
     )
     @jwt_required
-    def delete(self, genre_id):
+    def delete(self, genre_id,profile_uuid):
         """ Unlike a genre (connected profile) """
-        profile_uuid = get_jwt_identity()
+        user_uuid = get_jwt_identity()
 
-        return ProfileService.unlike_genre(genre_id, profile_uuid)
+        return ProfileService.unlike_genre(genre_id,user_uuid, profile_uuid)

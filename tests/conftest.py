@@ -202,21 +202,6 @@ def headers(user_test1):
     }
 
 @pytest.fixture(scope="function")
-def headers_profile(profile_test1):
-    """Create header with access token from profile test 1
-
-    Args:
-        profile_test1 (UserObject): profile "test1"
-
-    Returns:
-        Dict: Headers with the token access
-    """
-    access_token = create_access_token(identity=profile_test1)
-    return {
-        "Authorization": "Bearer %s" % access_token
-    }
-
-@pytest.fixture(scope="function")
 def headers_bad():
     """Create header with bad access token. It is a uuid
 

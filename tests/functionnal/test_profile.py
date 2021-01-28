@@ -150,7 +150,8 @@ class TestProfile:
             "/api/profile/"+str(profile.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
-        assert response.status_code == 403
+        #assert res['message'] == "test"
+        assert response.status_code == 404
         assert res['status'] == False
 
     def test_delete_profile_no_jwt(self, test_client):
@@ -185,11 +186,13 @@ class TestProfile:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test2").first()
         response = test_client.delete(
-            "/api/profile/"+str(user_test2.uuid), headers=headers)
+            "/api/profile/"+str(profile.uuid), headers=headers)
         res = json.loads(response.data)
 
-        assert response.status_code == 403
+        #assert res['message'] == "test"
+        assert response.status_code == 404
         assert res['status'] == False
 
     def test_delete_profile_other_profile(self, test_client, headers, user_test2):
@@ -205,11 +208,13 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test2").first()
         response = test_client.delete(
-            "/api/profile/"+str(user_test2.uuid), headers=headers)
+            "/api/profile/"+str(profile.uuid), headers=headers)
         res = json.loads(response.data)
 
-        assert response.status_code == 403
+        #assert res['message'] == "test"
+        assert response.status_code == 404
         assert res['status'] == False
 
     def test_delete_profile(self, test_client, headers):
@@ -302,7 +307,8 @@ class TestProfile:
         res = json.loads(response.data)
         profile = ProfileModel.query.filter_by(profilename="profile").first()
 
-        assert response.status_code == 403
+        #assert res['message'] == "test"
+        assert response.status_code == 404
         assert res['status'] == False
         assert profile.profilename == "profile"
 
@@ -342,12 +348,14 @@ class TestProfile:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        response = test_client.patch("/api/profile/"+str(user_test2.uuid), headers=headers, json=dict(
-            profile="test"
+        profile = ProfileModel.query.filter_by(profilename="test2").first()
+        response = test_client.patch("/api/profile/"+str(profile.uuid), headers=headers, json=dict(
+            profilename="test"
         ))
         res = json.loads(response.data)
 
-        assert response.status_code == 403
+        #assert res['message'] == "test"
+        assert response.status_code == 404
         assert res['status'] == False
 
     def test_update_profile_bad_field(self, test_client, headers):
@@ -365,7 +373,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.patch("/api/profile/"+str(profile.uuid), headers=headers, json=dict(
-            avatar="test"
+            profil="test"
         ))
         res = json.loads(response.data)
         profile = ProfileModel.query.filter_by(profilename="test").first()
@@ -491,9 +499,11 @@ class TestProfile:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-        response = test_client.get("/api/profile/genre", headers=headers)
+        profile = ProfileModel.query.filter_by(profilename="test").first()
+        response = test_client.get("/api/profile/genre/"+str(profile.uuid), headers=headers)
         res = json.loads(response.data)
 
+        #assert res['message'] == "test"
         assert response.status_code == 200
         assert res['status'] == True
 
@@ -510,8 +520,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
-        response = test_client.get("/api/profile/genre", headers=headers_bad)
-        res = json.loads(response.data)
+        profile = ProfileModel.query.filter_by(profilename="test").first()
+        response = test_client.get("/api/profile/genre/"+str(profile.uuid), headers=headers_bad)
+        #res = json.loads(response.data)
 
         assert response.status_code == 422
 
@@ -528,7 +539,8 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
-        response = test_client.get("/api/profile/genre", headers=headers_fake)
+        profile = ProfileModel.query.filter_by(profilename="test").first()
+        response = test_client.get("/api/profile/genre/"+str(profile.uuid), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -546,7 +558,8 @@ class TestProfile:
         Args:
             test_client (app context): Flask application
         """
-        response = test_client.get("/api/profile/genre")
+        profile = ProfileModel.query.filter_by(profilename="test").first()
+        response = test_client.get("/api/profile/genre/"+str(profile.uuid))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -567,11 +580,12 @@ class TestProfile:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
-
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
+        #assert res['message'] == "test"
         assert response.status_code == 201
         assert res['status'] == True
 
@@ -588,8 +602,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers_fake)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -608,8 +623,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers_bad)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -626,8 +642,9 @@ class TestProfile:
         Args:
             test_client (app context): Flask application
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(genre_test1.genre_id))
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -646,8 +663,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(9999999), headers=headers)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(9999999), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -668,10 +686,12 @@ class TestProfile:
             test_client (app context): Flask application
             headers (dict): HTTP headers, to get the access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers)
         res = json.loads(response.data)
 
+        #assert res['message'] == "test"
         assert response.status_code == 201
         assert res['status'] == True
 
@@ -688,8 +708,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the fake access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers_fake)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -708,9 +729,10 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the bad access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(genre_test1.genre_id), headers=headers_bad)
-        res = json.loads(response.data)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_bad)
+        #res = json.loads(response.data)
 
         assert response.status_code == 422
 
@@ -726,9 +748,10 @@ class TestProfile:
         Args:
             test_client (app context): Flask application
         """
-        genre = GenreModel.query.filter_by(name="genre test").first()
+        profile = ProfileModel.query.filter_by(profilename="test").first()
+        #genre = GenreModel.query.filter_by(name="genre test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(genre_test1.genre_id))
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -747,8 +770,9 @@ class TestProfile:
             test_client (app context): Flask application
             headers_bad (dict): HTTP headers, to get the access token
         """
+        profile = ProfileModel.query.filter_by(profilename="test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(9999999), headers=headers)
+            "/api/profile/genre/"+str(profile.uuid)+"/"+str(9999999), headers=headers)
         res = json.loads(response.data)
 
         assert response.status_code == 404

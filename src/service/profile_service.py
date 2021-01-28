@@ -64,9 +64,11 @@ class ProfileService:
             return internal_err_resp()
 
     @staticmethod
-    def get_genres(profile_uuid):
+    def get_genres(connected_uuid, uuid_profile):
         """ Get profile liked genre list """
-        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid).first()):
+        if not (user:=UserModel.query.filter_by(uuid=connected_uuid).first()):
+            return err_resp("User not found!", 404)
+        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id, uuid=uuid_profile).first()):
             return err_resp("Profile not found!", 404)
 
         try:
@@ -80,9 +82,11 @@ class ProfileService:
             return internal_err_resp()
 
     @staticmethod
-    def like_genre(genre_id, profile_uuid):
+    def like_genre(genre_id, user_uuid,profile_uuid):
         """" Like a genre """
-        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid).first()):
+        if not (user:=UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id,uuid=profile_uuid).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
@@ -106,9 +110,11 @@ class ProfileService:
             return internal_err_resp()
 
     @staticmethod
-    def unlike_genre(genre_id, profile_uuid):
+    def unlike_genre(genre_id, user_uuid, profile_uuid):
         """" Unlike a genre """
-        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid).first()):
+        if not (user:=UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id,uuid=profile_uuid).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
