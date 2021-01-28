@@ -249,9 +249,14 @@ class SerieService:
                 else:
                     return err_resp("Genre %s not found!" % genre_id, 404)
 
+            db.session.add(new_additional_serie)
+            db.session.flush()
+
             for episode in data["episodes"]:
+
                 new_additional_episode = EpisodeAdditionalModel(
                     title=data['title'],
+                    serie_id=new_additional_serie.serie_id
                 )
 
                 if 'imdbid' in data:
@@ -268,9 +273,6 @@ class SerieService:
                         new_additional_episode.genres.append(ge)
                     else:
                         return err_resp("Genre %s not found!" % genre_id, 404)
-
-                db.session.add(new_additional_episode)
-                db.session.flush()
 
                 new_additional_serie.episodes.append(new_additional_episode)
 
