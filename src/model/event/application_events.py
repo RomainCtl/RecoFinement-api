@@ -16,62 +16,23 @@ class ApplicationAddedEvent(Event, db.Model):
     android_version = db.Column(db.String(255))
     cover = db.Column(db.Text)
 
+    @classmethod
+    def insert(cls, target):
+        return cls.__table__.insert().values(
+            object_id=target.content_id,
+            name=target.name,
+            size=target.size,
+            installs=target.installs,
+            type=target.type,
+            price=target.price,
+            content_rating=target.content_rating,
+            last_updated=target.last_updated,
+            current_version=target.current_version,
+            android_version=target.android_version,
+            cover=target.cover,
+        )
+
 
 class ApplicationDeletedEvent(DeletionEvent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, model_name="application", **kwargs)
-
-
-class ApplicationChangedNameEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application", attribute_name="name", **kwargs)
-
-
-class ApplicationChangedSizeEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application", attribute_name="size", **kwargs)
-
-
-class ApplicationChangedInstallsEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application",
-                         attribute_name="installs", **kwargs)
-
-
-class ApplicationChangedTypeEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application", attribute_name="type", **kwargs)
-
-
-class ApplicationChangedPriceEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application", attribute_name="price", **kwargs)
-
-
-class ApplicationChangedContentRatingEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application",
-                         attribute_name="content_rating", **kwargs)
-
-
-class ApplicationChangedLastUpdatedEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application",
-                         attribute_name="last_updated", **kwargs)
-
-
-class ApplicationChangedCurrentVersionEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application",
-                         attribute_name="current_version", **kwargs)
-
-
-class ApplicationChangedAndroidVersionEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application",
-                         attribute_name="android_version", **kwargs)
-
-
-class ApplicationChangedCoverEvent(ChangedEvent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, model_name="application", attribute_name="cover", **kwargs)

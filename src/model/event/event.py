@@ -8,7 +8,7 @@ class Event(object):
     occured_at = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow)
     # occured_by = user_id (but not a FK)
-    occured_by = db.Column(db.Integer, nullable=False)
+    occured_by = db.Column(db.Integer, default=None)
     object_id = db.Column(db.Integer, nullable=False)
 
 
@@ -24,3 +24,9 @@ class DeletionEvent(Event, db.Model):
     __tablename__ = "deletion_event"
 
     model_name = db.Column(db.String, nullable=False)
+
+    def delete(self):
+        return self.__table__.insert().values(
+            object_id=self.content_id,
+            model_name=self.model_name,
+        )
