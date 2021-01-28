@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import ApplicationModel, UserModel, GenreModel, ContentType, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import ApplicationModel, UserModel, GenreModel, ContentType, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, ApplicationAdditionalModel
 from src.schemas import ApplicationBase, GenreBase, MetaUserContentBase, ApplicationExtra
 
 
@@ -194,6 +194,58 @@ class ApplicationService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_application(user_uuid, data):
+        """ Add additional application"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_application = ApplicationAdditionalModel(
+                name=data['name'],
+            )
+
+            if 'size' in data:
+                new_additional_application.size = data['size']
+            if 'installs' in data:
+                new_additional_application.installs = data['installs']
+            if 'type' in data:
+                new_additional_application.type = data['type']
+            if 'price' in data:
+                new_additional_application.price = data['price']
+            if 'content_rating' in data:
+                new_additional_application.content_rating = data['content_rating']
+            if 'last_updated' in data:
+                new_additional_application.last_updated = data['last_updated']
+            if 'current_version' in data:
+                new_additional_application.current_version = data['current_version']
+            if 'android_version' in data:
+                new_additional_application.android_version = data['android_version']
+            if 'cover' in data:
+                new_additional_application.cover = data['cover']
+
+            for genre_id in data["genres"]:
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_application.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
+
+            db.session.add(new_additional_application)
+            db.session.commit()
+
+            resp = message(True, "Application have been added to validation.")
             return resp, 201
 
         except Exception as error:

@@ -31,6 +31,26 @@ class ApplicationResource(Resource):
             page = 1
         return ApplicationService.get_popular_applications(page, user_uuid)
 
+    application_additional = ApplicationDto.application_additional_base
+
+    @api.doc(
+        "Add additional Application for validation",
+        responses={
+            200: ("Additional application added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(application_additional, validate=True)
+    def post(self):
+        """ Add additional Application for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return ApplicationService.add_additional_application(user_uuid, data)
+
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class ApplicationUserRecommendationResource(Resource):
@@ -151,6 +171,7 @@ class ApplicationMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class ApplicationBadRecommendation(Resource):
     bad_recommendation = ApplicationDto.application_bad_recommendation
+
     @api.doc(
         "Add application-user (connected user) bad recommendation",
         responses={

@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import GameBaseObj, paginationObj, messageObj
+from .base import GameBaseObj, paginationObj, messageObj, GameAdditionalBaseObj
 
 
 class GameDto:
@@ -9,6 +9,9 @@ class GameDto:
     # Objects
     api.models[GameBaseObj.name] = GameBaseObj
     game_base = GameBaseObj
+
+    api.models[GameAdditionalBaseObj.name] = GameAdditionalBaseObj
+    game_additional_base = GameAdditionalBaseObj
 
     # Responses
     data_resp = api.clone(

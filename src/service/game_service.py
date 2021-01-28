@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import GameModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import GameModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, GameAdditionalModel
 from src.schemas import GameBase, GameObject, GenreBase, GameExtra, MetaUserContentBase
 
 
@@ -185,6 +185,55 @@ class GameService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_game(user_uuid, data):
+        """ Add additional game"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_game = GameAdditionalModel(
+                name=data['name'],
+                steamid=data['steamid'],
+            )
+
+            if 'short_description' in data:
+                new_additional_game.short_description = data['short_description']
+            if 'header_image' in data:
+                new_additional_game.header_image = data['header_image']
+            if 'website' in data:
+                new_additional_game.website = data['website']
+            if 'developers' in data:
+                new_additional_game.developers = data['developers']
+            if 'publishers' in data:
+                new_additional_game.publishers = data['publishers']
+            if 'price' in data:
+                new_additional_game.price = data['price']
+            if 'release_date' in data:
+                new_additional_game.release_date = data['release_date']
+
+            for genre_id in data["genres"]:
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_game.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
+
+            db.session.add(new_additional_game)
+            db.session.commit()
+
+            resp = message(True, "Game have been added to validation.")
             return resp, 201
 
         except Exception as error:

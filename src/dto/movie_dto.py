@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import MovieBaseObj, paginationObj, messageObj
+from .base import MovieBaseObj, paginationObj, messageObj, MovieAdditionalBaseObj
 
 
 class MovieDto:
@@ -9,6 +9,9 @@ class MovieDto:
     # Objects
     api.models[MovieBaseObj.name] = MovieBaseObj
     movie_base = MovieBaseObj
+
+    api.models[MovieAdditionalBaseObj.name] = MovieAdditionalBaseObj
+    movie_additional_base = MovieAdditionalBaseObj
 
     # Responses
     data_resp = api.clone(

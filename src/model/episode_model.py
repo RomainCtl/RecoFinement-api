@@ -5,6 +5,13 @@ from sqlalchemy import event
 from src import db
 from .event import EpisodeAddedEvent, EpisodeDeletedEvent, ChangedEvent
 
+EpisodeAdditionalGenresModel = db.Table("episode_additional_genres",
+                                        db.Column("episode_id", db.Integer, db.ForeignKey(
+                                            "episode_additional.episode_id"), primary_key=True),
+                                        db.Column("genre_id", db.Integer, db.ForeignKey(
+                                            "genre.genre_id"), primary_key=True)
+                                        )
+
 
 class EpisodeModel(db.Model):
     """
@@ -29,6 +36,25 @@ class EpisodeModel(db.Model):
     @hybrid_property
     def episode_id(self):
         return self.content_id
+
+
+class EpisodeAdditionalModel(db.Model):
+    """
+    Episode Model for storing episode related details added by a user
+    """
+    __tablename__ = "episode_additional"
+
+    episode_id = db.Column(db.Integer, index=True, primary_key=True)
+    imdbid = db.Column(db.String(255))
+    title = db.Column(db.String(512), index=True)
+    year = db.Column(db.Integer)
+    season_number = db.Column(db.Integer)
+    episode_number = db.Column(db.Integer)
+    serie_id = db.Column(db.Integer, db.ForeignKey(
+        "serie_additional.serie_id"))
+
+    genres = db.relationship(
+        "GenreModel", secondary=EpisodeAdditionalGenresModel, lazy="dynamic")
 
 
 @event.listens_for(EpisodeModel, 'after_insert')

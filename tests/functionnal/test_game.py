@@ -429,7 +429,7 @@ class TestGame:
         """Test game user meta
 
         Test:
-            GET: /api/book/<content_id>/meta
+            GET: /api/game/<content_id>/meta
 
         Expected result: 
             200, {"status": True}
@@ -764,3 +764,55 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### GAME ADD CONTENT ###
+    def test_game_add_content(self, test_client, headers, genre_test1):
+        """Test game add additional content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers, json=dict(
+                steamid=-1,
+                name="name",
+                short_description="short_description",
+                header_image="header_image",
+                website="website",
+                developers="developers",
+                publishers="publishers",
+                price="price",
+                release_date="release_date",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_game_add_minimal_content(self, test_client, headers, genre_test1):
+        """Test game add additional minimal content
+        Test:
+            POST: /api/game/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers, json=dict(
+                steamid=-2,
+                name="name",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

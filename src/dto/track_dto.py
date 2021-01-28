@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import TrackBaseObj, TrackItemObj, paginationObj, messageObj
+from .base import TrackBaseObj, TrackItemObj, paginationObj, messageObj, TrackAdditionalBaseObj
 
 
 class TrackDto:
@@ -12,6 +12,9 @@ class TrackDto:
 
     api.models[TrackItemObj.name] = TrackItemObj
     track_item = TrackItemObj
+
+    api.models[TrackAdditionalBaseObj.name] = TrackAdditionalBaseObj
+    track_additional_base = TrackAdditionalBaseObj
 
     track_history = api.model("TrackHistory", {
         "last_played_date": fields.DateTime,

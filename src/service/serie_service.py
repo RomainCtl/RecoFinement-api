@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import SerieModel, EpisodeModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import SerieModel, EpisodeModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, SerieAdditionalModel, EpisodeAdditionalModel
 from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, SerieExtra, MetaUserContentBase
 
 
@@ -188,15 +188,15 @@ class SerieService:
             return err_resp("Serie not found!", 404)
 
         try:
-            for type , value in  data.items():
-                if type in REASON_CATEGORIES['serie'] :
+            for type, value in data.items():
+                if type in REASON_CATEGORIES['serie']:
                     for r in value:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id = user.user_id,
-                            content_id = serie.content_id,
-                            reason_categorie = type,
-                            reason = r
+                            user_id=user.user_id,
+                            content_id=serie.content_id,
+                            reason_categorie=type,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)
@@ -207,5 +207,81 @@ class SerieService:
             return resp, 201
 
         except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_serie(user_uuid, data):
+        """ Add additional serie"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        try:
+
+            new_additional_serie = SerieAdditionalModel(
+                title=data['title'],
+            )
+
+            if 'imdbid' in data:
+                new_additional_serie.imdbid = data['imdbid']
+            if 'start_year' in data:
+                new_additional_serie.start_year = data['start_year']
+            if 'end_year' in data:
+                new_additional_serie.end_year = data['end_year']
+            if 'writers' in data:
+                new_additional_serie.writers = data['writers']
+            if 'directors' in data:
+                new_additional_serie.directors = data['directors']
+            if 'actors' in data:
+                new_additional_serie.actors = data['actors']
+            if 'cover' in data:
+                new_additional_serie.cover = data['cover']
+
+            for genre_id in data["genres"]:
+                if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                    new_additional_serie.genres.append(ge)
+                else:
+                    return err_resp("Genre %s not found!" % genre_id, 404)
+
+            db.session.add(new_additional_serie)
+            db.session.flush()
+
+            if "episodes" in data:
+                for episode in data["episodes"]:
+                    new_additional_episode = EpisodeAdditionalModel(
+                        title=data['title'],
+                        serie_id=new_additional_serie.serie_id
+                    )
+
+                    if 'imdbid' in data:
+                        new_additional_serie.imdbid = data['imdbid']
+                    if 'year' in data:
+                        new_additional_serie.year = data['year']
+                    if 'season_number' in data:
+                        new_additional_serie.season_number = data['season_number']
+                    if 'episode_number' in data:
+                        new_additional_serie.episode_number = data['episode_number']
+
+                    for genre_id in data["genres"]:
+                        if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                            new_additional_episode.genres.append(ge)
+                        else:
+                            return err_resp("Genre %s not found!" % genre_id, 404)
+
+                    db.session.add(new_additional_episode)
+
+            db.session.commit()
+
+            resp = message(True, "Serie have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            import traceback
+            traceback.print_exc()
             current_app.logger.error(error)
             return internal_err_resp()

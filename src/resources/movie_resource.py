@@ -32,6 +32,25 @@ class MovieResource(Resource):
             page = 1
         return MovieService.get_popular_movies(page, user_uuid)
 
+    movie_additional = MovieDto.movie_additional_base
+    @api.doc(
+        "Add additional Movie for validation",
+        responses={
+            200: ("Additional movie added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(movie_additional, validate=True)
+    def post(self):
+        """ Add additional Movie for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return MovieService.add_additional_movie(user_uuid, data)
+
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class MovieUserRecommendationResource(Resource):
