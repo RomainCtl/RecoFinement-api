@@ -251,29 +251,29 @@ class SerieService:
             db.session.add(new_additional_serie)
             db.session.flush()
 
-            for episode in data["episodes"]:
+            if "episodes" in data:
+                for episode in data["episodes"]:
+                    new_additional_episode = EpisodeAdditionalModel(
+                        title=data['title'],
+                        serie_id=new_additional_serie.serie_id
+                    )
 
-                new_additional_episode = EpisodeAdditionalModel(
-                    title=data['title'],
-                    serie_id=new_additional_serie.serie_id
-                )
+                    if 'imdbid' in data:
+                        new_additional_serie.imdbid = data['imdbid']
+                    if 'year' in data:
+                        new_additional_serie.year = data['year']
+                    if 'season_number' in data:
+                        new_additional_serie.season_number = data['season_number']
+                    if 'episode_number' in data:
+                        new_additional_serie.episode_number = data['episode_number']
 
-                if 'imdbid' in data:
-                    new_additional_serie.imdbid = data['imdbid']
-                if 'year' in data:
-                    new_additional_serie.year = data['year']
-                if 'season_number' in data:
-                    new_additional_serie.season_number = data['season_number']
-                if 'episode_number' in data:
-                    new_additional_serie.episode_number = data['episode_number']
+                    for genre_id in data["genres"]:
+                        if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
+                            new_additional_episode.genres.append(ge)
+                        else:
+                            return err_resp("Genre %s not found!" % genre_id, 404)
 
-                for genre_id in data["genres"]:
-                    if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
-                        new_additional_episode.genres.append(ge)
-                    else:
-                        return err_resp("Genre %s not found!" % genre_id, 404)
-
-                db.session.add(new_additional_episode)
+                    db.session.add(new_additional_episode)
 
             db.session.commit()
 
@@ -281,5 +281,7 @@ class SerieService:
             return resp, 201
 
         except Exception as error:
+            import traceback
+            traceback.print_exc()
             current_app.logger.error(error)
             return internal_err_resp()
