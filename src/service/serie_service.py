@@ -188,15 +188,15 @@ class SerieService:
             return err_resp("Serie not found!", 404)
 
         try:
-            for type , value in  data.items():
-                if type in REASON_CATEGORIES['serie'] :
+            for type, value in data.items():
+                if type in REASON_CATEGORIES['serie']:
                     for r in value:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id = user.user_id,
-                            content_id = serie.content_id,
-                            reason_categorie = type,
-                            reason = r
+                            user_id=user.user_id,
+                            content_id=serie.content_id,
+                            reason_categorie=type,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)
@@ -209,7 +209,6 @@ class SerieService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
-
 
     @staticmethod
     def add_additional_serie(user_uuid, data):
@@ -274,9 +273,8 @@ class SerieService:
                     else:
                         return err_resp("Genre %s not found!" % genre_id, 404)
 
-                new_additional_serie.episodes.append(new_additional_episode)
+                db.session.add(new_additional_episode)
 
-            db.session.add(new_additional_serie)
             db.session.commit()
 
             resp = message(True, "Serie have been added to validation.")
