@@ -42,6 +42,7 @@ class SerieResource(Resource):
         }
     )
     @jwt_required
+    # problem to validate nested object: https://github.com/python-restx/flask-restx/issues/66
     @api.expect(serie_additional, validate=False)
     def post(self):
         """ Add additional Serie for validation"""
