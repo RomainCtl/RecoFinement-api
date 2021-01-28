@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import SerieBaseObj, SerieItemObj, paginationObj, messageObj, EpisodeBaseObj, SerieAdditionalBaseObj
+from .base import SerieBaseObj, SerieItemObj, paginationObj, messageObj, EpisodeBaseObj, SerieAdditionalBaseObj, EpisodeAdditionalBaseObj
 
 
 class SerieDto:
@@ -15,6 +15,9 @@ class SerieDto:
 
     api.models[EpisodeBaseObj.name] = EpisodeBaseObj
     episode_base = EpisodeBaseObj
+
+    api.models[EpisodeAdditionalBaseObj.name] = EpisodeAdditionalBaseObj
+    episode_aditional_base = EpisodeAdditionalBaseObj
 
     api.models[SerieAdditionalBaseObj.name] = SerieAdditionalBaseObj
     serie_additional_base = SerieAdditionalBaseObj
