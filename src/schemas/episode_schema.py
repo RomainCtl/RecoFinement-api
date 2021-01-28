@@ -14,5 +14,7 @@ class EpisodeBase(SQLAlchemyAutoSchema):
     rating = fields.Function(lambda obj: obj.content.rating)
     rating_count = fields.Function(lambda obj: obj.content.rating_count)
 
+    episode_id = ma.Function(lambda obj: obj.episode_id)
+
     class Meta(EpisodeMeta):
         pass

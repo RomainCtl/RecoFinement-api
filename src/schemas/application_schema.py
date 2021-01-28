@@ -18,6 +18,8 @@ class ApplicationBase(SQLAlchemyAutoSchema):
 
     categorie = ma.Nested("GenreBase")
 
+    app_id = ma.Function(lambda obj: obj.app_id)
+
     class Meta(ApplicationMeta):
         pass
 

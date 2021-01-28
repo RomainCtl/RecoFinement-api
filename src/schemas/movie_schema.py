@@ -17,6 +17,8 @@ class MovieBase(SQLAlchemyAutoSchema):
     popularity_score = fields.Function(
         lambda obj: obj.content.popularity_score)
 
+    movie_id = ma.Function(lambda obj: obj.movie_id)
+
     class Meta(MovieMeta):
         pass
 
