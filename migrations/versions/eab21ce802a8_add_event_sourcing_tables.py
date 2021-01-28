@@ -1,8 +1,8 @@
 """add event sourcing tables
 
-Revision ID: 6a68be6b9e1c
+Revision ID: eab21ce802a8
 Revises: 6ea6ab643ed1
-Create Date: 2021-01-28 16:43:30.173991
+Create Date: 2021-01-28 17:41:39.670188
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 
 # revision identifiers, used by Alembic.
-revision = '6a68be6b9e1c'
+revision = 'eab21ce802a8'
 down_revision = '6ea6ab643ed1'
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('name', sa.String(length=255), nullable=True),
                     sa.Column('size', sa.String(length=255), nullable=True),
@@ -46,7 +46,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('isbn', sa.String(length=13), nullable=True),
                     sa.Column('title', sa.String(length=255), nullable=True),
@@ -64,7 +64,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('model_name', sa.String(), nullable=False),
                     sa.Column('attribute_name', sa.String(), nullable=False),
@@ -75,7 +75,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('model_name', sa.String(), nullable=False),
                     sa.PrimaryKeyConstraint('id')
@@ -84,7 +84,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('imdbid', sa.String(length=255), nullable=True),
                     sa.Column('title', sa.String(length=512), nullable=True),
@@ -98,7 +98,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('steamid', sa.Integer(), nullable=True),
                     sa.Column('name', sa.String(length=255), nullable=True),
@@ -120,7 +120,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('rating', sa.Integer(), nullable=True),
                     sa.Column('review_see_count', sa.Integer(), nullable=True),
@@ -131,7 +131,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('title', sa.String(length=255), nullable=True),
                     sa.Column('language', sa.String(
@@ -151,7 +151,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('imdbid', sa.String(length=255), nullable=True),
                     sa.Column('title', sa.String(length=255), nullable=True),
@@ -168,7 +168,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(),
                               autoincrement=True, nullable=False),
                     sa.Column('occured_at', sa.DateTime(), nullable=False),
-                    sa.Column('occured_by', sa.Integer(), nullable=False),
+                    sa.Column('occured_by', sa.Integer(), nullable=True),
                     sa.Column('object_id', sa.Integer(), nullable=False),
                     sa.Column('title', sa.String(length=255), nullable=True),
                     sa.Column('year', sa.SmallInteger(), nullable=True),
