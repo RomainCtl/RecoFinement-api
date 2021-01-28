@@ -16,3 +16,5 @@ from .user_model import UserModel, MetaUserContentModel, RecommendedContentModel
 from .group_model import GroupModel, RecommendedContentForGroupModel
 
 from .role_model import RoleModel, PermissionModel
+
+from .event import *

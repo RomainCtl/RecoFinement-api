@@ -1,13 +1,17 @@
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm.session import object_session
+from sqlalchemy import event
 
 from src import db
+from .event import MovieAddedEvent, MovieDeletedEvent, ChangedEvent
 
 MovieAdditionalGenresModel = db.Table("movie_additional_genres",
-                              db.Column("movie_id", db.Integer, db.ForeignKey(
-                                  "movie_additional.movie_id"), primary_key=True),
-                              db.Column("genre_id", db.Integer, db.ForeignKey(
-                                  "genre.genre_id"), primary_key=True)
-                              )
+                                      db.Column("movie_id", db.Integer, db.ForeignKey(
+                                          "movie_additional.movie_id"), primary_key=True),
+                                      db.Column("genre_id", db.Integer, db.ForeignKey(
+                                          "genre.genre_id"), primary_key=True)
+                                      )
+
 
 class MovieModel(db.Model):
     """
@@ -38,6 +42,7 @@ class MovieModel(db.Model):
     def movie_id(self):
         return self.content_id
 
+
 class MovieAdditionalModel(db.Model):
     """
     Movie Model for storing movie related details  added by a user
@@ -59,3 +64,39 @@ class MovieAdditionalModel(db.Model):
 
     genres = db.relationship(
         "GenreModel", secondary=MovieAdditionalGenresModel, lazy="dynamic")
+
+
+@event.listens_for(MovieModel, 'after_insert')
+def receive_after_insert(mapper, connection, target):
+    "listen for the 'after_insert' event"
+    connection.execute(MovieAddedEvent.insert(target))
+
+
+@event.listens_for(MovieModel, 'after_delete')
+def receive_after_delete(mapper, connection, target):
+    "listen for the 'after_delete' event"
+    event = MovieDeletedEvent(object_id=target.content_id)
+    connection.execute(event.delete())
+
+
+@event.listens_for(MovieModel, 'after_update')
+def receive_after_update(mapper, connection, target):
+    "listen for the 'after_update' event"
+    if not object_session(target).is_modified(target, include_collections=False):
+        return
+
+    changes = {}
+    for attr in db.inspect(target).attrs:
+        hist = attr.load_history()
+
+        if not hist.has_changes():
+            continue
+
+        # hist.deleted holds old value
+        # hist.added holds new value
+        connection.execute(ChangedEvent.__table__.insert().values(
+            object_id=target.content_id,
+            model_name=MovieModel.__tablename__,
+            attribute_name=attr.key,
+            new_value=str(hist.added[0])
+        ))
