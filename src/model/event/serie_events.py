@@ -15,6 +15,21 @@ class SerieAddedEvent(Event, db.Model):
     cover = db.Column(db.Text)
     plot_outline = db.Column(db.Text)
 
+    @classmethod
+    def insert(cls, target):
+        return cls.__table__.insert().values(
+            object_id=target.content_id,
+            imdbid=target.imdbid,
+            title=target.title,
+            start_year=target.start_year,
+            end_year=target.end_year,
+            writers=target.writers,
+            directors=target.directors,
+            actors=target.actors,
+            cover=target.cover,
+            plot_outline=target.plot_outline,
+        )
+
 
 class SerieDeletedEvent(DeletionEvent):
     def __init__(self, *args, **kwargs):

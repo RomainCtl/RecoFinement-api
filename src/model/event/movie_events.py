@@ -17,6 +17,23 @@ class MovieAddedEvent(Event, db.Model):
     cover = db.Column(db.Text)
     plot_outline = db.Column(db.Text)
 
+    @classmethod
+    def insert(cls, target):
+        return cls.__table__.insert().values(
+            object_id=target.content_id,
+            title=target.title,
+            language=target.language,
+            actors=target.actors,
+            year=target.year,
+            producers=target.producers,
+            director=target.director,
+            writer=target.writer,
+            imdbid=target.imdbid,
+            tmdbid=target.tmdbid,
+            cover=target.cover,
+            plot_outline=target.plot_outline,
+        )
+
 
 class MovieDeletedEvent(DeletionEvent):
     def __init__(self, *args, **kwargs):

@@ -3,7 +3,7 @@ from sqlalchemy.orm.session import object_session
 from sqlalchemy import event
 
 from src import db
-from .event.application_events import ApplicationAddedEvent, ApplicationDeletedEvent, ChangedEvent
+from .event import ApplicationAddedEvent, ApplicationDeletedEvent, ChangedEvent
 
 
 class ApplicationModel(db.Model):
@@ -53,7 +53,7 @@ def receive_after_delete(mapper, connection, target):
 
 
 @event.listens_for(ApplicationModel, 'after_update')
-def receive_after_delete(mapper, connection, target):
+def receive_after_update(mapper, connection, target):
     "listen for the 'after_update' event"
     if not object_session(target).is_modified(target, include_collections=False):
         return
@@ -71,5 +71,5 @@ def receive_after_delete(mapper, connection, target):
             object_id=target.content_id,
             model_name=ApplicationModel.__tablename__,
             attribute_name=attr.key,
-            new_value=hist.added
+            new_value=str(hist.added[0])
         ))

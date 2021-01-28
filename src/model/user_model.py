@@ -1,9 +1,12 @@
+from sqlalchemy.orm.session import object_session
+from sqlalchemy import event
 from sqlalchemy import CheckConstraint
 import uuid
 
 from src import db, bcrypt
 from src.utils import GUID
 from .content_model import ContentType
+from .event import MetaAddedEvent, ChangedEvent
 
 
 UserRoleModel = db.Table("user_role",
@@ -32,6 +35,35 @@ class MetaUserContentModel(db.Model):
     # can be play_count, watch_count, num_watched_episodes
     count = db.Column(db.Integer, default=0)
     last_count_increment = db.Column(db.DateTime, default=None)
+
+
+@event.listens_for(MetaUserContentModel, 'after_insert')
+def receive_after_insert(mapper, connection, target):
+    "listen for the 'after_insert' event"
+    connection.execute(MetaAddedEvent.insert(target))
+
+
+@event.listens_for(MetaUserContentModel, 'after_update')
+def receive_after_update(mapper, connection, target):
+    "listen for the 'after_update' event"
+    if not object_session(target).is_modified(target, include_collections=False):
+        return
+
+    changes = {}
+    for attr in db.inspect(target).attrs:
+        hist = attr.load_history()
+
+        if not hist.has_changes():
+            continue
+
+        # hist.deleted holds old value
+        # hist.added holds new value
+        connection.execute(ChangedEvent.__table__.insert().values(
+            object_id=target.content_id,
+            model_name=MetaUserContentModel.__tablename__,
+            attribute_name=attr.key,
+            new_value=str(hist.added[0])
+        ))
 
 
 GroupMembersModel = db.Table("group_members",
