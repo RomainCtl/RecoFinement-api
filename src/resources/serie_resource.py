@@ -32,6 +32,27 @@ class SerieResource(Resource):
             page = 1
         return SerieService.get_popular_series(page, user_uuid)
 
+    serie_additional = SerieDto.serie_additional_base
+
+    @api.doc(
+        "Add additional Serie for validation",
+        responses={
+            200: ("Additional serie added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    # problem to validate nested object: https://github.com/python-restx/flask-restx/issues/66
+    @api.expect(serie_additional, validate=False)
+    def post(self):
+        """ Add additional Serie for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return SerieService.add_additional_serie(user_uuid, data)
+
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class SerieUserRecommendationResource(Resource):
@@ -167,6 +188,7 @@ class SerieMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class SerieBadRecommendation(Resource):
     bad_recommendation = SerieDto.serie_bad_recommendation
+
     @api.doc(
         "Add Serie-user (connected user) bad recommendation",
         responses={

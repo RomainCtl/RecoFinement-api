@@ -766,3 +766,61 @@ class TestSerie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### SERIE ADD CONTENT ###
+    def test_serie_add_content(self, test_client, headers, genre_test1):
+        """Test serie add additional content
+        Test:
+            POST: /api/serie/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/serie", headers=headers, json=dict(
+                title="title",
+                imdbid="imdbid",
+                start_year=1900,
+                end_year=1900,
+                writers="writer1 | writer2",
+                directors="director1 | director2",
+                actors="actor1 | actor2",
+                cover="cover",
+                episodes=[dict(
+                    title="title",
+                    imdbid="imdbid",
+                    year=1900,
+                    season_number=1,
+                    episode_number=1,
+                    genres=[genre_test1.genre_id],
+                )],
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_serie_add_minimal_content(self, test_client, headers, genre_test1):
+        """Test serie add additional minimal content
+        Test:
+            POST: /api/serie/
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/serie", headers=headers, json=dict(
+                title="title",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

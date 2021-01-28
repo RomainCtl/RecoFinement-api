@@ -6,7 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
-from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel
+from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, BookAdditionalModel
 from src.schemas import BookBase, BookExtra, MetaUserContentBase
 
 
@@ -166,6 +166,47 @@ class BookService:
             db.session.commit()
 
             resp = message(True, "Bad recommendation has been registered.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def add_additional_book(user_uuid, data):
+        """ Add additional book"""
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+            
+        try:
+
+            new_additional_book = BookAdditionalModel(
+                    title = data['title'],
+                    isbn = data['isbn'],
+            )
+
+            if 'author' in data:
+                new_additional_book.author = data['author']
+            if 'year_of_publication' in data:
+                new_additional_book.year_of_publication = data['year_of_publication']
+            if 'publisher' in data:
+                new_additional_book.publisher = data['publisher']
+            if 'image_url_s' in data:
+                new_additional_book.image_url_s = data['image_url_s']
+            if 'image_url_m' in data:
+                new_additional_book.image_url_m = data['image_url_m']
+            if 'image_url_l' in data:
+                new_additional_book.image_url_l = data['image_url_l']
+
+            db.session.add(new_additional_book)
+            db.session.commit()
+
+            resp = message(True, "Book have been added to validation.")
             return resp, 201
 
         except Exception as error:

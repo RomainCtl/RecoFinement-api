@@ -5,13 +5,13 @@ from .user_schema import UserBase, UserObject, UserFullObject, UpdateUserDataSch
 from .profile_schema import ProfileBase, ProfileObject, ProfileFullObject, UpdateProfileDataSchema
 from .external_schema import ExternalBase
 
-from .application_schema import ApplicationBase, ApplicationExtra
-from .book_schema import BookBase, BookExtra
-from .episode_schema import EpisodeBase
-from .game_schema import GameBase, GameObject, GameExtra
-from .movie_schema import MovieBase, MovieObject, MovieExtra
-from .serie_schema import SerieBase, SerieItem, SerieExtra
-from .track_schema import TrackBase, TrackObject, TrackExtra
+from .application_schema import ApplicationBase, ApplicationExtra, ApplicationAdditionalBase
+from .book_schema import BookBase, BookExtra, BookAdditionalBase
+from .episode_schema import EpisodeBase, EpisodeAdditionalBase
+from .game_schema import GameBase, GameObject, GameExtra, GameAdditionalBase
+from .movie_schema import MovieBase, MovieObject, MovieExtra, MovieAdditionalBase
+from .serie_schema import SerieBase, SerieItem, SerieExtra, SerieAdditionalBase
+from .track_schema import TrackBase, TrackObject, TrackExtra, TrackAdditionalBase
 
 from .genre_schema import GenreBase, GenreObject
 

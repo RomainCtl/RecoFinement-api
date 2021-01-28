@@ -31,6 +31,26 @@ class BookResource(Resource):
             page = 1
         return BookService.get_popular_books(page, user_uuid)
 
+    book_additional = BookDto.book_additional_base
+
+    @api.doc(
+        "Add additional Book for validation",
+        responses={
+            200: ("Additional book added for validation", meta_resp),
+            401: ("Authentication required"),
+        }
+    )
+    @jwt_required
+    @api.expect(book_additional, validate=True)
+    def post(self):
+        """ Add additional Book for validation"""
+        user_uuid = get_jwt_identity()
+
+        # Grab the json data
+        data = request.get_json()
+
+        return BookService.add_additional_book(user_uuid, data)
+
 
 @api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class BookUserRecommendationResource(Resource):
@@ -135,6 +155,7 @@ class bookMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class BookBadRecommendation(Resource):
     bad_recommendation = BookDto.book_bad_recommendation
+
     @api.doc(
         "Add Book-user (connected user) bad recommendation",
         responses={

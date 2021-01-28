@@ -1,4 +1,5 @@
 from src import db
+from .content_model import ContentType
 
 InvitationModel = db.Table("invitations",
                            db.Column("user_id", db.Integer, db.ForeignKey(
@@ -21,6 +22,7 @@ class RecommendedContentForGroupModel(db.Model):
     score = db.Column(db.Float)
     engine = db.Column(db.String)
     engine_priority = db.Column(db.Integer)
+    content_type = db.Column(db.Enum(ContentType))
 
 
 class GroupModel(db.Model):

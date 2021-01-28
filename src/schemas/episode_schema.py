@@ -1,7 +1,7 @@
 # Episode Schemas
 from marshmallow import fields
 from src import ma
-from src.model import EpisodeModel
+from src.model import EpisodeModel, EpisodeAdditionalModel
 from src.utils import SQLAlchemyAutoSchema
 
 
@@ -17,4 +17,14 @@ class EpisodeBase(SQLAlchemyAutoSchema):
     episode_id = ma.Function(lambda obj: obj.episode_id)
 
     class Meta(EpisodeMeta):
+        pass
+
+# ----
+
+class EpisodeAdditionalMeta:
+    model = EpisodeAdditionalModel
+    include_fk = True
+
+class EpisodeAdditionalBase(SQLAlchemyAutoSchema):
+    class Meta(EpisodeAdditionalMeta):
         pass

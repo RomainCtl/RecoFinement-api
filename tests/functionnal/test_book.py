@@ -689,3 +689,59 @@ class TestBook:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+
+    ### BOOK ADD CONTENT ###
+    def test_book_add_content(self, test_client, headers):
+        """Test book add additional content
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/book", headers=headers, json=dict(
+                isbn="isbn",
+                title="title",
+                author="author",
+                year_of_publication=1900,
+                publisher="publisher",
+                image_url_s="image_url_s",
+                image_url_m="image_url_m",
+                image_url_l="image_url_l"
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+    def test_book_add_minimal_content(self, test_client, headers):
+        """Test book add additional minimal content
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            201, {"status": True}
+
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/book", headers=headers, json=dict(
+                isbn="isbn2",
+                title="title",
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
