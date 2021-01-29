@@ -73,6 +73,7 @@ class MovieService:
             .join(RecommendedContentModel, RecommendedContentModel.content_id == ContentModel.content_id)
             .filter(RecommendedContentModel.user_id == user.user_id)
             .order_by(
+                RecommendedContentModel.score.desc().nullslast(),
                 ContentModel.popularity_score.desc().nullslast(),
             ),
             page,
@@ -115,6 +116,7 @@ class MovieService:
             .join(RecommendedContentForGroupModel, RecommendedContentForGroupModel.content_id == ContentModel.content_id)
             .filter(RecommendedContentForGroupModel.group_id.in_(groups_ids))
             .order_by(
+                RecommendedContentModel.score.desc().nullslast(),
                 ContentModel.popularity_score.desc().nullslast(),
             ),
             page,
