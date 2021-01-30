@@ -96,7 +96,7 @@ class GBooks :
                                 bk = books.volumes().get(volumeId=str(user_bk['id'])).execute()
                                 element["isbn"] = isbn['identifier']
                                 element["title"] = bk['volumeInfo']['title']
-                                element["author"] = bk['volumeInfo']['authors'][0]
+                                element["author"] = bk['volumeInfo']['authors'][0] if ( isinstance( bk['volumeInfo']['authors'],list) and len(bk['volumeInfo']['authors']) >0) else None
                                 element["year_of_publication"] = bk['volumeInfo']['publishedDate'][:4]
                                 element["publisher"] = bk['volumeInfo']['publisher']
                                 if "imageLinks" in bk["volumeInfo"].keys():
