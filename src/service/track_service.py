@@ -66,15 +66,21 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_tracks_for_user(page, connected_user_uuid):
+    def get_recommended_tracks_for_user(page, connected_user_uuid, reco_engine):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        filters = [RecommendedContentModel.user_id == user.user_id]
+        if reco_engine is not None:
+            filters.append(RecommendedContentModel.engine == reco_engine)
 
         tracks, total_pages = Paginator.get_from(
             db.session.query(RecommendedContentModel, TrackModel)
             .join(TrackModel.content)
             .join(RecommendedContentModel, RecommendedContentModel.content_id == ContentModel.content_id)
-            .filter(RecommendedContentModel.user_id == user.user_id)
+            .filter(
+                and_(*filters)
+            )
             .order_by(
                 RecommendedContentModel.score.desc().nullslast(),
                 ContentModel.rating_count.desc().nullslast(),
@@ -104,7 +110,7 @@ class TrackService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_tracks_for_group(page, connected_user_uuid):
+    def get_recommended_tracks_for_group(page, connected_user_uuid, reco_engine):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -114,11 +120,17 @@ class TrackService:
             *list(map(lambda x: x.group_id, user.owned_groups))
         ]
 
+        filters = [RecommendedContentForGroupModel.group_id.in_(groups_ids)]
+        if reco_engine is not None:
+            filters.append(RecommendedContentModel.engine == reco_engine)
+
         tracks, total_pages = Paginator.get_from(
             db.session.query(RecommendedContentForGroupModel, TrackModel)
             .join(TrackModel.content)
             .join(RecommendedContentForGroupModel, RecommendedContentForGroupModel.content_id == ContentModel.content_id)
-            .filter(RecommendedContentForGroupModel.group_id.in_(groups_ids))
+            .filter(
+                and_(*filters)
+            )
             .order_by(
                 RecommendedContentModel.score.desc().nullslast(),
                 ContentModel.rating_count.desc().nullslast(),
@@ -249,19 +261,19 @@ class TrackService:
                 title=data['title'],
             )
 
-            if 'year' in data :
+            if 'year' in data:
                 new_additional_track.year = data['year']
-            if 'artist_name' in data :
+            if 'artist_name' in data:
                 new_additional_track.artist_name = data['artist_name']
-            if 'release' in data :
+            if 'release' in data:
                 new_additional_track.release = data['release']
-            if 'track_mmid' in data :
+            if 'track_mmid' in data:
                 new_additional_track.track_mmid = data['track_mmid']
-            if 'recording_mbid' in data :
+            if 'recording_mbid' in data:
                 new_additional_track.recording_mbid = data['recording_mbid']
-            if 'spotify_id' in data :
+            if 'spotify_id' in data:
                 new_additional_track.spotify_id = data['spotify_id']
-            if 'covert_art_url' in data :
+            if 'covert_art_url' in data:
                 new_additional_track.covert_art_url = data['covert_art_url']
 
             for genre_id in data["genres"]:

@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import TrackService, ContentService
@@ -33,6 +33,7 @@ class TrackResource(Resource):
         return TrackService.get_popular_tracks(page, user_uuid)
 
     track_additional = TrackDto.track_additional_base
+
     @api.doc(
         "Add additional Track for validation",
         responses={
@@ -51,7 +52,8 @@ class TrackResource(Resource):
 
         return TrackService.add_additional_track(user_uuid, data)
 
-@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class TrackUserRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Tracks for the connected user",
@@ -65,14 +67,15 @@ class TrackUserRecommendationResource(Resource):
         """ Get list of the recommended Tracks for the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return TrackService.get_recommended_tracks_for_user(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return TrackService.get_recommended_tracks_for_user(args["page"], user_uuid, args["reco_engine"])
 
 
-@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class TrackGroupRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Tracks for the groups of the connected user",
@@ -86,11 +89,12 @@ class TrackGroupRecommendationResource(Resource):
         """ Get list of the recommended Tracks for the groups of the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return TrackService.get_recommended_tracks_for_group(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return TrackService.get_recommended_tracks_for_group(args["page"], user_uuid, args["reco_engine"])
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -193,6 +197,7 @@ class TrackHistoryResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class TrackBadRecommendation(Resource):
     bad_recommendation = TrackDto.track_bad_recommendation
+
     @api.doc(
         "Add Track-user (connected user) bad recommendation",
         responses={
