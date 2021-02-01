@@ -14,7 +14,7 @@ class ProfileService:
     @staticmethod
     def search_profile_data(search_term, page, connected_profile_uuid):
         """ Search profile data by profilename """
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
         if not (ProfileModel.query.filter_by(user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
@@ -46,10 +46,10 @@ class ProfileService:
 
         if not (profile := ProfileModel.query.filter_by(uuid=uuid).first()):
             return err_resp("User Profile not found!", 404)
-        
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+
+        if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(uuid=uuid,user_id=user.user_id).first()):
+        if not (ProfileModel.query.filter_by(uuid=uuid, user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         try:
@@ -66,7 +66,7 @@ class ProfileService:
     @staticmethod
     def get_genres(connected_uuid, uuid_profile):
         """ Get profile liked genre list """
-        if not (user:=UserModel.query.filter_by(uuid=connected_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=connected_uuid).first()):
             return err_resp("User not found!", 404)
         if not (profile := ProfileModel.query.filter_by(user_id=user.user_id, uuid=uuid_profile).first()):
             return err_resp("Profile not found!", 404)
@@ -82,16 +82,16 @@ class ProfileService:
             return internal_err_resp()
 
     @staticmethod
-    def like_genre(genre_id, user_uuid,profile_uuid):
+    def like_genre(genre_id, user_uuid, profile_uuid):
         """" Like a genre """
-        if not (user:=UserModel.query.filter_by(uuid=user_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id,uuid=profile_uuid).first()):
+        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id, uuid=profile_uuid).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_user_profil" not in permissions:
+        if "access-sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -112,14 +112,14 @@ class ProfileService:
     @staticmethod
     def unlike_genre(genre_id, user_uuid, profile_uuid):
         """" Unlike a genre """
-        if not (user:=UserModel.query.filter_by(uuid=user_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=user_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id,uuid=profile_uuid).first()):
+        if not (profile := ProfileModel.query.filter_by(user_id=user.user_id, uuid=profile_uuid).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_user_profil" not in permissions:
+        if "access-sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -144,14 +144,14 @@ class ProfileService:
     def update_profile_data(profile_uuid, connected_profile_uuid, data):
         """ Update profile data profilename """
 
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (profile:=ProfileModel.query.filter_by(uuid=profile_uuid,user_id=user.user_id).first()):
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_user_profil" not in permissions:
+        if "access-sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if str(user.uuid) != connected_profile_uuid:
@@ -175,19 +175,19 @@ class ProfileService:
     def delete_account(profile_uuid, connected_profile_uuid):
         """" Delete profile account """
 
-        if not (user:=UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+        if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(uuid=profile_uuid,user_id=user.user_id).first()):
+        if not (ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "modify_user_profil" not in permissions:
+        if "access-sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (ProfileModel.query.filter_by(user_id=user.user_id, uuid=profile_uuid).first()):
             return err_resp("Unable to delete an account which is not your's", 403)
-            
+
         try:
             ProfileModel.query.filter_by(uuid=profile_uuid).delete()
 
