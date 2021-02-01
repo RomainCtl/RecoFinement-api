@@ -1,7 +1,7 @@
 from settings import REASON_CATEGORIES
 from flask import current_app
 from flask_jwt_extended import get_jwt_claims
-from sqlalchemy import func, text, select
+from sqlalchemy import func, text, select, and_
 from sqlalchemy.sql.expression import null
 
 from src import db, settings
@@ -64,15 +64,21 @@ class GameService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_games_for_user(page, connected_user_uuid):
+    def get_recommended_games_for_user(page, connected_user_uuid, reco_engine):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
+
+        filters = [RecommendedContentModel.user_id == user.user_id]
+        if reco_engine is not None:
+            filters.append(RecommendedContentModel.engine == reco_engine)
 
         games, total_pages = Paginator.get_from(
             db.session.query(RecommendedContentModel, GameModel)
             .join(GameModel.content)
             .join(RecommendedContentModel, RecommendedContentModel.content_id == ContentModel.content_id)
-            .filter(RecommendedContentModel.user_id == user.user_id)
+            .filter(
+                and_(*filters)
+            )
             .order_by(
                 RecommendedContentModel.score.desc().nullslast(),
                 GameModel.recommendations.desc().nullslast(),
@@ -101,7 +107,7 @@ class GameService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_games_for_group(page, connected_user_uuid):
+    def get_recommended_games_for_group(page, connected_user_uuid, reco_engine):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -111,11 +117,17 @@ class GameService:
             *list(map(lambda x: x.group_id, user.owned_groups))
         ]
 
+        filters = [RecommendedContentForGroupModel.group_id.in_(groups_ids)]
+        if reco_engine is not None:
+            filters.append(RecommendedContentModel.engine == reco_engine)
+
         games, total_pages = Paginator.get_from(
             db.session.query(RecommendedContentForGroupModel, GameModel)
             .join(GameModel.content)
             .join(RecommendedContentForGroupModel, RecommendedContentForGroupModel.content_id == ContentModel.content_id)
-            .filter(RecommendedContentForGroupModel.group_id.in_(groups_ids))
+            .filter(
+                and_(*filters)
+            )
             .order_by(
                 RecommendedContentModel.score.desc().nullslast(),
                 GameModel.recommendations.desc().nullslast(),
@@ -171,15 +183,15 @@ class GameService:
             return err_resp("Game not found!", 404)
 
         try:
-            for type, value in  data.items():
-                if type in REASON_CATEGORIES['game'] :
+            for type, value in data.items():
+                if type in REASON_CATEGORIES['game']:
                     for r in value:
 
                         new_bad_reco = BadRecommendationContentModel(
-                            user_id = user.user_id,
-                            content_id = game.content_id,
-                            reason_categorie = type,
-                            reason = r
+                            user_id=user.user_id,
+                            content_id=game.content_id,
+                            reason_categorie=type,
+                            reason=r
                         )
 
                         db.session.add(new_bad_reco)

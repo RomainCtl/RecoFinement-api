@@ -1,6 +1,6 @@
 import uuid
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import BookService, ContentService
@@ -52,7 +52,7 @@ class BookResource(Resource):
         return BookService.add_additional_book(user_uuid, data)
 
 
-@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class BookUserRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended books for the connected user",
@@ -66,14 +66,15 @@ class BookUserRecommendationResource(Resource):
         """ Get list of the recommended books for the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return BookService.get_recommended_books_for_user(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return BookService.get_recommended_books_for_user(args["page"], user_uuid, args["reco_engine"])
 
 
-@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class BookGroupRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended books for the groups of the connected user",
@@ -87,11 +88,12 @@ class BookGroupRecommendationResource(Resource):
         """ Get list of the recommended books for the groups of the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return BookService.get_recommended_books_for_group(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return BookService.get_recommended_books_for_group(args["page"], user_uuid, args["reco_engine"])
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})

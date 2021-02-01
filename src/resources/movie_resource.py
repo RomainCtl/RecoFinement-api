@@ -1,6 +1,6 @@
 from src.dto.application_dto import ApplicationDto
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import MovieService, ContentService
@@ -33,6 +33,7 @@ class MovieResource(Resource):
         return MovieService.get_popular_movies(page, user_uuid)
 
     movie_additional = MovieDto.movie_additional_base
+
     @api.doc(
         "Add additional Movie for validation",
         responses={
@@ -52,7 +53,7 @@ class MovieResource(Resource):
         return MovieService.add_additional_movie(user_uuid, data)
 
 
-@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class MovieUserRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Movies for the connected user",
@@ -66,14 +67,15 @@ class MovieUserRecommendationResource(Resource):
         """ Get list of the recommended Movies for the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return MovieService.get_recommended_movies_for_user(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return MovieService.get_recommended_movies_for_user(args["page"], user_uuid, args["reco_engine"])
 
 
-@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class MovieGroupRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Movies for the groups of the connected user",
@@ -87,11 +89,12 @@ class MovieGroupRecommendationResource(Resource):
         """ Get list of the recommended Movies for the groups of the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return MovieService.get_recommended_movies_for_group(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return MovieService.get_recommended_movies_for_group(args["page"], user_uuid, args["reco_engine"])
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -171,6 +174,7 @@ class MovieMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class MovieBadRecommendation(Resource):
     bad_recommendation = ApplicationDto.application_bad_recommendation
+
     @api.doc(
         "Add Movie-user (connected user) bad recommendation",
         responses={

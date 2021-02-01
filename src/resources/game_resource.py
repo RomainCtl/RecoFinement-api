@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import GameService, ContentService
@@ -32,6 +32,7 @@ class GameResource(Resource):
         return GameService.get_popular_games(page, user_uuid)
 
     game_additional = GameDto.game_additional_base
+
     @api.doc(
         "Add additional Game for validation",
         responses={
@@ -51,7 +52,7 @@ class GameResource(Resource):
         return GameService.add_additional_game(user_uuid, data)
 
 
-@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/user", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class GameUserRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Games for the connected user",
@@ -65,14 +66,15 @@ class GameUserRecommendationResource(Resource):
         """ Get list of the recommended Games for the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return GameService.get_recommended_games_for_user(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return GameService.get_recommended_games_for_user(args["page"], user_uuid, args["reco_engine"])
 
 
-@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("/groups", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}, "reco_engine": {"in": "query", "type": "str", "default": None}}})
 class GameGroupRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended Games for the groups of the connected user",
@@ -86,11 +88,12 @@ class GameGroupRecommendationResource(Resource):
         """ Get list of the recommended Games for the groups of the connected user """
         user_uuid = get_jwt_identity()
 
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return GameService.get_recommended_games_for_group(page, user_uuid)
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        parser.add_argument('reco_engine', type=str, default=None)
+        args = parser.parse_args()
+
+        return GameService.get_recommended_games_for_group(args["page"], user_uuid, args["reco_engine"])
 
 
 @api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -170,6 +173,7 @@ class GameMetaResource(Resource):
 @api.route("/<int:content_id>/bad_recommendation")
 class GameBadRecommendation(Resource):
     bad_recommendation = GameDto.game_bad_recommendation
+
     @api.doc(
         "Add Game-user (connected user) bad recommendation",
         responses={

@@ -109,7 +109,7 @@ class ApplicationService:
             return internal_err_resp()
 
     @staticmethod
-    def get_recommended_applications_for_group(page, connected_user_uuid):
+    def get_recommended_applications_for_group(page, connected_user_uuid, reco_engine):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
@@ -119,11 +119,17 @@ class ApplicationService:
             *list(map(lambda x: x.group_id, user.owned_groups))
         ]
 
+        filters = [RecommendedContentForGroupModel.group_id.in_(groups_ids)]
+        if reco_engine is not None:
+            filters.append(RecommendedContentModel.engine == reco_engine)
+
         applications, total_pages = Paginator.get_from(
             db.session.query(RecommendedContentForGroupModel, ApplicationModel)
             .join(ApplicationModel.content)
             .join(RecommendedContentForGroupModel, RecommendedContentForGroupModel.content_id == ContentModel.content_id)
-            .filter(RecommendedContentForGroupModel.group_id.in_(groups_ids))
+            .filter(
+                and_(*filters)
+            )
             .order_by(
                 RecommendedContentModel.score.desc().nullslast(),
                 ContentModel.rating_count.desc().nullslast(),
