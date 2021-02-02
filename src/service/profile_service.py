@@ -91,7 +91,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "access-sandbox" not in permissions:
+        if "access_sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -119,7 +119,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "access-sandbox" not in permissions:
+        if "access_sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (genre := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -151,7 +151,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "access-sandbox" not in permissions:
+        if "access_sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if str(user.uuid) != connected_profile_uuid:
@@ -182,7 +182,7 @@ class ProfileService:
 
         # Check permissions
         permissions = get_jwt_claims()['permissions']
-        if "access-sandbox" not in permissions:
+        if "access_sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
         if not (ProfileModel.query.filter_by(user_id=user.user_id, uuid=profile_uuid).first()):
