@@ -816,3 +816,70 @@ class TestGame:
 
         assert response.status_code == 201
         assert res['status'] == True
+
+    def test_game_add_content_bad_jwt(self, test_client, headers_bad, genre_test1):
+        """Test game add additional minimal content with bad JWT token
+        Test:
+            POST: /api/game/
+        Expected result: 
+            422
+        Args:
+            test_client (app context): Flask application
+            headers_bad (dict): bad HTTP header, to get the access token
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers_bad, json=dict(
+                steamid=-2,
+                name="name",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 422
+
+    def test_game_add_content_fake_jwt(self, test_client, headers_fake, genre_test1):
+        """Test game add additional minimal content with fake JWT token
+        Test:
+            POST: /api/game/
+        Expected result: 
+            404, {"status": False}
+        Args:
+            test_client (app context): Flask application
+            headers_fake (dict): fake HTTP header, with invalid signed access token
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/game", headers=headers_fake, json=dict(
+                steamid=-2,
+                name="name",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_game_add_content_no_jwt(self, test_client, genre_test1):
+        """Test game add additional minimal content with fake JWT token
+        Test:
+            POST: /api/game/
+        Expected result: 
+            404, {"status": False}
+        Args:
+            test_client (app context): Flask application
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/game", json=dict(
+                steamid=-2,
+                name="name",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"

@@ -842,7 +842,7 @@ class TestApplication:
 
         assert response.status_code == 422
 
-    def test_application_bad_add_content_fake_jwt(self, test_client, headers_fake, genre_test1):
+    def test_application_add_content_fake_jwt(self, test_client, headers_fake, genre_test1):
         """Test application add additional content with fake JWT token
         Test:
             POST: /api/application/
@@ -864,7 +864,7 @@ class TestApplication:
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_application_bad_recommendation_no_jwt(self, test_client, genre_test1):
+    def test_application_add_content_no_jwt(self, test_client, genre_test1):
         """Test application add additional content without JWT token
         Test:
             POST: /api/application/

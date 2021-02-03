@@ -793,7 +793,7 @@ class TestBook:
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_book_add_content_fake_jwt(self, test_client):
+    def test_book_add_content_no_jwt(self, test_client):
         """Test book add additional minimal content without JWT token
 
         Test:
