@@ -745,3 +745,73 @@ class TestBook:
 
         assert response.status_code == 201
         assert res['status'] == True
+
+    def test_book_add_content_bad_jwt(self, test_client, headers_bad):
+        """Test book add additional minimal content with bad JWT token
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            422
+
+        Args:
+            test_client (app context): Flask application
+            headers_bad (dict): bad HTTP header, to get the access token
+        """
+
+        response = test_client.post(
+            "/api/book", headers=headers_bad, json=dict(
+                isbn="isbn2",
+                title="title",
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 422
+
+    def test_book_add_content_fake_jwt(self, test_client, headers_fake):
+        """Test book add additional minimal content with fake JWT token
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            404, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+            headers_fake (dict): fake HTTP header, with invalid signed access token
+        """
+
+        response = test_client.post(
+            "/api/book", headers=headers_fake, json=dict(
+                isbn="isbn2",
+                title="title",
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_book_add_content_fake_jwt(self, test_client):
+        """Test book add additional minimal content without JWT token
+
+        Test:
+            POST: /api/book/
+
+        Expected result: 
+            401, {"status": False}
+
+        Args:
+            test_client (app context): Flask application
+        """
+
+        response = test_client.post(
+            "/api/book", json=dict(
+                isbn="isbn2",
+                title="title",
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
