@@ -865,11 +865,11 @@ class TestMovie:
         assert res['status'] == False
 
     def test_movie_add_content_no_jwt(self, test_client, genre_test1):
-        """Test movie add additional minimal content with fake JWT token
+        """Test movie add additional minimal content without JWT token
         Test:
             POST: /api/movie/
         Expected result: 
-            404, {"status": False}
+            401, {"status": False}
         Args:
             test_client (app context): Flask application
             genre_test1 (GenreObject) : Genre example
