@@ -23,8 +23,8 @@
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             171 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">99 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">72 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">100 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">71 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -282,7 +282,7 @@
     <p id="t228" class="run"><span class="n"><a href="#t228">228</a></span><span class="t">    <span class="key">def</span> <span class="nam">add_additional_serie</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">data</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t229" class="pln"><span class="n"><a href="#t229">229</a></span><span class="t">        <span class="str">""" Add additional serie"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t230" class="run"><span class="n"><a href="#t230">230</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="op">(</span><span class="nam">user</span> <span class="op">:=</span> <span class="nam">UserModel</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">filter_by</span><span class="op">(</span><span class="nam">uuid</span><span class="op">=</span><span class="nam">user_uuid</span><span class="op">)</span><span class="op">.</span><span class="nam">first</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t231" class="mis show_mis"><span class="n"><a href="#t231">231</a></span><span class="t">            <span class="key">return</span> <span class="nam">err_resp</span><span class="op">(</span><span class="str">"User not found!"</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t231" class="run"><span class="n"><a href="#t231">231</a></span><span class="t">            <span class="key">return</span> <span class="nam">err_resp</span><span class="op">(</span><span class="str">"User not found!"</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t232" class="pln"><span class="n"><a href="#t232">232</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t233" class="pln"><span class="n"><a href="#t233">233</a></span><span class="t">        <span class="com"># Check permissions</span>&nbsp;</span><span class="r"></span></p>
     <p id="t234" class="run"><span class="n"><a href="#t234">234</a></span><span class="t">        <span class="nam">permissions</span> <span class="op">=</span> <span class="nam">get_jwt_claims</span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="str">'permissions'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
@@ -358,7 +358,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-02 09:38 +0000
+            created at 2021-02-03 21:36 +0000
         </p>
     </div>
 </div>
