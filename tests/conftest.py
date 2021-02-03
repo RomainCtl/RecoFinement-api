@@ -122,8 +122,8 @@ def admin_role():
             name="admin",
             permission=[indicate_interest, modify_user_profil,
                         view_recommendation, play_music, add_content,
-                        access_sandbox, modify_content, delete_content,
-                        validate_added_content]
+                        access_sandbox, modify_content, validate_added_content, 
+                        delete_content]
         )
         db.session.add(role)
         db.session.commit()
@@ -295,7 +295,7 @@ def headers_admin(admin_test1):
     """Create header with access token from admin user test 1
 
     Args:
-        user_test1 (UserObject): admin user "test1"
+        admin_test1 (UserObject): admin user "test1"
 
     Returns:
         Dict: Headers with the token access
