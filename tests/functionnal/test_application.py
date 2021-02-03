@@ -727,7 +727,7 @@ class TestApplication:
 
         Args:
             test_client (app context): Flask application
-            headers (dict): HTTP header, to get the access token
+            headers_fake (dict): fake HTTP header, with invalid signed access token
         """
 
         application = ApplicationModel.query.filter_by(
@@ -776,6 +776,7 @@ class TestApplication:
         Args:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
+            genre_test1 : Genre example
         """
 
         response = test_client.post(
@@ -806,6 +807,7 @@ class TestApplication:
         Args:
             test_client (app context): Flask application
             headers (dict): HTTP header, to get the access token
+            genre_test1 (GenreObject) : Genre example
         """
 
         response = test_client.post(
@@ -817,3 +819,68 @@ class TestApplication:
 
         assert response.status_code == 201
         assert res['status'] == True
+
+
+    def test_application_add_content_bad_jwt(self, test_client, headers_bad, genre_test1):
+        """Test application add additional content with bad JWT token
+        Test:
+            POST: /api/application/
+        Expected result: 
+            422
+        Args:
+            test_client (app context): Flask application
+            headers_bad (dict): bad HTTP header, to get the access token
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/application", headers=headers_bad, json=dict(
+                name="name1",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 422
+
+    def test_application_add_content_fake_jwt(self, test_client, headers_fake, genre_test1):
+        """Test application add additional content with fake JWT token
+        Test:
+            POST: /api/application/
+        Expected result: 
+            404, {"status": False}
+        Args:
+            test_client (app context): Flask application
+            headers_fake (dict): fake HTTP header, with invalid signed access token
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/application", headers=headers_fake, json=dict(
+                name="name1",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 404
+        assert res['status'] == False
+
+    def test_application_add_content_no_jwt(self, test_client, genre_test1):
+        """Test application add additional content without JWT token
+        Test:
+            POST: /api/application/
+        Expected result: 
+            401, {"status": False}
+        Args:
+            test_client (app context): Flask application
+            genre_test1 (GenreObject) : Genre example
+        """
+
+        response = test_client.post(
+            "/api/application", json=dict(
+                name="name1",
+                genres=[genre_test1.genre_id],
+            ))
+        res = json.loads(response.data)
+
+        assert response.status_code == 401
+        assert res['msg'] == "Missing Authorization Header"
