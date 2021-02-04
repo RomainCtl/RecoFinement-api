@@ -6,8 +6,8 @@ import requests
 from src import db
 from settings import ENGINE_APIKEY, ENGINE_URL
 from src.utils import err_resp, message, pagination_resp, internal_err_resp, Paginator
-from src.model import ProfileModel, GenreModel, UserModel
-from src.schemas import ProfileBase, ProfileObject, ProfileFullObject, GenreBase
+from src.model import ProfileModel, GenreModel, UserModel, MetaProfileContentModel, ContentModel, ApplicationModel, BookModel, GameModel, MovieModel, SerieModel, TrackModel
+from src.schemas import ProfileBase, ProfileObject, GenreBase, MetaProfileApplicationItem, MetaProfileBookItem, MetaProfileGameItem, MetaProfileMovieItem, MetaProfileSerieItem, MetaProfileTrackItem
 
 
 class ProfileService:
@@ -28,7 +28,7 @@ class ProfileService:
         )
 
         try:
-            profile_data = ProfileObject.loads(profiles)
+            profile_data = ProfileBase.loads(profiles)
 
             return pagination_resp(
                 message="Profile data sent",
@@ -59,7 +59,7 @@ class ProfileService:
             db.session.add(new_profile)
             db.session.commit()
 
-            profile_data = ProfileObject.load(new_profile)
+            profile_data = ProfileBase.load(new_profile)
 
             resp = message(True, "Profile created")
             resp["profile"] = profile_data
@@ -74,12 +74,10 @@ class ProfileService:
     def get_profile_data(uuid, connected_profile_uuid):
         """ Get profile's data by uuid """
 
-        if not (profile := ProfileModel.query.filter_by(uuid=uuid).first()):
-            return err_resp("User Profile not found!", 404)
-
         if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(uuid=uuid, user_id=user.user_id).first()):
+
+        if not (profile := ProfileModel.query.filter_by(uuid=uuid).first()):
             return err_resp("Profile not found!", 404)
 
         try:
@@ -231,11 +229,293 @@ class ProfileService:
             return internal_err_resp()
 
     @staticmethod
-    def get_profile_meta(profile_uuid, connected_user_uuid):
-        """ Get profile meta """
+    def get_profile_meta_app(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta applicaiton """
 
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
 
-        if not (ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
             return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, ApplicationModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(ApplicationModel, ApplicationModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].application = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileApplicationItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta application data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta_book(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta book """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, BookModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(BookModel, BookModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].book = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileBookItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta book data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta_game(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta game """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, GameModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(GameModel, GameModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].game = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileGameItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta game data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta_movie(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta movie """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, MovieModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(MovieModel, MovieModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].movie = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileMovieItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta movie data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta_serie(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta serie """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, SerieModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(SerieModel, SerieModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].serie = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileSerieItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta serie data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta_track(profile_uuid, connected_user_uuid, page):
+        """ Get profile meta track """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        metas, total_pages = Paginator.get_from(
+            db.session.query(MetaProfileContentModel, TrackModel)
+            .join(ContentModel, MetaProfileContentModel.content_id == ContentModel.content_id)
+            .join(TrackModel, TrackModel.content_id == ContentModel.content_id)
+            .filter(MetaProfileContentModel.profile_id == profile.profile_id),
+            page,
+        )
+
+        try:
+            def c_load(row):
+                row[0].track = row[1]
+                return row[0]
+
+            metas = list(map(c_load, metas))
+            meta_data = MetaProfileTrackItem.loads(metas)
+
+            return pagination_resp(
+                message="Profile's meta track data sent",
+                content=meta_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def update_meta(profile_uuid, content_id, connected_user_uuid, data):
+        """ Update metadata between a profile and a content """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (app := ContentModel.query.filter_by(content_id=content_id).first()):
+            return err_resp("Content not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        try:
+            if not (meta_profile_content := MetaProfileContentModel.query.filter_by(profile_id=profile.profile_id, content_id=content_id).first()):
+                meta_profile_content = MetaUserContentModel(
+                    content_id=content_id, profile_id=profile.profile_id)
+
+            meta_profile_content.rating = data["rating"]
+            meta_profile_content.last_rating_date = data["last_rating_date"]
+            meta_profile_content.review_see_count = data["review_see_count"]
+            meta_profile_content.last_review_see_date = data["last_review_see_date"]
+            meta_profile_content.count = data["count"]
+            meta_profile_content.last_count_increment = data["last_count_increment"]
+
+            db.session.add(meta_profile_content)
+            db.session.commit()
+
+            resp = message(True, "Meta successfully updated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()

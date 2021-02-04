@@ -11,8 +11,7 @@ UserBaseObj = Model("User Base", {
 
 ProfileBaseObj = Model("Profile Base", {
     "uuid": fields.String,
-    "username": fields.String,
-    "user_id": fields.Integer,
+    "profilename": fields.String,
 })
 
 ExternalBaseObj = Model("External service Base", {
@@ -152,6 +151,30 @@ MetaProfileContentBaseObj = Model("MetaProfileContent base", {
 })
 
 # Item object
+
+MetaProfileApplicationItemObj = Model.clone("Meta Profile Application Item", MetaProfileContentBaseObj, {
+    "application": fields.Nested(ApplicationBaseObj)
+})
+
+MetaProfileBookItemObj = Model.clone("Meta Profile Book Item", MetaProfileContentBaseObj, {
+    "book": fields.Nested(ApplicationBaseObj)
+})
+
+MetaProfileGameItemObj = Model.clone("Meta Profile Game Item", MetaProfileContentBaseObj, {
+    "game": fields.Nested(ApplicationBaseObj)
+})
+
+MetaProfileMovieItemObj = Model.clone("Meta Profile Movie Item", MetaProfileContentBaseObj, {
+    "movie": fields.Nested(ApplicationBaseObj)
+})
+
+MetaProfileSerieItemObj = Model.clone("Meta Profile Serie Item", MetaProfileContentBaseObj, {
+    "serie": fields.Nested(ApplicationBaseObj)
+})
+
+MetaProfileTrackItemObj = Model.clone("Meta Profile Track Item", MetaProfileContentBaseObj, {
+    "track": fields.Nested(ApplicationBaseObj)
+})
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
     "groups": fields.List(fields.Nested(GroupBaseObj)),

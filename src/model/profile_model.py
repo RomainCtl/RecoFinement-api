@@ -25,13 +25,6 @@ class MetaProfileContentModel(db.Model):
     last_count_increment = db.Column(db.DateTime, default=None)
 
 
-""" GroupMembersProfileModel = db.Table("group_members_profile",
-                             db.Column("profile_id", db.Integer, db.ForeignKey(
-                                 "profile.profile_id", ondelete="CASCADE"), primary_key=True),
-                             db.Column("group_id", db.Integer, db.ForeignKey(
-                                 "group_profile.group_id", ondelete="CASCADE"), primary_key=True)
-                             ) """
-
 LikedGenreProfileModel = db.Table("liked_genres_profile",
                                   db.Column("profile_id", db.Integer, db.ForeignKey(
                                       "profile.profile_id", ondelete="CASCADE"), primary_key=True),
