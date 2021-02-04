@@ -12,7 +12,7 @@ from src.schemas import ProfileBase, ProfileObject, ProfileFullObject, GenreBase
 
 class ProfileService:
     @staticmethod
-    def get_profiles(connected_user_uuid):
+    def get_profiles(connected_user_uuid, page):
         """" Get user's profile list """
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
@@ -22,14 +22,20 @@ class ProfileService:
         if "access_sandbox" not in permissions:
             return err_resp("Permission missing", 403)
 
-        profiles = ProfileModel.query.filter_by(user_id=user.user_id).all()
+        profiles, total_pages = Paginator.get_from(
+            ProfileModel.query.filter_by(user_id=user.user_id),
+            page,
+        )
 
         try:
             profile_data = ProfileObject.loads(profiles)
 
-            resp = message(True, "Profile data sent")
-            resp["profiles"] = profile_data
-            return resp, 200
+            return pagination_resp(
+                message="Profile data sent",
+                content=profile_data,
+                page=page,
+                total_pages=total_pages
+            )
 
         except Exception as error:
             current_app.logger.error(error)

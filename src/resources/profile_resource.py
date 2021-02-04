@@ -15,7 +15,7 @@ search_data_resp = ProfileDto.search_data_resp
 update_schema = UpdateProfileDataSchema()
 
 
-@api.route("")
+@api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class UserProfileResource(Resource):
     @api.doc(
         "Get a specific profile",
@@ -30,7 +30,12 @@ class UserProfileResource(Resource):
         """ Get list of user's profile """
         user_uuid = get_jwt_identity()
 
-        return ProfileService.get_profiles(user_uuid)
+        try:
+            page = int(request.args.get('page'))
+        except (ValueError, TypeError):
+            page = 1
+
+        return ProfileService.get_profiles(user_uuid, page)
 
     profile_data = ProfileDto.profile_data
 
