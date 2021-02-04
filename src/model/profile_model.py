@@ -4,6 +4,7 @@ import uuid
 from src import db, bcrypt
 from src.utils import GUID
 
+
 class MetaProfileContentModel(db.Model):
     """
     MetaProfileContent Model for storing metadata between profile and content
@@ -32,11 +33,11 @@ class MetaProfileContentModel(db.Model):
                              ) """
 
 LikedGenreProfileModel = db.Table("liked_genres_profile",
-                           db.Column("profile_id", db.Integer, db.ForeignKey(
-                               "profile.profile_id", ondelete="CASCADE"), primary_key=True),
-                           db.Column("genre_id", db.Integer, db.ForeignKey(
-                               "genre.genre_id", ondelete="CASCADE"), primary_key=True)
-                           )
+                                  db.Column("profile_id", db.Integer, db.ForeignKey(
+                                      "profile.profile_id", ondelete="CASCADE"), primary_key=True),
+                                  db.Column("genre_id", db.Integer, db.ForeignKey(
+                                      "genre.genre_id", ondelete="CASCADE"), primary_key=True)
+                                  )
 
 
 class RecommendedContentProfileModel(db.Model):
@@ -75,11 +76,11 @@ class ProfileModel(db.Model):
     __tablename__ = "profile"
 
     profile_id = db.Column(db.Integer, primary_key=True,
-                        autoincrement=True, index=True)
+                           autoincrement=True, index=True)
     uuid = db.Column(GUID(), default=uuid.uuid4, unique=True)
     profilename = db.Column(db.String(45), nullable=False)
-    #uuid_user = db.Column(GUID(), db.ForeignKey("user.uuid", ondelete="CASCADE"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.user_id", ondelete="CASCADE"), nullable=False)
 
     # Loaded immediately after loading Profile, but when querying multiple profiles, you will not get additional queries.
     meta_profile_contents = db.relationship(
@@ -90,14 +91,6 @@ class ProfileModel(db.Model):
 
     bad_recommadation_contents = db.relationship(
         "BadRecommendationContentProfileModel", lazy="subquery")
-
-    """ groups = db.relationship(
-        "GroupProfileModel", secondary=GroupMembersProfileModel, lazy="dynamic", backref=db.backref('members', lazy='dynamic'))
-    owned_groups = db.relationship(
-        "GroupProfileModel", backref="owner", lazy='dynamic')
-
-    linked_services = db.relationship(
-        "ExternalModel", backref="profile", lazy='dynamic') """
 
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreProfileModel, lazy="dynamic")

@@ -15,6 +15,45 @@ search_data_resp = ProfileDto.search_data_resp
 update_schema = UpdateProfileDataSchema()
 
 
+@api.route("")
+class UserProfileResource(Resource):
+    @api.doc(
+        "Get a specific profile",
+        responses={
+            200: ("Profile data successfully sent", search_data_resp),
+            401: ("Authentication required"),
+            403: ("Permission missing"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of user's profile """
+        user_uuid = get_jwt_identity()
+
+        return ProfileService.get_profiles(user_uuid)
+
+    profile_data = ProfileDto.profile_data
+
+    @api.doc(
+        "Create a new profile",
+        responses={
+            200: ("Profile successfully created", data_resp),
+            401: ("Malformed data or validations failed."),
+            401: ("Authentication required"),
+            403: ("Permission missing"),
+        },
+    )
+    @jwt_required
+    @api.expect(profile_data, validate=True)
+    def post(self):
+        """ Get list of user's profile """
+        user_uuid = get_jwt_identity()
+
+        data = request.get_json()
+
+        return ProfileService.create_profile(data, user_uuid)
+
+
 @api.route("/<uuid:uuid>")
 class ProfileResource(Resource):
     @api.doc(
@@ -67,27 +106,8 @@ class ProfileResource(Resource):
             return validation_error(False, errors)
         return ProfileService.update_profile_data(uuid, profile_uuid, data)
 
-@api.route("/search/<string:search_term>", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
-class ProfileSearchResource(Resource):
-    @api.doc(
-        "Search profiles",
-        responses={
-            200: ("Profile data successfully sent", search_data_resp),
-            401: ("Authentication required"),
-        },
-    )
-    @jwt_required
-    def get(self, search_term):
-        """ Get list of track's data by term """
-        profile_uuid = get_jwt_identity()
-        try:
-            page = int(request.args.get('page'))
-        except (ValueError, TypeError):
-            page = 1
-        return ProfileService.search_profile_data(search_term, page, profile_uuid)
 
-
-@api.route("/genre/<uuid:profile_uuid>")
+@api.route("/<uuid:profile_uuid>/genre")
 class ProfileGenresResource(Resource):
     @api.doc(
         "Get liked genres (connected profile)",
@@ -98,14 +118,14 @@ class ProfileGenresResource(Resource):
         }
     )
     @jwt_required
-    def get(self,profile_uuid):
+    def get(self, profile_uuid):
         """ Get liked genres (connected profile) """
         uuid = get_jwt_identity()
 
         return ProfileService.get_genres(uuid, profile_uuid)
 
 
-@api.route("/genre/<uuid:profile_uuid>/<int:genre_id>")
+@api.route("/<uuid:profile_uuid>/genre/<int:genre_id>")
 class ProfileGenreResource(Resource):
     @api.doc(
         "Like a genre (connected profile)",
@@ -120,7 +140,7 @@ class ProfileGenreResource(Resource):
         """ Like a genre (connected profile) """
         user_uuid = get_jwt_identity()
 
-        return ProfileService.like_genre(genre_id,user_uuid, profile_uuid)
+        return ProfileService.like_genre(genre_id, user_uuid, profile_uuid)
 
     @api.doc(
         "Unlike a genre (connected profile)",
@@ -131,8 +151,26 @@ class ProfileGenreResource(Resource):
         }
     )
     @jwt_required
-    def delete(self, genre_id,profile_uuid):
+    def delete(self, genre_id, profile_uuid):
         """ Unlike a genre (connected profile) """
         user_uuid = get_jwt_identity()
 
-        return ProfileService.unlike_genre(genre_id,user_uuid, profile_uuid)
+        return ProfileService.unlike_genre(genre_id, user_uuid, profile_uuid)
+
+
+@api.route("/<uuid:profile_uuid>/meta")
+class ProfileMetaResource(Resource):
+    @api.doc(
+        "Like a genre (connected profile)",
+        responses={
+            201: ("Successfully send"),
+            401: ("Authentication required"),
+            404: "Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid):
+        """ Like a genre (connected profile) """
+        user_uuid = get_jwt_identity()
+
+        return ProfileService.get_profile_meta(genre_id, user_uuid, profile_uuid)

@@ -12,29 +12,53 @@ from src.schemas import ProfileBase, ProfileObject, ProfileFullObject, GenreBase
 
 class ProfileService:
     @staticmethod
-    def search_profile_data(search_term, page, connected_profile_uuid):
-        """ Search profile data by profilename """
-        if not (user := UserModel.query.filter_by(uuid=connected_profile_uuid).first()):
+    def get_profiles(connected_user_uuid):
+        """" Get user's profile list """
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
-        if not (ProfileModel.query.filter_by(user_id=user.user_id).first()):
-            return err_resp("Profile not found!", 404)
-        """ if not (ProfileModel.query.filter_by(uuid_user=connected_profile_uuid).first()):
-            return err_resp("Profile not found!", 404) """
-        profiles, total_pages = Paginator.get_from(
-            ProfileModel.query.filter(ProfileModel.profilename.ilike(search_term+"%")).union(
-                ProfileModel.query.filter(ProfileModel.profilename.ilike("%"+search_term+"%"))),
-            page,
-        )
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "access_sandbox" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        profiles = ProfileModel.query.filter_by(user_id=user.user_id).all()
 
         try:
-            profile_data = ProfileBase.loads(profiles)
+            profile_data = ProfileObject.loads(profiles)
 
-            return pagination_resp(
-                message="Track data sent",
-                content=profile_data,
-                page=page,
-                total_pages=total_pages
+            resp = message(True, "Profile data sent")
+            resp["profiles"] = profile_data
+            return resp, 200
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def create_profile(data, connected_user_uuid):
+        """ Create new profile """
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if ProfileModel.query.filter_by(user_id=user.user_id, profilename=data["profilename"]).first() is not None:
+            return err_resp("You have already created a profile with this name!", 400)
+
+        try:
+            new_profile = ProfileModel(
+                profilename=data["profilename"],
+                user_id=user.user_id
             )
+
+            db.session.add(new_profile)
+            db.session.commit()
+
+            profile_data = ProfileObject.load(new_profile)
+
+            resp = message(True, "Profile created")
+            resp["profile"] = profile_data
+
+            return resp, 201
 
         except Exception as error:
             current_app.logger.error(error)
@@ -199,3 +223,13 @@ class ProfileService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def get_profile_meta(profile_uuid, connected_user_uuid):
+        """ Get profile meta """
+
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        if not (ProfileModel.query.filter_by(uuid=profile_uuid, user_id=user.user_id).first()):
+            return err_resp("Profile not found!", 404)
