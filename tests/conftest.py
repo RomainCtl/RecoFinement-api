@@ -340,7 +340,7 @@ def test_client():
     Yields:
         [app context]: app context for the Flask test application
     """
-    flask_app = create_app(settings.testing)
+    flask_app, socketio = create_app(settings.testing)
 
     # Flask provides a way to test your application exposing the Werkzeug test Client and handling the context locals for you.
     testing_client = flask_app.test_client()
