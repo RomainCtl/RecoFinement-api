@@ -32,6 +32,8 @@ launchpadlib = "*"
 pytest-html = "*"
 pytest-cov = "*"
 anybadge = "*"
+flask-socketio = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.8"

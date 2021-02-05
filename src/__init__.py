@@ -1,7 +1,7 @@
 from flask import Flask
 from jwt import ExpiredSignatureError
 
-from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid
+from src.addons import db, ma, migrate, cors, bcrypt, jwt, flask_uuid, socketio
 from src.utils import err_resp
 import settings
 
@@ -25,6 +25,7 @@ def create_app(config=None):
     cors.init_app(app, resources={r"*": {"origins": "*"}})
     migrate.init_app(app, db=db)
     flask_uuid.init_app(app)
+    socketio.init_app(app)
 
     # JWT overrided method
     from .model import RevokedTokenModel
@@ -54,4 +55,4 @@ def create_app(config=None):
 
     app.register_blueprint(api_bp, url_prefix="/api")
 
-    return app
+    return app, socketio

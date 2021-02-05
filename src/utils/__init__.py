@@ -6,6 +6,7 @@ from .spotify import Spotify
 from .tmdb import TMDB
 from .gbooks import GBooks
 from .guid import GUID
+from .ws_auth import ws_jwt_required
 
 
 def message(status, message):

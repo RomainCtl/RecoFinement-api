@@ -167,6 +167,10 @@ git-config: ## Configure git for working with submodule and define some usefull 
 bash: ## Open a new bash session
 	bash
 
+# source: https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
+%:
+	@:
+
 # source: https://suva.sh/posts/well-documented-makefiles/
 help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<task>\033[0m\n"} /^[0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
