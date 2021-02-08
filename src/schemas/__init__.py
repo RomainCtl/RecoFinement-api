@@ -2,7 +2,7 @@ from .auth_schema import LoginSchema, RegisterSchema, ResetSchema, ForgetSchema
 
 from .group_schema import GroupBase, GroupObject, GroupCreateSchema, GroupAddMemberSchema
 from .user_schema import UserBase, UserObject, UserFullObject, UpdateUserDataSchema
-from .profile_schema import ProfileBase, ProfileObject, ProfileFullObject, UpdateProfileDataSchema
+from .profile_schema import ProfileBase, ProfileObject, UpdateProfileDataSchema
 from .external_schema import ExternalBase
 
 from .application_schema import ApplicationBase, ApplicationExtra, ApplicationAdditionalBase
@@ -16,5 +16,8 @@ from .track_schema import TrackBase, TrackObject, TrackExtra, TrackAdditionalBas
 from .genre_schema import GenreBase, GenreObject
 
 from .meta_user_content_schema import MetaUserContentBase, MetaUserContentItem
+from .meta_profile_content_schema import MetaProfileContentBase, MetaProfileApplicationItem, MetaProfileBookItem, MetaProfileGameItem, MetaProfileMovieItem, MetaProfileSerieItem, MetaProfileTrackItem
 
 from .role_schema import RoleBase, RoleObject
+
+from .recommendation_history_schema import *

@@ -9,3 +9,5 @@ from .game_events import *
 from .movie_events import *
 from .serie_events import *
 from .track_events import *
+
+from .recommendation_launched_for_profile_event import RecoLaunchedLikedGenreModel, RecoMetaModel, RecoResultModel, RecommendationLaunchedForProfileEvent

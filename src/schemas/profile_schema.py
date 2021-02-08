@@ -26,29 +26,10 @@ class ProfileBase(SQLAlchemyAutoSchema):
 
 
 class ProfileObject(SQLAlchemyAutoSchema):
-    groups = ma.Nested("GroupBase", many=True)
-    invitations = ma.Nested("GroupBase", many=True)
-    owned_groups = ma.Nested("GroupBase", many=True)
-
-    class Meta(ProfileMeta):
-        fields = ("uuid", "profilename",
-                  "groups", "invitations", "owned_groups")
-
-
-class ProfileFullObject(SQLAlchemyAutoSchema):
-    groups = ma.Nested("GroupBase", many=True)
-    invitations = ma.Nested("GroupBase", many=True)
-    owned_groups = ma.Nested("GroupBase", many=True)
-
     liked_genres = ma.Nested("GenreBase", many=True)
 
-    linked_services = ma.Nested("ExternalBase", many=True)
-
-    meta_profile_content = ma.Nested("MetaProfileContentItem", many=True)
-
     class Meta(ProfileMeta):
-        fields = ("uuid", "profilename", "groups", "invitations",
-                  "owned_groups", "liked_genres", "linked_services", "meta_profile_content")
+        fields = ("uuid", "profilename", "liked_genres")
 
 
 class UpdateProfileDataSchema(DTOSchema):

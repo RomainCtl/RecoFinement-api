@@ -380,116 +380,13 @@ class TestProfile:
         assert response.status_code == 400
         assert res['status'] == False
 
-    ### SEARCH PROFILE ###
-
-    def test_profile_search_no_jwt(self, test_client):
-        """Test profile search without access token
-
-        Test:
-            GET: /api/profile/search/<profilename>
-
-        Expected result:
-            401, {"msg" : "Missing Authorization Header"}
-
-        Args:
-            test_client (app context): Flask application
-        """
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.get("/api/profile/search/"+profile.profilename)
-        res = json.loads(response.data)
-
-        assert response.status_code == 401
-        assert res['msg'] == "Missing Authorization Header"
-
-    def test_profile_search_bad_name(self, test_client, headers_admin):
-        """Test profile search bad name with access token
-
-        Test:
-            GET: /api/profile/search/<profilename>
-
-        Expected result:
-            200, {"status" : True}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP headers, to get the access token
-        """
-        response = test_client.get(
-            "/api/profile/search/"+str(uuid.uuid4()), headers=headers_admin)
-        res = json.loads(response.data)
-
-        assert response.status_code == 200
-        assert res['status'] == True
-
-    def test_profile_search(self, test_client, headers_admin):
-        """Test profile search with access token
-
-        Test:
-            GET: /api/profile/search/<profilename>
-
-        Expected result:
-            200, {"status" : True}
-
-        Args:
-            test_client (app context): Flask application
-            headers_admin (dict): HTTP headers, to get the access token
-        """
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.get(
-            "/api/profile/search/"+profile.profilename, headers=headers_admin)
-        res = json.loads(response.data)
-
-        assert response.status_code == 200
-        assert res['status'] == True
-
-    def test_profile_search_bad_jwt(self, test_client, headers_bad):
-        """Test profile search with bad access token
-
-        Test:
-            GET: /api/profile/search/<profilename>
-
-        Expected result:
-            422
-
-        Args:
-            test_client (app context): Flask application
-            headers_bad (dict): HTTP headers, to get the bad access token
-        """
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.get(
-            "/api/profile/search/"+profile.profilename, headers=headers_bad)
-        res = json.loads(response.data)
-
-        assert response.status_code == 422
-
-    def test_profile_search_fake_jwt(self, test_client, headers_fake):
-        """Test profile search with fake access token
-
-        Test:
-            GET: /api/profile/search/<profilename>
-
-        Expected result:
-            404, {"status" : False}
-
-        Args:
-            test_client (app context): Flask application
-            headers_fake (dict): HTTP headers, to get the fake access token
-        """
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.get(
-            "/api/profile/search/"+profile.profilename, headers=headers_fake)
-        res = json.loads(response.data)
-
-        assert response.status_code == 404
-        assert res['status'] == False
-
     ### PROFILE GENRE ###
 
     def test_profile_genre(self, test_client, headers_admin):
         """Test get profile genres with access token
 
         Test:
-            GET: /api/profile/genre
+            GET: /api/profile/<profile_uuid>/genre
 
         Expected result:
             200, {"status" : True}
@@ -500,7 +397,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.get(
-            "/api/profile/genre/"+str(profile.uuid), headers=headers_admin)
+            "/api/profile/"+str(profile.uuid)+"/genre", headers=headers_admin)
         res = json.loads(response.data)
 
         #assert res['message'] == "test"
@@ -511,7 +408,7 @@ class TestProfile:
         """Test profile genre with bad access token
 
         Test:
-            GET: /api/profile/genre
+            GET: /api/profile/<profile_uuid>/genre
 
         Expected result:
             422
@@ -522,7 +419,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.get(
-            "/api/profile/genre/"+str(profile.uuid), headers=headers_bad)
+            "/api/profile/"+str(profile.uuid)+"/genre", headers=headers_bad)
         #res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -531,7 +428,7 @@ class TestProfile:
         """Test get profile genre with fake access token
 
         Test:
-            GET: /api/profile/genre
+            GET: /api/profile/<profile_uuid>genre
 
         Expected result:
             404, {"status" : False}
@@ -542,7 +439,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.get(
-            "/api/profile/genre/"+str(profile.uuid), headers=headers_fake)
+            "/api/profile/"+str(profile.uuid)+"/genre", headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -552,7 +449,7 @@ class TestProfile:
         """Test get profile genre without access token
 
         Test:
-            GET: /api/profile/genre
+            GET: /api/profile/<profile_uuid>/genre
 
         Expected result:
             401, {"msg" : "Missing Authorization Header"}
@@ -561,7 +458,7 @@ class TestProfile:
             test_client (app context): Flask application
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.get("/api/profile/genre/"+str(profile.uuid))
+        response = test_client.get("/api/profile/"+str(profile.uuid)+"/genre")
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -573,7 +470,7 @@ class TestProfile:
         """Test update profile genre by id with access token
 
         Test:
-            PUT: /api/profile/genre/<genre_id>
+            PUT: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             201, {"status" : True}
@@ -584,7 +481,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_admin)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_admin)
         res = json.loads(response.data)
 
         #assert res['message'] == "test"
@@ -595,7 +492,7 @@ class TestProfile:
         """Test update profile genre by id  with fake access token
 
         Test:
-            PUT: /api/profile/genre/<genre_id>
+            PUT: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             404, {"status" : False}
@@ -606,7 +503,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_fake)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -616,7 +513,7 @@ class TestProfile:
         """Test get profile genre id with bad access token
 
         Test:
-            PUT: /api/profile/genre/<genre_id>
+            PUT: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             422
@@ -627,7 +524,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_bad)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -636,7 +533,7 @@ class TestProfile:
         """Test update profile genre by id without access token
 
         Test:
-            PUT: /api/profile/genre/<genre_id>
+            PUT: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             401, {"msg" : "Missing Authorization Header"}
@@ -646,7 +543,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id))
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -656,7 +553,7 @@ class TestProfile:
         """Test profile genre by bad id with access token
 
         Test:
-            PUT: /api/profile/genre/<genre_id>
+            PUT: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             404, {"status" : False}
@@ -667,7 +564,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.put(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(9999999), headers=headers_admin)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(9999999), headers=headers_admin)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -679,7 +576,7 @@ class TestProfile:
         """Test delete profile genre by id with access token
 
         Test:
-            DELETE: /api/profile/genre/<genre_id>
+            DELETE: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             201, {"status" : True}
@@ -690,7 +587,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_admin)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_admin)
         res = json.loads(response.data)
 
         #assert res['message'] == "test"
@@ -701,7 +598,7 @@ class TestProfile:
         """Test delete profile genre by id with fake access token
 
         Test:
-            DELETE: /api/profile/genre/<genre_id>
+            DELETE: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             404, {"status" : False}
@@ -712,7 +609,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_fake)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_fake)
         res = json.loads(response.data)
 
         assert response.status_code == 404
@@ -722,7 +619,7 @@ class TestProfile:
         """Test profile genre id delete with bad access token
 
         Test:
-            DELETE: /api/profile/genre/<genre_id>
+            DELETE: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             422
@@ -733,7 +630,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id), headers=headers_bad)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id), headers=headers_bad)
         #res = json.loads(response.data)
 
         assert response.status_code == 422
@@ -742,7 +639,7 @@ class TestProfile:
         """Test delete profile genre by id without access token
 
         Test:
-            DELETE: /api/profile/genre/<genre_id>
+            DELETE: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             401, {"msg" : "Missing Authorization Header"}
@@ -753,7 +650,7 @@ class TestProfile:
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         #genre = GenreModel.query.filter_by(name="genre test").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(genre_test1.genre_id))
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(genre_test1.genre_id))
         res = json.loads(response.data)
 
         assert response.status_code == 401
@@ -763,7 +660,7 @@ class TestProfile:
         """Test delete profile genre by bad id with access token
 
         Test:
-            DELETE: /api/profile/genre/<genre_id>
+            DELETE: /api/profile/<profile_uuid>/genre/<genre_id>
 
         Expected result:
             404, {"status" : False}
@@ -774,7 +671,7 @@ class TestProfile:
         """
         profile = ProfileModel.query.filter_by(profilename="admin1").first()
         response = test_client.delete(
-            "/api/profile/genre/"+str(profile.uuid)+"/"+str(9999999), headers=headers_admin)
+            "/api/profile/"+str(profile.uuid)+"/genre/"+str(9999999), headers=headers_admin)
         res = json.loads(response.data)
 
         assert response.status_code == 404
