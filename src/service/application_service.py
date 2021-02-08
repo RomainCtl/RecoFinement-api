@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import ApplicationModel, UserModel, GenreModel, ContentType, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, ApplicationAdditionalModel
-from src.schemas import ApplicationBase, GenreBase, MetaUserContentBase, ApplicationExtra
+from src.schemas import ApplicationBase, GenreBase, MetaUserContentBase, ApplicationExtra, ApplicationAdditionalBase
 
 
 class ApplicationService:
@@ -260,6 +260,103 @@ class ApplicationService:
             db.session.commit()
 
             resp = message(True, "Application have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_additional_application(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        applications, total_pages = Paginator.get_from(
+            ApplicationAdditionalModel.query,
+            page,
+        )
+
+        try:
+            application_data = ApplicationAdditionalBase.loads(applications)
+
+            return pagination_resp(
+                message="Additional application data sent",
+                content=application_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_application(connected_user_uuid, app_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (app := ApplicationAdditionalModel.query.filter_by(app_id=app_id).first()):
+            return err_resp("Additional application not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=app.genres)
+            db.session.add(content)
+            db.session.flush()
+
+            new_application = ApplicationModel(
+                name=app.name,
+                size=app.size,
+                installs=app.installs,
+                type=app.type,
+                price=app.price,
+                content_rating=app.content_rating,
+                last_updated=app.last_updated,
+                current_version=app.current_version,
+                android_version=app.android_version,
+                cover=app.cover,
+                content=content
+            )
+            db.session.add(new_application)
+            db.session.delete(app)
+
+            db.session.commit()
+
+            resp = message(
+                True, "Additional application data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_application(connected_user_uuid, app_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (app := ApplicationAdditionalModel.query.filter_by(app_id=app_id).first()):
+            return err_resp("Additional application not found!", 404)
+
+        try:
+            db.session.delete(app)
+            db.session.commit()
+
+            resp = message(True, "Additional application successfully deleted")
             return resp, 201
 
         except Exception as error:
