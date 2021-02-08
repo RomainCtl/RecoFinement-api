@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            19 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">19 run</button>
+            18 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">18 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -95,29 +95,12 @@
     <p id="t41" class="pln"><span class="n"><a href="#t41">41</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t42" class="run"><span class="n"><a href="#t42">42</a></span><span class="t">    <span class="nam">recommended_contents</span> <span class="op">=</span> <span class="nam">db</span><span class="op">.</span><span class="nam">relationship</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t43" class="pln"><span class="n"><a href="#t43">43</a></span><span class="t">        <span class="str">"RecommendedContentForGroupModel"</span><span class="op">,</span> <span class="nam">lazy</span><span class="op">=</span><span class="str">"subquery"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t44" class="pln"><span class="n"><a href="#t44">44</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t45" class="pln"><span class="n"><a href="#t45">45</a></span><span class="t"><span class="com">#class GroupProfileModel(db.Model):</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">    <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t"><span class="str">    Group Model for storing group related details</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t48" class="pln"><span class="n"><a href="#t48">48</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t49" class="run"><span class="n"><a href="#t49">49</a></span><span class="t">    <span class="str">""" __tablename__ = "group_profile"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t50" class="pln"><span class="n"><a href="#t50">50</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t"><span class="str">    group_id = db.Column(db.Integer, primary_key=True, autoincrement=True)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t52" class="pln"><span class="n"><a href="#t52">52</a></span><span class="t"><span class="str">    name = db.Column(db.String(45), nullable=False)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t53" class="pln"><span class="n"><a href="#t53">53</a></span><span class="t"><span class="str">    owner_id = db.Column(db.Integer, db.ForeignKey(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t54" class="pln"><span class="n"><a href="#t54">54</a></span><span class="t"><span class="str">        "profile.profile_id", ondelete="CASCADE"))</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t55" class="pln"><span class="n"><a href="#t55">55</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t56" class="pln"><span class="n"><a href="#t56">56</a></span><span class="t"><span class="str">    invitations = db.relationship("ProfileModel", secondary=InvitationModel,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t"><span class="str">                                  lazy="dynamic", backref=db.backref("invitations", lazy="dynamic"))</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t"><span class="str">    recommended_contents = db.relationship(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t"><span class="str">        "RecommendedContentForGroupModel", lazy="subquery") """</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-03 21:36 +0000
+            created at 2021-02-08 17:50 +0000
         </p>
     </div>
 </div>
