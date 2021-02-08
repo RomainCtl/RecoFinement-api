@@ -11,14 +11,21 @@ from src.utils import validation_error
 
 api = ProfileDto.api
 data_resp = ProfileDto.data_resp
+data_resp_list = ProfileDto.data_resp_list
+liked_genres_resp_list = ProfileDto.liked_genres_resp_list
 search_data_resp = ProfileDto.search_data_resp
-meta_resp = ProfileDto.meta_resp
 meta_application_resp = ProfileDto.meta_application_resp
 meta_book_resp = ProfileDto.meta_book_resp
 meta_game_resp = ProfileDto.meta_game_resp
 meta_movie_resp = ProfileDto.meta_movie_resp
 meta_serie_resp = ProfileDto.meta_serie_resp
 meta_track_resp = ProfileDto.meta_track_resp
+result_app_resp = ProfileDto.result_app_resp
+result_book_resp = ProfileDto.result_book_resp
+result_game_resp = ProfileDto.result_game_resp
+result_movie_resp = ProfileDto.result_movie_resp
+result_serie_resp = ProfileDto.result_serie_resp
+result_track_resp = ProfileDto.result_track_resp
 update_schema = UpdateProfileDataSchema()
 
 
@@ -124,7 +131,7 @@ class ProfileGenresResource(Resource):
     @api.doc(
         "Get liked genres (connected profile)",
         responses={
-            201: ("Successfully send"),
+            200: ("Successfully send", liked_genres_resp_list),
             401: ("Authentication required"),
             404: "Profile not found!",
         }
@@ -337,7 +344,7 @@ class ProfileRecoHistoryResource(Resource):
     @api.doc(
         "Get recommendation history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", data_resp_list),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -359,8 +366,7 @@ class ProfileRecoHistoryGenresResource(Resource):
     @api.doc(
         "Get liked genres from event",
         responses={
-            # TODO change delcared dto
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", liked_genres_resp_list),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -382,7 +388,7 @@ class ProfileRecoHistoryApplicationResultResource(Resource):
     @api.doc(
         "Get recommended application result history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_app_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -404,7 +410,7 @@ class ProfileRecoHistoryApplicationMetaResource(Resource):
     @api.doc(
         "Get recommended application meta history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", meta_application_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -426,7 +432,7 @@ class ProfileRecoHistoryBookResultResource(Resource):
     @api.doc(
         "Get recommended book result history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_book_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -448,7 +454,7 @@ class ProfileRecoHistoryBookMetaResource(Resource):
     @api.doc(
         "Get recommended book meta history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", meta_book_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -470,7 +476,7 @@ class ProfileRecoHistoryResultGameResource(Resource):
     @api.doc(
         "Get recommended game result istory",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_game_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -492,7 +498,7 @@ class ProfileRecoHistoryGameMEtaResource(Resource):
     @api.doc(
         "Get recommended game meta history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", meta_game_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -514,7 +520,7 @@ class ProfileRecoHistoryMovieResultResource(Resource):
     @api.doc(
         "Get recommended movie result history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_movie_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -536,7 +542,7 @@ class ProfileRecoHistoryMovieMetaResource(Resource):
     @api.doc(
         "Get recommended movie meta history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", meta_movie_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -558,7 +564,7 @@ class ProfileRecoHistoryResultSerieResource(Resource):
     @api.doc(
         "Get recommended serie result history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_serie_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -580,7 +586,7 @@ class ProfileRecoHistoryMetaSerieResource(Resource):
     @api.doc(
         "Get recommended serie meta history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", meta_serie_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }
@@ -602,7 +608,7 @@ class ProfileRecoHistoryResultTrackResource(Resource):
     @api.doc(
         "Get recommended track result history",
         responses={
-            200: ("Successfully send", meta_track_resp),
+            200: ("Successfully send", result_track_resp),
             401: ("Authentication required"),
             404: "User or Profile not found!",
         }

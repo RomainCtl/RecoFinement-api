@@ -1,6 +1,6 @@
 from flask_restx import Namespace, fields
 
-from .base import ProfileBaseObj, GroupBaseObj, ProfileItemObj, messageObj, paginationObj, GenreBaseObj, MetaProfileContentBaseObj, MetaProfileApplicationItemObj, MetaProfileBookItemObj, MetaProfileGameItemObj, MetaProfileMovieItemObj, MetaProfileSerieItemObj, MetaProfileTrackItemObj
+from .base import ProfileBaseObj, GroupBaseObj, ProfileItemObj, messageObj, paginationObj, GenreBaseObj, MetaProfileContentBaseObj, MetaProfileApplicationItemObj, MetaProfileBookItemObj, MetaProfileGameItemObj, MetaProfileMovieItemObj, MetaProfileSerieItemObj, MetaProfileTrackItemObj, GenreBase2Obj, ResultApplicationItemObj, ResultBookItemObj, ResultGameItemObj, ResultMovieItemObj, ResultSerieItemObj, ResultTrackItemObj
 
 
 class ProfileDto:
@@ -37,12 +37,49 @@ class ProfileDto:
     api.models[ProfileItemObj.name] = ProfileItemObj
     profile_item = ProfileItemObj
 
+    api.models[GenreBase2Obj.name] = GenreBase2Obj
+    liked_genres2_base = GenreBase2Obj
+
+    api.models[ResultApplicationItemObj.name] = ResultApplicationItemObj
+    result_app_item = ResultApplicationItemObj
+
+    api.models[ResultBookItemObj.name] = ResultBookItemObj
+    result_book_item = ResultBookItemObj
+
+    api.models[ResultGameItemObj.name] = ResultGameItemObj
+    result_game_item = ResultGameItemObj
+
+    api.models[ResultMovieItemObj.name] = ResultMovieItemObj
+    result_movie_item = ResultMovieItemObj
+
+    api.models[ResultSerieItemObj.name] = ResultSerieItemObj
+    result_serie_item = ResultSerieItemObj
+
+    api.models[ResultTrackItemObj.name] = ResultTrackItemObj
+    result_track_item = ResultTrackItemObj
+
     # Responses
     data_resp = api.clone(
         "Profile Data Response",
         messageObj,
         {
             "profile": fields.Nested(profile_item)
+        }
+    )
+
+    data_resp_list = api.clone(
+        "Profile List Data Response",
+        messageObj,
+        {
+            "profile": fields.List(fields.Nested(profile_item))
+        }
+    )
+
+    liked_genres_resp_list = api.clone(
+        "Profile liked genres list",
+        messageObj,
+        {
+            "profile": fields.List(fields.Nested(liked_genres2_base))
         }
     )
 
@@ -61,19 +98,11 @@ class ProfileDto:
         }
     )
 
-    meta_resp = api.clone(
-        "MetaProfileContent Data Response",
-        messageObj,
-        {
-            "content": fields.Nested(meta_profile_content_base)
-        }
-    )
-
     meta_application_resp = api.clone(
         "MetaProfileapplication Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_application_item)
+            "content": fields.List(fields.Nested(meta_profile_application_item))
         }
     )
 
@@ -81,7 +110,7 @@ class ProfileDto:
         "MetaProfilebook Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_book_item)
+            "content": fields.List(fields.Nested(meta_profile_book_item))
         }
     )
 
@@ -89,7 +118,7 @@ class ProfileDto:
         "MetaProfilegame Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_game_item)
+            "content": fields.List(fields.Nested(meta_profile_game_item))
         }
     )
 
@@ -97,7 +126,7 @@ class ProfileDto:
         "MetaProfilemovie Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_movie_item)
+            "content": fields.List(fields.Nested(meta_profile_movie_item))
         }
     )
 
@@ -105,7 +134,7 @@ class ProfileDto:
         "MetaProfileserie Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_serie_item)
+            "content": fields.List(fields.Nested(meta_profile_serie_item))
         }
     )
 
@@ -113,7 +142,50 @@ class ProfileDto:
         "MetaProfiletrack Data Response",
         messageObj,
         {
-            "content": fields.Nested(meta_profile_track_item)
+            "content": fields.List(fields.Nested(meta_profile_track_item))
+        }
+    )
+
+    result_app_resp = api.clone(
+        "Result app_ Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_app_item))
+        }
+    )
+    result_book_resp = api.clone(
+        "Result book Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_book_item))
+        }
+    )
+    result_game_resp = api.clone(
+        "Result game Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_game_item))
+        }
+    )
+    result_movie_resp = api.clone(
+        "Result movi Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_movie_item))
+        }
+    )
+    result_serie_resp = api.clone(
+        "Result seri Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_serie_item))
+        }
+    )
+    result_track_resp = api.clone(
+        "Result trac Data resp",
+        messageObj,
+        {
+            "content": fields.List(fields.Nested(result_track_item))
         }
     )
 

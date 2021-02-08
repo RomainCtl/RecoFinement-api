@@ -150,6 +150,11 @@ MetaProfileContentBaseObj = Model("MetaProfileContent base", {
     "last_count_increment": fields.DateTime,
 })
 
+GenreBase2Obj = Model("Genre base 2", {
+    "name": fields.String,
+    "content_type": fields.String,
+})
+
 # Item object
 
 MetaProfileApplicationItemObj = Model.clone("Meta Profile Application Item", MetaProfileContentBaseObj, {
@@ -157,23 +162,23 @@ MetaProfileApplicationItemObj = Model.clone("Meta Profile Application Item", Met
 })
 
 MetaProfileBookItemObj = Model.clone("Meta Profile Book Item", MetaProfileContentBaseObj, {
-    "book": fields.Nested(ApplicationBaseObj)
+    "book": fields.Nested(BookBaseObj)
 })
 
 MetaProfileGameItemObj = Model.clone("Meta Profile Game Item", MetaProfileContentBaseObj, {
-    "game": fields.Nested(ApplicationBaseObj)
+    "game": fields.Nested(GameBaseObj)
 })
 
 MetaProfileMovieItemObj = Model.clone("Meta Profile Movie Item", MetaProfileContentBaseObj, {
-    "movie": fields.Nested(ApplicationBaseObj)
+    "movie": fields.Nested(MovieBaseObj)
 })
 
 MetaProfileSerieItemObj = Model.clone("Meta Profile Serie Item", MetaProfileContentBaseObj, {
-    "serie": fields.Nested(ApplicationBaseObj)
+    "serie": fields.Nested(SerieBaseObj)
 })
 
 MetaProfileTrackItemObj = Model.clone("Meta Profile Track Item", MetaProfileContentBaseObj, {
-    "track": fields.Nested(ApplicationBaseObj)
+    "track": fields.Nested(TrackBaseObj)
 })
 
 UserItemObj = Model.clone("User Item", UserBaseObj, {
@@ -211,6 +216,35 @@ MovieItemObj = Model.clone("Movie Item", MovieBaseObj, {
 
 GameItemObj = Model.clone("Game Item", GameBaseObj, {
     "genres": fields.List(fields.Nested(GenreBaseObj)),
+})
+
+ResultBaseObj = Model("Result base", {
+    "score": fields.Float,
+    "engine": fields.String
+})
+
+ResultApplicationItemObj = Model.clone("Result Application Item", ResultBaseObj, {
+    "application": fields.Nested(ApplicationBaseObj)
+})
+
+ResultBookItemObj = Model.clone("Result Book Item", ResultBaseObj, {
+    "book": fields.Nested(BookBaseObj)
+})
+
+ResultGameItemObj = Model.clone("Result Game Item", ResultBaseObj, {
+    "game": fields.Nested(GameBaseObj)
+})
+
+ResultMovieItemObj = Model.clone("Result Movie Item", ResultBaseObj, {
+    "movie": fields.Nested(MovieBaseObj)
+})
+
+ResultSerieItemObj = Model.clone("Result Serie Item", ResultBaseObj, {
+    "serie": fields.Nested(SerieBaseObj)
+})
+
+ResultTrackItemObj = Model.clone("Result Track Item", ResultBaseObj, {
+    "track": fields.Nested(TrackBaseObj)
 })
 
 # Common Object
