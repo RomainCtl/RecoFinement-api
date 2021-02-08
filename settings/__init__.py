@@ -6,7 +6,8 @@ from mailjet_rest import Client
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'postgresql://' + \
     os.environ.get('DB_USER_LOGIN', '')+':'+os.environ.get('DB_USER_PASSWORD', '')+'@' + \
-    os.environ.get('DB_URL', '')+':'+os.environ.get('DB_PORT', '')+'/'+os.environ.get('DB_NAME', '')
+    os.environ.get('DB_URL', '')+':'+os.environ.get('DB_PORT',
+                                                    '')+'/'+os.environ.get('DB_NAME', '')
 
 JWT_SECRET_KEY = os.environ.get('SECRET_KEY', '')
 JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(seconds=43_200)
@@ -53,10 +54,10 @@ GBOOKS_TOKEN_URI = "https://oauth2.googleapis.com/token"
 
 # REASON CATEGORIES
 REASON_CATEGORIES = {
-    "book" : ["author","publisher","year_of_publication"],
-    "application" : ["categorie"],
-    "game" : ["developers", "publishers", "genres", "release_date"],
-    "movie" : ["actors", "year", "producers", "director", "genres", "writer"],
-    "serie" : ["directors", "writers", "start_year", "end_year", "genres", "actors"],
-    "track" : ["year", "artist_name", "release", "genres"]
+    "book": ["author", "publisher", "year_of_publication"],
+    "application": ["categorie"],
+    "game": ["developers", "publishers", "genres", "release_date"],
+    "movie": ["actors", "year", "producers", "director", "genres", "writer"],
+    "serie": ["directors", "writers", "start_year", "end_year", "genres", "actors"],
+    "track": ["year", "artist_name", "release", "genres"]
 }

@@ -519,3 +519,23 @@ class ProfileService:
         except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()
+
+    @staticmethod
+    def launch_recommendation(profile_uuid, current_user):
+        if not (profile := ProfileModel.query.filter_by(uuid=profile_uuid, user_id=current_user.user_id).first()):
+            return err_resp("Profile not found!", 404)
+
+        try:
+            # Send request to reco_engine
+            # TODO change url to launch for profile
+            requests.put('%s/recommend/%s' % (ENGINE_URL, current_user.uuid),
+                         headers={'X-API-TOKEN': ENGINE_APIKEY})
+
+            # TODO create event for history
+
+            resp = message(True, "Recommendation successfully started")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()

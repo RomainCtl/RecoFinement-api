@@ -25,7 +25,7 @@ def create_app(config=None):
     cors.init_app(app, resources={r"*": {"origins": "*"}})
     migrate.init_app(app, db=db)
     flask_uuid.init_app(app)
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*")
 
     # JWT overrided method
     from .model import RevokedTokenModel
@@ -54,5 +54,10 @@ def create_app(config=None):
     from .resources import api_bp
 
     app.register_blueprint(api_bp, url_prefix="/api")
+
+    # Register websocket
+    from .resources.ws import SandboxResource
+
+    socketio.on_namespace(SandboxResource("/recommend"))
 
     return app, socketio
