@@ -33,35 +33,6 @@ LikedGenreProfileModel = db.Table("liked_genres_profile",
                                   )
 
 
-class RecommendedContentProfileModel(db.Model):
-    """
-    RecommendedContent Model for storing recommended contents for a profile
-    """
-    __tablename__ = "recommended_content_profile"
-
-    profile_id = db.Column(db.Integer, db.ForeignKey(
-        "profile.profile_id", ondelete="CASCADE"), primary_key=True)
-    content_id = db.Column(db.Integer, db.ForeignKey(
-        "content.content_id", ondelete="CASCADE"), primary_key=True)
-    score = db.Column(db.Float)
-    engine = db.Column(db.String)
-    engine_priority = db.Column(db.Integer)
-
-
-class BadRecommendationContentProfileModel(db.Model):
-    """
-    BadRecommendationContent Model for storing bad recommended contents for a profile
-    """
-    __tablename__ = "bad_recommendation_content_profile"
-
-    profile_id = db.Column(db.Integer, db.ForeignKey(
-        "profile.profile_id", ondelete="CASCADE"), primary_key=True)
-    content_id = db.Column(db.Integer, db.ForeignKey(
-        "content.content_id", ondelete="CASCADE"), primary_key=True)
-    reason_categorie = db.Column(db.Text, primary_key=True)
-    reason = db.Column(db.Text, primary_key=True)
-
-
 class ProfileModel(db.Model):
     """
     Profile Model for storing profile related details
@@ -78,12 +49,6 @@ class ProfileModel(db.Model):
     # Loaded immediately after loading Profile, but when querying multiple profiles, you will not get additional queries.
     meta_profile_contents = db.relationship(
         "MetaProfileContentModel", lazy="subquery")
-
-    recommended_contents = db.relationship(
-        "RecommendedContentProfileModel", lazy="subquery")
-
-    bad_recommadation_contents = db.relationship(
-        "BadRecommendationContentProfileModel", lazy="subquery")
 
     liked_genres = db.relationship(
         "GenreModel", secondary=LikedGenreProfileModel, lazy="dynamic")

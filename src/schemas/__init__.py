@@ -19,3 +19,5 @@ from .meta_user_content_schema import MetaUserContentBase, MetaUserContentItem
 from .meta_profile_content_schema import MetaProfileContentBase, MetaProfileApplicationItem, MetaProfileBookItem, MetaProfileGameItem, MetaProfileMovieItem, MetaProfileSerieItem, MetaProfileTrackItem
 
 from .role_schema import RoleBase, RoleObject
+
+from .recommendation_history_schema import *

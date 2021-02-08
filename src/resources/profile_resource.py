@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from src.service import ProfileService, ExternalService
@@ -330,3 +330,312 @@ class ProfileMetaTrackResource(Resource):
             page = 1
 
         return ProfileService.get_profile_meta_track(profile_uuid, user_uuid, page)
+
+
+@api.route("/<uuid:profile_uuid>/history", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryResource(Resource):
+    @api.doc(
+        "Get recommendation history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid):
+        """ Get recommendation history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_reco_history(profile_uuid, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/genres", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryGenresResource(Resource):
+    @api.doc(
+        "Get liked genres from event",
+        responses={
+            # TODO change delcared dto
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get liked genres from event """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_liked_genre_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/application/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryApplicationResultResource(Resource):
+    @api.doc(
+        "Get recommended application result history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended application result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_app_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/application/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryApplicationMetaResource(Resource):
+    @api.doc(
+        "Get recommended application meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended application meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_app_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/book/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryBookResultResource(Resource):
+    @api.doc(
+        "Get recommended book result history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended book result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_book_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/book/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryBookMetaResource(Resource):
+    @api.doc(
+        "Get recommended book meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended book meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_book_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/game/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryResultGameResource(Resource):
+    @api.doc(
+        "Get recommended game result istory",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended game result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_game_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/game/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryGameMEtaResource(Resource):
+    @api.doc(
+        "Get recommended game meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended game meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_game_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/movie/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryMovieResultResource(Resource):
+    @api.doc(
+        "Get recommended movie result history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended movie result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_movie_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/movie/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryMovieMetaResource(Resource):
+    @api.doc(
+        "Get recommended movie meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended movie meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_movie_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/serie/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryResultSerieResource(Resource):
+    @api.doc(
+        "Get recommended serie result history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended serie result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_serie_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/serie/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryMetaSerieResource(Resource):
+    @api.doc(
+        "Get recommended serie meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended serie meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_serie_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/track/result", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryResultTrackResource(Resource):
+    @api.doc(
+        "Get recommended track result history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended track result history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_track_reco_result_history(profile_uuid, id, user_uuid, args["page"])
+
+
+@api.route("/<uuid:profile_uuid>/history/<int:id>/track/meta", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ProfileRecoHistoryMetaTrackResource(Resource):
+    @api.doc(
+        "Get recommended track meta history",
+        responses={
+            200: ("Successfully send", meta_track_resp),
+            401: ("Authentication required"),
+            404: "User or Profile not found!",
+        }
+    )
+    @jwt_required
+    def get(self, profile_uuid, id):
+        """ Get recommended track meta history """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ProfileService.get_track_reco_meta_history(profile_uuid, id, user_uuid, args["page"])
