@@ -583,8 +583,11 @@ class ProfileService:
             return err_resp("Profile not found!", 404)
 
         reco_history, total_pages = Paginator.get_from(
-            RecommendationLaunchedForProfileEvent.query.filter_by(
-                profile_id=profile.profile_id),
+            RecommendationLaunchedForProfileEvent.query
+            .filter_by(profile_id=profile.profile_id)
+            .order_by(
+                RecommendationLaunchedForProfileEvent.occured_at.desc()
+            ),
             page,
         )
 
