@@ -10,65 +10,73 @@ from src.service import ProfileService
 
 
 class SandboxResource(Namespace):
-    def _check_auth(self, token):
-        try:
-            tk = decode_token(token)
-        except Exception as e:
-            raise ConnectionRefusedError("Unauthorized!")
+    def is_auth(func):
+        def wrapper(*args, **kwargs):
+            if not 'token' in request.headers:
+                raise ConnectionRefusedError("Token not found !")
 
-        # Check identity
-        if not (user := UserModel.query.filter_by(uuid=tk['identity']).first()):
-            raise ConnectionRefusedError("User not found!")
+            try:
+                tk = decode_token(request.headers["token"])
+            except Exception as e:
+                raise ConnectionRefusedError("Unauthorized!")
 
-        # Check permissions
-        # NOTE ws only used in sandbox, that's why we check this permission here
-        if "access_sandbox" not in tk['user_claims']['permissions']:
-            raise ConnectionRefusedError("Permission missing!")
+            # Check identity
+            if not (user := UserModel.query.filter_by(uuid=tk['identity']).first()):
+                raise ConnectionRefusedError("User not found!")
 
-        return user
+            # Check permissions
+            # NOTE ws only used in sandbox, that's why we check this permission here
+            if "access_sandbox" not in tk['user_claims']['permissions']:
+                raise ConnectionRefusedError("Permission missing!")
 
-    def on_connect(self):
+            return func(*args, connected_user=user, **kwargs)
+
+        return wrapper
+
+    @is_auth
+    def on_connect(self, connected_user):
         current_app.logger.info('Client connected %s' % request.sid)
         emit('server_response', {'on': 'connect',
                                  'action': 'connect', 'message': 'Connected'})
 
-    def on_disconnect(self):
+    @is_auth
+    def on_disconnect(self, connected_user):
         current_app.logger.info('Client disconnected %s' % request.sid)
 
-    def on_join(self, json):
+    @is_auth
+    def on_join(self, connected_user):
         current_app.logger.info('Join %s' % request.sid)
-        current_user = self._check_auth(json["token"])
-        room = "user%s" % current_user.uuid
+        room = "user%s" % connected_user.uuid
         join_room(room)
         emit('server_response', {
             'on': 'join',
             'action': 'join',
             'message': 'Room successfully joined',
-            'user_uuid': str(current_user.uuid),
+            'user_uuid': str(connected_user.uuid),
             'room': room
         }, room=room)
 
-    def on_leave(self, json):
+    @is_auth
+    def on_leave(self, connected_user):
         current_app.logger.info('Leave %s' % request.sid)
-        current_user = self._check_auth(json["token"])
-        room = "user%s" % current_user.uuid
+        room = "user%s" % connected_user.uuid
         leave_room(room)
         emit('server_response', {
             'on': 'leave',
             'action': 'leave',
             'message': 'Room successfully leaved',
-            'user_uuid': str(current_user.uuid),
+            'user_uuid': str(connected_user.uuid),
             'room': room
         }, room=room)
 
-    def on_recommend(self, json):
+    @is_auth
+    def on_recommend(self, json, connected_user):
         current_app.logger.info('Recommend %s' % request.sid)
-        if "token" not in json or "profile_uuid" not in json:
+        if "profile_uuid" not in json:
             emit('server_response', {
-                 'on': 'recommend', 'message': "Error 400, data must contain 'token' and 'profile_uuid' attr!"})
+                 'on': 'recommend', 'message': "Error 400, data must contain 'profile_uuid' attr!"})
         else:
-            current_user = self._check_auth(json["token"])
-            room = "user%s" % current_user.uuid
+            room = "user%s" % connected_user.uuid
 
             # Check profile uuid
             try:
@@ -87,12 +95,12 @@ class SandboxResource(Namespace):
                 'on': 'recommend',
                 'action': 'join',
                 'message': 'Room joined',
-                'user_uuid': str(current_user.uuid),
+                'user_uuid': str(connected_user.uuid),
                 'room': room
             }, room=room)
 
             data, code = ProfileService.launch_recommendation(
-                profile_uuid, current_user)
+                profile_uuid, connected_user)
 
             if code == 201:
                 emit('server_response', {

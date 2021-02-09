@@ -25,7 +25,7 @@ def create_app(config=None):
     cors.init_app(app, resources={r"*": {"origins": "*"}})
     migrate.init_app(app, db=db)
     flask_uuid.init_app(app)
-    socketio.init_app(app, cors_allowed_origins="*")
+    socketio.init_app(app, cors_allowed_origins="*", async_mode="eventlet")
 
     # JWT overrided method
     from .model import RevokedTokenModel
