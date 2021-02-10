@@ -192,3 +192,57 @@ class MovieBadRecommendation(Resource):
         data = request.get_json()
 
         return MovieService.add_bad_recommendation(user_uuid, content_id, data)
+
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class MovieAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Movies (by user)",
+        responses={
+            200: ("Movie data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Movies (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return MovieService.get_additional_movie(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:movie_id>")
+class MovieAdditionalResource(Resource):
+    @api.doc(
+        "Validate (put) added Movies (by user)",
+        responses={
+            201: ("Additional movie data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or movie not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, movie_id):
+        """ Validate (put) added Movies (by user) """
+        user_uuid = get_jwt_identity()
+
+        return MovieService.validate_additional_movie(user_uuid, movie_id)
+
+    @api.doc(
+        "Decline (delete) added Movies (by user)",
+        responses={
+            201: ("Additional movie successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or movie not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, movie_id):
+        """ Decline (delete) added Movies (by user) """
+        user_uuid = get_jwt_identity()
+
+        return MovieService.decline_additional_movie(user_uuid, movie_id)
