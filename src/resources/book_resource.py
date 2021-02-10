@@ -176,6 +176,7 @@ class BookBadRecommendation(Resource):
 
         return BookService.add_bad_recommendation(user_uuid, content_id, data)
 
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
 class BookAdditionalResource(Resource):
     @api.doc(
         "Get list of the added Books (by user)",
