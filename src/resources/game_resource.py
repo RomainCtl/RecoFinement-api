@@ -191,3 +191,57 @@ class GameBadRecommendation(Resource):
         data = request.get_json()
 
         return GameService.add_bad_recommendation(user_uuid, content_id, data)
+
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class GameAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Game (by user)",
+        responses={
+            200: ("Game data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Games (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return GameService.get_additional_game(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:game_id>")
+class GameAdditionalResource(Resource):
+    @api.doc(
+        "Validate (put) added Games (by user)",
+        responses={
+            201: ("Additional game data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or game not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, game_id):
+        """ Validate (put) added Games (by user) """
+        user_uuid = get_jwt_identity()
+
+        return GameService.validate_additional_game(user_uuid, game_id)
+
+    @api.doc(
+        "Decline (delete) added Games (by user)",
+        responses={
+            201: ("Additional game successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or game not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, game_id):
+        """ Decline (delete) added Games (by user) """
+        user_uuid = get_jwt_identity()
+
+        return GameService.decline_additional_game(user_uuid, game_id)
