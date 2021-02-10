@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import BookModel, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, BookAdditionalModel
-from src.schemas import BookBase, BookExtra, MetaUserContentBase
+from src.schemas import BookBase, BookExtra, MetaUserContentBase, BookAdditionalBase
 
 
 class BookService:
@@ -221,6 +221,102 @@ class BookService:
             db.session.commit()
 
             resp = message(True, "Book have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+
+    @staticmethod
+    def get_additional_book(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        books, total_pages = Paginator.get_from(
+            BookAdditionalModel.query,
+            page,
+        )
+
+        try:
+            book_data = BookAdditionalBase.loads(books)
+
+            return pagination_resp(
+                message="Additional Book data sent",
+                content=book_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_book(connected_user_uuid, book_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (book := BookAdditionalModel.query.filter_by(book_id=book_id).first()):
+            return err_resp("Additional book not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=None)
+            db.session.add(content)
+            db.session.flush()
+
+            new_book = BookModel(
+                isbn=book.isbn,
+                title=book.title,
+                author=book.author,
+                year_of_publication=book.year_of_publication,
+                publisher=book.publisher,
+                image_url_s=book.image_url_s,
+                image_url_m=book.image_url_m,
+                image_url_l=book.image_url_l,
+                content=content
+            )
+            db.session.add(new_book)
+            db.session.delete(book)
+
+            db.session.commit()
+
+            resp = message(
+                True, "Additional book data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_book(connected_user_uuid, book_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (book := BookAdditionalModel.query.filter_by(book_id=book_id).first()):
+            return err_resp("Additional book not found!", 404)
+
+        try:
+            db.session.delete(book)
+            db.session.commit()
+
+            resp = message(True, "Additional book successfully deleted")
             return resp, 201
 
         except Exception as error:
