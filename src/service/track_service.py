@@ -292,7 +292,6 @@ class TrackService:
             current_app.logger.error(error)
             return internal_err_resp()
 
-
     @staticmethod
     def get_additional_track(connected_user_uuid, page):
         if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
@@ -332,7 +331,7 @@ class TrackService:
         if "validate_added_content" not in permissions:
             return err_resp("Permission missing", 403)
 
-        if not (track := TracjAdditionalModel.query.filter_by(track_id=track_id).first()):
+        if not (track := TrackAdditionalModel.query.filter_by(track_id=track_id).first()):
             return err_resp("Additional track not found!", 404)
 
         try:
