@@ -215,3 +215,58 @@ class TrackBadRecommendation(Resource):
         data = request.get_json()
 
         return TrackService.add_bad_recommendation(user_uuid, content_id, data)
+
+
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class TrackAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Tracks (by user)",
+        responses={
+            200: ("Track data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Tracks (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return TrackService.get_additional_track(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:track_id>")
+class TrackAdditionalValidationResource(Resource):
+    @api.doc(
+        "Validate (put) added Tracks (by user)",
+        responses={
+            201: ("Additional track data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or track not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, track_id):
+        """ Validate (put) added Tracks (by user) """
+        user_uuid = get_jwt_identity()
+
+        return TrackService.validate_additional_track(user_uuid, track_id)
+
+    @api.doc(
+        "Decline (delete) added Tracks (by user)",
+        responses={
+            201: ("Additional track successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or track not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, track_id):
+        """ Decline (delete) added Tracks (by user) """
+        user_uuid = get_jwt_identity()
+
+        return TrackService.decline_additional_track(user_uuid, track_id)

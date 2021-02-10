@@ -11,7 +11,7 @@ genres_resp = UserDto.genres_resp
 meta_resp = UserDto.meta_resp
 
 
-@api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+@api.route("")
 class ApplicationResource(Resource):
     @api.doc(
         "Get list of the most popular Applications",
@@ -19,6 +19,7 @@ class ApplicationResource(Resource):
             200: ("Application data successfully sent", data_resp),
             401: ("Authentication required"),
         },
+        params={"page": {"in": "query", "type": "int", "default": 1}}
     )
     @jwt_required
     def get(self):
@@ -191,3 +192,57 @@ class ApplicationBadRecommendation(Resource):
         data = request.get_json()
 
         return ApplicationService.add_bad_recommendation(user_uuid, content_id, data)
+
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class ApplicationAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Applications (by user)",
+        responses={
+            200: ("Application data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Applications (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return ApplicationService.get_additional_application(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:app_id>")
+class ApplicationAdditionalValidationResource(Resource):
+    @api.doc(
+        "Validate (put) added Applications (by user)",
+        responses={
+            201: ("Additional application data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or application not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, app_id):
+        """ Validate (put) added Applications (by user) """
+        user_uuid = get_jwt_identity()
+
+        return ApplicationService.validate_additional_application(user_uuid, app_id)
+
+    @api.doc(
+        "Decline (delete) added Applications (by user)",
+        responses={
+            201: ("Additional application successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or application not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, app_id):
+        """ Decline (delete) added Applications (by user) """
+        user_uuid = get_jwt_identity()
+
+        return ApplicationService.decline_additional_application(user_uuid, app_id)

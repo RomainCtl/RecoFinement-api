@@ -57,7 +57,7 @@ class BookUserRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended books for the connected user",
         responses={
-            200: ("Application data successfully sent", data_resp),
+            200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
@@ -79,7 +79,7 @@ class BookGroupRecommendationResource(Resource):
     @api.doc(
         "Get list of the recommended books for the groups of the connected user",
         responses={
-            200: ("Application data successfully sent", data_resp),
+            200: ("Book data successfully sent", data_resp),
             401: ("Authentication required"),
         },
     )
@@ -175,3 +175,56 @@ class BookBadRecommendation(Resource):
         data = request.get_json()
 
         return BookService.add_bad_recommendation(user_uuid, content_id, data)
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class BookAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Books (by user)",
+        responses={
+            200: ("Book data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Books (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return BookService.get_additional_book(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:book_id>")
+class BookAdditionalValidationResource(Resource):
+    @api.doc(
+        "Validate (put) added Books (by user)",
+        responses={
+            201: ("Additional book data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or book not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, book_id):
+        """ Validate (put) added Books (by user) """
+        user_uuid = get_jwt_identity()
+
+        return BookService.validate_additional_book(user_uuid, book_id)
+
+    @api.doc(
+        "Decline (delete) added Books (by user)",
+        responses={
+            201: ("Additional book successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or book not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, book_id):
+        """ Decline (delete) added Books (by user) """
+        user_uuid = get_jwt_identity()
+
+        return BookService.decline_additional_book(user_uuid, book_id)

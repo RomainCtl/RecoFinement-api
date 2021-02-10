@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import MovieModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, MovieAdditionalModel
-from src.schemas import MovieBase, MovieObject, GenreBase, MovieExtra, MetaUserContentBase
+from src.schemas import MovieBase, MovieObject, GenreBase, MovieExtra, MetaUserContentBase, MovieAdditionalBase
 
 
 class MovieService:
@@ -252,6 +252,105 @@ class MovieService:
             db.session.commit()
 
             resp = message(True, "Movie have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+
+    @staticmethod
+    def get_additional_movie(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        movies, total_pages = Paginator.get_from(
+            MovieAdditionalModel.query,
+            page,
+        )
+
+        try:
+            movie_data = MovieAdditionalBase.loads(movies)
+
+            return pagination_resp(
+                message="Additional movie data sent",
+                content=movie_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_movie(connected_user_uuid, movie_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (movie := MovieAdditionalModel.query.filter_by(movie_id=movie_id).first()):
+            return err_resp("Additional movie not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=movie.genres)
+            db.session.add(content)
+            db.session.flush()
+
+            new_movie = MovieModel(
+                title=movie.title,
+                language=movie.language,
+                actors=movie.actors,
+                year=movie.year,
+                producers=movie.producers,
+                director=movie.director,
+                writer=movie.writer,
+                imdbid=movie.imdbid,
+                tmdbid=movie.tmdbid,
+                cover=movie.cover,
+                plot_outline=movie.plot_outline,
+                content=content
+            )
+            db.session.add(new_movie)
+            db.session.delete(movie)
+
+            db.session.commit()
+
+            resp = message(
+                True, "Additional movie data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_movie(connected_user_uuid, movie_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (movie := MovieAdditionalModel.query.filter_by(movie_id=movie_id).first()):
+            return err_resp("Additional movie not found!", 404)
+
+        try:
+            db.session.delete(movie)
+            db.session.commit()
+
+            resp = message(True, "Additional movie successfully deleted")
             return resp, 201
 
         except Exception as error:

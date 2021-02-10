@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import GameModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, GameAdditionalModel
-from src.schemas import GameBase, GameObject, GenreBase, GameExtra, MetaUserContentBase
+from src.schemas import GameBase, GameObject, GenreBase, GameExtra, MetaUserContentBase, GameAdditionalBase
 
 
 class GameService:
@@ -248,6 +248,102 @@ class GameService:
             db.session.commit()
 
             resp = message(True, "Game have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def get_additional_game(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        games, total_pages = Paginator.get_from(
+            GameAdditionalModel.query,
+            page,
+        )
+
+        try:
+            games_data = GameAdditionalBase.loads(games)
+
+            return pagination_resp(
+                message="Additional game data sent",
+                content=game_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_game(connected_user_uuid, game_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (game := GameAdditionalModel.query.filter_by(game_id=game_id).first()):
+            return err_resp("Additional game not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=game.genres)
+            db.session.add(content)
+            db.session.flush()
+
+            new_game = GameModel(
+                steamid=game.steamid,
+                name=game.name,
+                short_description=game.short_description,
+                header_image=game.header_image,
+                website=game.website,
+                developers=game.developers,
+                publishers=game.publishers,
+                price=game.price,
+                release_date=game.release_date,
+                content=content
+            )
+            db.session.add(new_game)
+            db.session.delete(game)
+
+            db.session.commit()
+
+            resp = message(
+                True, "Additional game data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_game(connected_user_uuid, game_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (game := GameAdditionalModel.query.filter_by(game_id=game_id).first()):
+            return err_resp("Additional game not found!", 404)
+
+        try:
+            db.session.delete(game)
+            db.session.commit()
+
+            resp = message(True, "Additional game successfully deleted")
             return resp, 201
 
         except Exception as error:
