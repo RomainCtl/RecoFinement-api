@@ -8,7 +8,7 @@ from datetime import datetime
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import TrackModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, TrackAdditionalModel
-from src.schemas import TrackBase, TrackObject, GenreBase, TrackExtra, MetaUserContentBase
+from src.schemas import TrackBase, TrackObject, GenreBase, TrackExtra, MetaUserContentBase, TrackAdditionalBase
 
 
 class TrackService:
@@ -286,6 +286,102 @@ class TrackService:
             db.session.commit()
 
             resp = message(True, "Track have been added to validation.")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+
+    @staticmethod
+    def get_additional_track(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        tracks, total_pages = Paginator.get_from(
+            TrackAdditionalModel.query,
+            page,
+        )
+
+        try:
+            track_data = TrackAdditionalBase.loads(tracks)
+
+            return pagination_resp(
+                message="Additional track data sent",
+                content=track_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_track(connected_user_uuid, track_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (track := TracjAdditionalModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Additional track not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=track.genres)
+            db.session.add(content)
+            db.session.flush()
+
+            new_track = TrackModel(
+                title=track.title,
+                year=track.year,
+                artist_name=track.artist_name,
+                release=track.release,
+                track_mmid=track.track_mmid,
+                recording_mbid=track.recording_mbid,
+                spotify_id=track.spotify_id,
+                covert_art_url=track.covert_art_url,
+                content=content
+            )
+            db.session.add(new_track)
+            db.session.delete(track)
+
+            db.session.commit()
+
+            resp = message(
+                True, "Additional track data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_track(connected_user_uuid, track_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (track := TrackAdditionalModel.query.filter_by(track_id=track_id).first()):
+            return err_resp("Additional track not found!", 404)
+
+        try:
+            db.session.delete(track)
+            db.session.commit()
+
+            resp = message(True, "Additional track successfully deleted")
             return resp, 201
 
         except Exception as error:
