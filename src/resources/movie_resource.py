@@ -216,7 +216,7 @@ class MovieAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:movie_id>")
-class MovieAdditionalResource(Resource):
+class MovieAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Movies (by user)",
         responses={

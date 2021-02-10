@@ -215,7 +215,7 @@ class GameAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:game_id>")
-class GameAdditionalResource(Resource):
+class GameAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Games (by user)",
         responses={

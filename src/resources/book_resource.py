@@ -197,7 +197,7 @@ class BookAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:book_id>")
-class BookAdditionalResource(Resource):
+class BookAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Books (by user)",
         responses={

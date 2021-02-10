@@ -216,7 +216,7 @@ class ApplicationAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:app_id>")
-class ApplicationAdditionalResource(Resource):
+class ApplicationAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Applications (by user)",
         responses={

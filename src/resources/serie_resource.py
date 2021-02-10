@@ -230,7 +230,7 @@ class SerieAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:serie_id>")
-class SerieAdditionalResource(Resource):
+class SerieAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Series (by user)",
         responses={

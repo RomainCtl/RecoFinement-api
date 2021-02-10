@@ -240,7 +240,7 @@ class TrackAdditionalResource(Resource):
 
 
 @api.route("/additional/<int:track_id>")
-class TrackAdditionalResource(Resource):
+class TrackAdditionalValidationResource(Resource):
     @api.doc(
         "Validate (put) added Tracks (by user)",
         responses={
