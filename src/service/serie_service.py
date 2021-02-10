@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import null
 from src import db, settings
 from src.utils import pagination_resp, internal_err_resp, message, Paginator, err_resp
 from src.model import SerieModel, EpisodeModel, GenreModel, ContentType, UserModel, ContentModel, RecommendedContentModel, RecommendedContentForGroupModel, MetaUserContentModel, BadRecommendationContentModel, SerieAdditionalModel, EpisodeAdditionalModel
-from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, SerieExtra, MetaUserContentBase
+from src.schemas import SerieBase, SerieItem, EpisodeBase, GenreBase, SerieExtra, MetaUserContentBase, SerieAdditionalBase, EpisodeAdditionalBase
 
 
 class SerieService:
@@ -273,13 +273,13 @@ class SerieService:
                     )
 
                     if 'imdbid' in data:
-                        new_additional_serie.imdbid = data['imdbid']
+                        new_additional_episode.imdbid = data['imdbid']
                     if 'year' in data:
-                        new_additional_serie.year = data['year']
+                        new_additional_episode.year = data['year']
                     if 'season_number' in data:
-                        new_additional_serie.season_number = data['season_number']
+                        new_additional_episode.season_number = data['season_number']
                     if 'episode_number' in data:
-                        new_additional_serie.episode_number = data['episode_number']
+                        new_additional_episode.episode_number = data['episode_number']
 
                     for genre_id in data["genres"]:
                         if (ge := GenreModel.query.filter_by(genre_id=genre_id).first()):
@@ -297,5 +297,122 @@ class SerieService:
         except Exception as error:
             import traceback
             traceback.print_exc()
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+
+    @staticmethod
+    def get_additional_serie(connected_user_uuid, page):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "add_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        series, total_pages = Paginator.get_from(
+            SerieAdditionalModel.query,
+            page,
+        )
+
+        try:
+            serie_data = SerieAdditionalBase.loads(series)
+
+            return pagination_resp(
+                message="Additional series data sent",
+                content=serie_data,
+                page=page,
+                total_pages=total_pages
+            )
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def validate_additional_serie(connected_user_uuid, serie_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "validate_added_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (serie := SerieAdditionalModel.query.filter_by(serie_id=serie_id).first()):
+            return err_resp("Additional series not found!", 404)
+
+        try:
+            content = ContentModel(rating=None, genres=serie.genres)
+            db.session.add(content)
+            db.session.flush()
+
+            new_serie = SerieModel(
+                imdbid=serie.imdbid,
+                title=serie.title,
+                start_year=serie.start_year,
+                end_year=serie.end_year,
+                writers=serie.writers,
+                directors=serie.directors,
+                actors=serie.actors,
+                cover=serie.cover,
+                plot_outline=serie.plot_outline,
+                content=content
+            )
+            db.session.add(new_serie)
+
+            for episode in serie.episodes :
+                content_episode = ContentModel(rating=None, genres=episode.genres)
+                db.session.add(content)
+                db.session.flush()
+
+                new_episode = EpisodeModel(
+                    imdbid=episode.imdbid,
+                    title=episode.title,
+                    year=episode.year,
+                    season_number=episode.season_number,
+                    episode_number=episode.episode_number,
+                    serie_id=serie.serie_id,
+                    content=content_episode
+                )
+
+                db.session.add(new_serie)
+                db.session.delete(episode)
+
+            db.session.delete(serie)
+            db.session.commit()
+
+            resp = message(
+                True, "Additional series data successfully validated")
+            return resp, 201
+
+        except Exception as error:
+            current_app.logger.error(error)
+            return internal_err_resp()
+
+    @staticmethod
+    def decline_additional_serie(connected_user_uuid, serie_id):
+        if not (user := UserModel.query.filter_by(uuid=connected_user_uuid).first()):
+            return err_resp("User not found!", 404)
+
+        # Check permissions
+        permissions = get_jwt_claims()['permissions']
+        if "delete_content" not in permissions:
+            return err_resp("Permission missing", 403)
+
+        if not (serie := SerieAdditionalModel.query.filter_by(serie_id=serie_id).first()):
+            return err_resp("Additional series not found!", 404)
+
+        try:
+            for episode in serie.episodes :
+                db.session.delete(episode)
+            db.session.delete(serie)
+            db.session.commit()
+
+            resp = message(True, "Additional series successfully deleted")
+            return resp, 201
+
+        except Exception as error:
             current_app.logger.error(error)
             return internal_err_resp()

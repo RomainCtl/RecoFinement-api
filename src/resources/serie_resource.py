@@ -207,3 +207,56 @@ class SerieBadRecommendation(Resource):
         data = request.get_json()
 
         return SerieService.add_bad_recommendation(user_uuid, content_id, data)
+
+@api.route("/additional", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
+class SerieAdditionalResource(Resource):
+    @api.doc(
+        "Get list of the added Series (by user)",
+        responses={
+            200: ("Series data successfully sent", data_resp),
+            401: ("Authentication required"),
+        },
+    )
+    @jwt_required
+    def get(self):
+        """ Get list of the added Series (by user) """
+        user_uuid = get_jwt_identity()
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('page', type=int, default=1)
+        args = parser.parse_args()
+
+        return SerieService.get_additional_serie(user_uuid, args["page"])
+
+
+@api.route("/additional/<int:serie_id>")
+class SerieAdditionalResource(Resource):
+    @api.doc(
+        "Validate (put) added Series (by user)",
+        responses={
+            201: ("Additional series data successfully validated"),
+            401: ("Authentication required"),
+            404: ("User or series not found!"),
+        },
+    )
+    @jwt_required
+    def put(self, serie_id):
+        """ Validate (put) added Series (by user) """
+        user_uuid = get_jwt_identity()
+
+        return SerieService.validate_additional_serie(user_uuid, serie_id)
+
+    @api.doc(
+        "Decline (delete) added Series (by user)",
+        responses={
+            201: ("Additional series successfully deleted"),
+            401: ("Authentication required"),
+            404: ("User or series not found!"),
+        },
+    )
+    @jwt_required
+    def delete(self, serie_id):
+        """ Decline (delete) added Series (by user) """
+        user_uuid = get_jwt_identity()
+
+        return SerieService.decline_additional_serie(user_uuid, serie_id)
