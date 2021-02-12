@@ -274,7 +274,7 @@ class GameService:
 
             return pagination_resp(
                 message="Additional game data sent",
-                content=game_data,
+                content=games_data,
                 page=page,
                 total_pages=total_pages
             )
