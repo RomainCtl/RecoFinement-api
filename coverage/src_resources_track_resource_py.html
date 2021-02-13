@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for src/resources/track_resource.py: 79%</title>
+    <title>Coverage for src/resources/track_resource.py: 86%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>src/resources/track_resource.py</b> :
-            <span class="pc_cov">79%</span>
+            <span class="pc_cov">86%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             127 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">100 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">27 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">109 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">18 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -284,13 +284,13 @@
     <p id="t230" class="run"><span class="n"><a href="#t230">230</a></span><span class="t">    <span class="op">@</span><span class="nam">jwt_required</span>&nbsp;</span><span class="r"></span></p>
     <p id="t231" class="run"><span class="n"><a href="#t231">231</a></span><span class="t">    <span class="key">def</span> <span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t232" class="pln"><span class="n"><a href="#t232">232</a></span><span class="t">        <span class="str">""" Get list of the added Tracks (by user) """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t233" class="mis show_mis"><span class="n"><a href="#t233">233</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t233" class="run"><span class="n"><a href="#t233">233</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t234" class="pln"><span class="n"><a href="#t234">234</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t235" class="mis show_mis"><span class="n"><a href="#t235">235</a></span><span class="t">        <span class="nam">parser</span> <span class="op">=</span> <span class="nam">reqparse</span><span class="op">.</span><span class="nam">RequestParser</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t236" class="mis show_mis"><span class="n"><a href="#t236">236</a></span><span class="t">        <span class="nam">parser</span><span class="op">.</span><span class="nam">add_argument</span><span class="op">(</span><span class="str">'page'</span><span class="op">,</span> <span class="nam">type</span><span class="op">=</span><span class="nam">int</span><span class="op">,</span> <span class="nam">default</span><span class="op">=</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t237" class="mis show_mis"><span class="n"><a href="#t237">237</a></span><span class="t">        <span class="nam">args</span> <span class="op">=</span> <span class="nam">parser</span><span class="op">.</span><span class="nam">parse_args</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t235" class="run"><span class="n"><a href="#t235">235</a></span><span class="t">        <span class="nam">parser</span> <span class="op">=</span> <span class="nam">reqparse</span><span class="op">.</span><span class="nam">RequestParser</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t236" class="run"><span class="n"><a href="#t236">236</a></span><span class="t">        <span class="nam">parser</span><span class="op">.</span><span class="nam">add_argument</span><span class="op">(</span><span class="str">'page'</span><span class="op">,</span> <span class="nam">type</span><span class="op">=</span><span class="nam">int</span><span class="op">,</span> <span class="nam">default</span><span class="op">=</span><span class="num">1</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t237" class="run"><span class="n"><a href="#t237">237</a></span><span class="t">        <span class="nam">args</span> <span class="op">=</span> <span class="nam">parser</span><span class="op">.</span><span class="nam">parse_args</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t238" class="pln"><span class="n"><a href="#t238">238</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t239" class="mis show_mis"><span class="n"><a href="#t239">239</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">get_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">args</span><span class="op">[</span><span class="str">"page"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t239" class="run"><span class="n"><a href="#t239">239</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">get_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">args</span><span class="op">[</span><span class="str">"page"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t240" class="pln"><span class="n"><a href="#t240">240</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t241" class="pln"><span class="n"><a href="#t241">241</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t242" class="run"><span class="n"><a href="#t242">242</a></span><span class="t"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">"/additional/&lt;int:track_id>"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -300,36 +300,38 @@
     <p id="t246" class="pln"><span class="n"><a href="#t246">246</a></span><span class="t">        <span class="nam">responses</span><span class="op">=</span><span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t247" class="pln"><span class="n"><a href="#t247">247</a></span><span class="t">            <span class="num">201</span><span class="op">:</span> <span class="op">(</span><span class="str">"Additional track data successfully validated"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t248" class="pln"><span class="n"><a href="#t248">248</a></span><span class="t">            <span class="num">401</span><span class="op">:</span> <span class="op">(</span><span class="str">"Authentication required"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t249" class="pln"><span class="n"><a href="#t249">249</a></span><span class="t">            <span class="num">404</span><span class="op">:</span> <span class="op">(</span><span class="str">"User or track not found!"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t250" class="pln"><span class="n"><a href="#t250">250</a></span><span class="t">        <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t251" class="pln"><span class="n"><a href="#t251">251</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t252" class="run"><span class="n"><a href="#t252">252</a></span><span class="t">    <span class="op">@</span><span class="nam">jwt_required</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t253" class="run"><span class="n"><a href="#t253">253</a></span><span class="t">    <span class="key">def</span> <span class="nam">put</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t254" class="pln"><span class="n"><a href="#t254">254</a></span><span class="t">        <span class="str">""" Validate (put) added Tracks (by user) """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t255" class="mis show_mis"><span class="n"><a href="#t255">255</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t256" class="pln"><span class="n"><a href="#t256">256</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t257" class="mis show_mis"><span class="n"><a href="#t257">257</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">validate_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t258" class="pln"><span class="n"><a href="#t258">258</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t259" class="run"><span class="n"><a href="#t259">259</a></span><span class="t">    <span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">doc</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t260" class="pln"><span class="n"><a href="#t260">260</a></span><span class="t">        <span class="str">"Decline (delete) added Tracks (by user)"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t261" class="pln"><span class="n"><a href="#t261">261</a></span><span class="t">        <span class="nam">responses</span><span class="op">=</span><span class="op">{</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t262" class="pln"><span class="n"><a href="#t262">262</a></span><span class="t">            <span class="num">201</span><span class="op">:</span> <span class="op">(</span><span class="str">"Additional track successfully deleted"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t263" class="pln"><span class="n"><a href="#t263">263</a></span><span class="t">            <span class="num">401</span><span class="op">:</span> <span class="op">(</span><span class="str">"Authentication required"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t264" class="pln"><span class="n"><a href="#t264">264</a></span><span class="t">            <span class="num">404</span><span class="op">:</span> <span class="op">(</span><span class="str">"User or track not found!"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t265" class="pln"><span class="n"><a href="#t265">265</a></span><span class="t">        <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t266" class="pln"><span class="n"><a href="#t266">266</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t267" class="run"><span class="n"><a href="#t267">267</a></span><span class="t">    <span class="op">@</span><span class="nam">jwt_required</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t268" class="run"><span class="n"><a href="#t268">268</a></span><span class="t">    <span class="key">def</span> <span class="nam">delete</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t269" class="pln"><span class="n"><a href="#t269">269</a></span><span class="t">        <span class="str">""" Decline (delete) added Tracks (by user) """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t270" class="mis show_mis"><span class="n"><a href="#t270">270</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t271" class="pln"><span class="n"><a href="#t271">271</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t272" class="mis show_mis"><span class="n"><a href="#t272">272</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">decline_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t249" class="pln"><span class="n"><a href="#t249">249</a></span><span class="t">            <span class="num">403</span><span class="op">:</span> <span class="op">(</span><span class="str">"Permission missing"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t250" class="pln"><span class="n"><a href="#t250">250</a></span><span class="t">            <span class="num">404</span><span class="op">:</span> <span class="op">(</span><span class="str">"User or track not found!"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t251" class="pln"><span class="n"><a href="#t251">251</a></span><span class="t">        <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t252" class="pln"><span class="n"><a href="#t252">252</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t253" class="run"><span class="n"><a href="#t253">253</a></span><span class="t">    <span class="op">@</span><span class="nam">jwt_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t254" class="run"><span class="n"><a href="#t254">254</a></span><span class="t">    <span class="key">def</span> <span class="nam">put</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t255" class="pln"><span class="n"><a href="#t255">255</a></span><span class="t">        <span class="str">""" Validate (put) added Tracks (by user) """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t256" class="run"><span class="n"><a href="#t256">256</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t257" class="pln"><span class="n"><a href="#t257">257</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t258" class="run"><span class="n"><a href="#t258">258</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">validate_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t259" class="pln"><span class="n"><a href="#t259">259</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t260" class="run"><span class="n"><a href="#t260">260</a></span><span class="t">    <span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">doc</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t261" class="pln"><span class="n"><a href="#t261">261</a></span><span class="t">        <span class="str">"Decline (delete) added Tracks (by user)"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t262" class="pln"><span class="n"><a href="#t262">262</a></span><span class="t">        <span class="nam">responses</span><span class="op">=</span><span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t263" class="pln"><span class="n"><a href="#t263">263</a></span><span class="t">            <span class="num">201</span><span class="op">:</span> <span class="op">(</span><span class="str">"Additional track successfully deleted"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t264" class="pln"><span class="n"><a href="#t264">264</a></span><span class="t">            <span class="num">401</span><span class="op">:</span> <span class="op">(</span><span class="str">"Authentication required"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t265" class="pln"><span class="n"><a href="#t265">265</a></span><span class="t">            <span class="num">403</span><span class="op">:</span> <span class="op">(</span><span class="str">"Permission missing"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t266" class="pln"><span class="n"><a href="#t266">266</a></span><span class="t">            <span class="num">404</span><span class="op">:</span> <span class="op">(</span><span class="str">"User or track not found!"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t267" class="pln"><span class="n"><a href="#t267">267</a></span><span class="t">        <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t268" class="pln"><span class="n"><a href="#t268">268</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t269" class="run"><span class="n"><a href="#t269">269</a></span><span class="t">    <span class="op">@</span><span class="nam">jwt_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t270" class="run"><span class="n"><a href="#t270">270</a></span><span class="t">    <span class="key">def</span> <span class="nam">delete</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t271" class="pln"><span class="n"><a href="#t271">271</a></span><span class="t">        <span class="str">""" Decline (delete) added Tracks (by user) """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t272" class="run"><span class="n"><a href="#t272">272</a></span><span class="t">        <span class="nam">user_uuid</span> <span class="op">=</span> <span class="nam">get_jwt_identity</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t273" class="pln"><span class="n"><a href="#t273">273</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t274" class="run"><span class="n"><a href="#t274">274</a></span><span class="t">        <span class="key">return</span> <span class="nam">TrackService</span><span class="op">.</span><span class="nam">decline_additional_track</span><span class="op">(</span><span class="nam">user_uuid</span><span class="op">,</span> <span class="nam">track_id</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-12 16:10 +0000
+            created at 2021-02-13 15:21 +0000
         </p>
     </div>
 </div>
