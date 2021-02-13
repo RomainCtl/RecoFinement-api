@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import SerieModel, ContentModel, MetaUserContentModel
+from src.model import SerieModel, ContentModel, MetaUserContentModel, SerieAdditionalModel
 from src import db
 
 
@@ -429,7 +429,7 @@ class TestSerie:
         """Test serie user meta
 
         Test:
-            GET: /api/book/<content_id>/meta
+            GET: /api/serie/<content_id>/meta
 
         Expected result: 
             200, {"status": True}
@@ -817,7 +817,7 @@ class TestSerie:
 
         response = test_client.post(
             "/api/serie", headers=headers, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -839,7 +839,7 @@ class TestSerie:
 
         response = test_client.post(
             "/api/serie", headers=headers_bad, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -860,7 +860,7 @@ class TestSerie:
 
         response = test_client.post(
             "/api/serie", headers=headers_fake, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -881,10 +881,67 @@ class TestSerie:
 
         response = test_client.post(
             "/api/serie", json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+        
+    ### SERIE GET ADDITIONAL CONTENT ###
+    def test_serie_get_additional_content(self, test_client, headers):
+        """Test serie get additional content
+        Test:
+            GET: /api/serie/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/serie/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### SERIE VALIDATE CONTENT ###
+    def test_serie_validate_additional_content(self, test_client, headers_admin):
+        """Test serie validate additional content
+        Test:
+            PUT: /api/serie/<int:serie_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        serie = SerieAdditionalModel.query.filter_by(title="title").first()
+        response = test_client.put("/api/serie/additional/"+str(serie.serie_id), headers=headers_admin)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### SERIE DECLINE CONTENT ###
+    def test_serie_decline_additional_content(self, test_client, headers_admin):
+        """Test serie validate decline content
+        Test:
+            DELETE: /api/serie/<int:serie_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        serie = SerieAdditionalModel.query.filter_by(title="title2").first()
+        response = test_client.delete("/api/serie/additional/"+str(serie.serie_id), headers=headers_admin)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

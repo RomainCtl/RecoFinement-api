@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import MovieModel, ContentModel, MetaUserContentModel
+from src.model import MovieModel, ContentModel, MetaUserContentModel, MovieAdditionalModel
 from src import db
 
 
@@ -813,7 +813,7 @@ class TestMovie:
 
         response = test_client.post(
             "/api/movie", headers=headers, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -835,7 +835,7 @@ class TestMovie:
 
         response = test_client.post(
             "/api/movie", headers=headers_bad, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -856,7 +856,7 @@ class TestMovie:
 
         response = test_client.post(
             "/api/movie", headers=headers_fake, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -884,3 +884,60 @@ class TestMovie:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### MOVIE GET ADDITIONAL CONTENT ###
+    def test_movie_get_additional_content(self, test_client, headers):
+        """Test movie get additional content
+        Test:
+            GET: /api/movie/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/movie/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### MOVIE VALIDATE CONTENT ###
+    def test_movie_validate_additional_content(self, test_client, headers_admin):
+        """Test movie validate additional content
+        Test:
+            PUT: /api/movie/<int:movie_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        movie = MovieAdditionalModel.query.filter_by(title="title").first()
+        response = test_client.put("/api/movie/additional/"+str(movie.movie_id), headers=headers_admin)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### MOVIE DECLINE CONTENT ###
+    def test_movie_decline_additional_content(self, test_client, headers_admin):
+        """Test movie validate decline content
+        Test:
+            DELETE: /api/movie/<int:movie_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        movie = MovieAdditionalModel.query.filter_by(title="title2").first()
+        response = test_client.delete("/api/movie/additional/"+str(movie.movie_id), headers=headers_admin)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

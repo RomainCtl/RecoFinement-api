@@ -53,27 +53,72 @@ def genre_test1():
         db.session.commit()
         return new_genre
 
+@pytest.fixture(scope="function")
+def indicate_interest():
+    if (p := PermissionModel.query.filter_by(permission="indicate_interest").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="indicate_interest"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
 
 @pytest.fixture(scope="function")
-def user_role():
+def modify_user_profil():
+    if (p := PermissionModel.query.filter_by(permission="modify_user_profil").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="modify_user_profil"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def view_recommendation():
+    if (p := PermissionModel.query.filter_by(permission="view_recommendation").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="view_recommendation"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def play_music():
+    if (p := PermissionModel.query.filter_by(permission="play_music").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="play_music"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def add_content():
+    if (p := PermissionModel.query.filter_by(permission="add_content").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="add_content"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+
+@pytest.fixture(scope="function")
+def user_role(indicate_interest, modify_user_profil, view_recommendation, play_music, add_content):
     if (role := RoleModel.query.filter_by(role_id=1).first()):
         return role
     else:
-        indicate_interest = PermissionModel(
-            permission="indicate_interest"
-        )
-        modify_user_profil = PermissionModel(
-            permission="modify_user_profil"
-        )
-        view_recommendation = PermissionModel(
-            permission="view_recommendation"
-        )
-        play_music = PermissionModel(
-            permission="play_music"
-        )
-        add_content = PermissionModel(
-            permission="add_content"
-        )
         role = RoleModel(
             role_id=1,
             name="user",
@@ -84,39 +129,60 @@ def user_role():
         db.session.commit()
         return role
 
+@pytest.fixture(scope="function")
+def access_sandbox():
+    if (p := PermissionModel.query.filter_by(permission="access_sandbox").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="access_sandbox"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
 
 @pytest.fixture(scope="function")
-def admin_role():
+def modify_content():
+    if (p := PermissionModel.query.filter_by(permission="modify_content").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="modify_content"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def validate_added_content():
+    if (p := PermissionModel.query.filter_by(permission="validate_added_content").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="validate_added_content"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def delete_content():
+    if (p := PermissionModel.query.filter_by(permission="delete_content").first()):
+        return p
+    else:
+        p = PermissionModel(
+            permission="delete_content"
+        )
+        db.session.add(p)
+        db.session.commit()
+        return p
+
+@pytest.fixture(scope="function")
+def admin_role(indicate_interest, modify_user_profil,view_recommendation, play_music, add_content,
+                access_sandbox, modify_content, validate_added_content, delete_content):
     if (role := RoleModel.query.filter_by(role_id=2).first()):
         return role
     else:
-        indicate_interest = PermissionModel(
-            permission="indicate_interest"
-        )
-        modify_user_profil = PermissionModel(
-            permission="modify_user_profil"
-        )
-        view_recommendation = PermissionModel(
-            permission="view_recommendation"
-        )
-        play_music = PermissionModel(
-            permission="play_music"
-        )
-        add_content = PermissionModel(
-            permission="add_content"
-        )
-        access_sandbox = PermissionModel(
-            permission="access_sandbox"
-        )
-        modify_content = PermissionModel(
-            permission="modify_content"
-        )
-        validate_added_content = PermissionModel(
-            permission="validate_added_content"
-        )
-        delete_content = PermissionModel(
-            permission="delete_content"
-        )
         role = RoleModel(
             role_id=2,
             name="admin",

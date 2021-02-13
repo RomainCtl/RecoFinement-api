@@ -271,7 +271,7 @@ class BookService:
             return err_resp("Additional book not found!", 404)
 
         try:
-            content = ContentModel(rating=None, genres=None)
+            content = ContentModel(rating=None)
             db.session.add(content)
             db.session.flush()
 
