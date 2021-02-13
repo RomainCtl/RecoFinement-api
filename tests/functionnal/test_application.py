@@ -904,8 +904,72 @@ class TestApplication:
         assert res['status'] == True
         assert res['content'] != []
 
+        
+    # def test_application_get_additional_content_bad_jwt(self, test_client, headers_bad):
+    #     """Test application get additional content with bad JWT token
+    #     Test:
+    #         GET: /api/application/additional/
+    #     Expected result: 
+    #         200, {"status": True}
+    #     Args:
+    #         test_client (app context): Flask application
+    #         headers_bad (dict): bad HTTP header, to get the access token
+    #     """
+
+    #     response = test_client.post(
+    #         "/api/application", headers=headers_bad, json=dict(
+    #             name="name1",
+    #             genres=[genre_test1.genre_id],
+    #         ))
+    #     res = json.loads(response.data)
+
+    #     assert response.status_code == 422
+
+    # def test_application_add_content_fake_jwt(self, test_client, headers_fake, genre_test1):
+    #     """Test application add additional content with fake JWT token
+    #     Test:
+    #         POST: /api/application/
+    #     Expected result: 
+    #         404, {"status": False}
+    #     Args:
+    #         test_client (app context): Flask application
+    #         headers_fake (dict): fake HTTP header, with invalid signed access token
+    #         genre_test1 (GenreObject) : Genre example
+    #     """
+
+    #     response = test_client.post(
+    #         "/api/application", headers=headers_fake, json=dict(
+    #             name="name1",
+    #             genres=[genre_test1.genre_id],
+    #         ))
+    #     res = json.loads(response.data)
+
+    #     assert response.status_code == 404
+    #     assert res['status'] == False
+
+    # def test_application_add_content_no_jwt(self, test_client, genre_test1):
+    #     """Test application add additional content without JWT token
+    #     Test:
+    #         POST: /api/application/
+    #     Expected result: 
+    #         401, {"status": False}
+    #     Args:
+    #         test_client (app context): Flask application
+    #         genre_test1 (GenreObject) : Genre example
+    #     """
+
+    #     response = test_client.post(
+    #         "/api/application", json=dict(
+    #             name="name1",
+    #             genres=[genre_test1.genre_id],
+    #         ))
+    #     res = json.loads(response.data)
+
+    #     assert response.status_code == 401
+    #     assert res['msg'] == "Missing Authorization Header"
+
     ### APPLICATION VALIDATE CONTENT ###
-    def test_application_validate_additional_content(self, test_client, headers):
+    def test_application_validate_additional_content(self, test_client, headers_admin):
         """Test application validate additional content
         Test:
             PUT: /api/application/<int:app_id>
@@ -916,7 +980,7 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
         app = ApplicationAdditionalModel.query.filter_by(name="name").first()
-        response = test_client.put("/api/application/additional/"+str(app.app_id), headers=headers)
+        response = test_client.put("/api/application/additional/"+str(app.app_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -925,7 +989,7 @@ class TestApplication:
 
         
     ### APPLICATION DECLINE CONTENT ###
-    def test_application_decline_additional_content(self, test_client, headers):
+    def test_application_decline_additional_content(self, test_client, headers_admin):
         """Test application validate decline content
         Test:
             DELETE: /api/application/<int:app_id>
@@ -936,7 +1000,7 @@ class TestApplication:
             headers (dict): HTTP header, to get the access token
         """
         app = ApplicationAdditionalModel.query.filter_by(name="name1").first()
-        response = test_client.delete("/api/application/additional/"+str(app.app_id), headers=headers)
+        response = test_client.delete("/api/application/additional/"+str(app.app_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
