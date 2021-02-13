@@ -835,7 +835,7 @@ class TestBook:
         assert res['content'] != []
 
     ### BOOK VALIDATE CONTENT ###
-    def test_book_validate_additional_content(self, test_client, headers):
+    def test_book_validate_additional_content(self, test_client, headers_admin):
         """Test book validate additional content
         Test:
             PUT: /api/book/<int:book_id>
@@ -846,7 +846,7 @@ class TestBook:
             headers (dict): HTTP header, to get the access token
         """
         book = BookAdditionalModel.query.filter_by(isbn="isbn").first()
-        response = test_client.put("/api/book/additional/"+str(book.book_id), headers=headers)
+        response = test_client.put("/api/book/additional/"+str(book.book_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -855,7 +855,7 @@ class TestBook:
 
         
     ### BOOK DECLINE CONTENT ###
-    def test_book_decline_additional_content(self, test_client, headers):
+    def test_book_decline_additional_content(self, test_client, headers_admin):
         """Test book validate decline content
         Test:
             DELETE: /api/book/<int:book_id>
@@ -866,7 +866,7 @@ class TestBook:
             headers (dict): HTTP header, to get the access token
         """
         book = BookAdditionalModel.query.filter_by(isbn="isbn2").first()
-        response = test_client.delete("/api/book/additional/"+str(book.book_id), headers=headers)
+        response = test_client.delete("/api/book/additional/"+str(book.book_id), headers=headers_admin)
 
         res = json.loads(response.data)
 

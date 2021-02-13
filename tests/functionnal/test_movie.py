@@ -904,7 +904,7 @@ class TestMovie:
         assert res['content'] != []
 
     ### MOVIE VALIDATE CONTENT ###
-    def test_movie_validate_additional_content(self, test_client, headers):
+    def test_movie_validate_additional_content(self, test_client, headers_admin):
         """Test movie validate additional content
         Test:
             PUT: /api/movie/<int:movie_id>
@@ -915,7 +915,7 @@ class TestMovie:
             headers (dict): HTTP header, to get the access token
         """
         movie = MovieAdditionalModel.query.filter_by(title="title").first()
-        response = test_client.put("/api/movie/additional/"+str(movie.movie_id), headers=headers)
+        response = test_client.put("/api/movie/additional/"+str(movie.movie_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -924,7 +924,7 @@ class TestMovie:
 
         
     ### MOVIE DECLINE CONTENT ###
-    def test_movie_decline_additional_content(self, test_client, headers):
+    def test_movie_decline_additional_content(self, test_client, headers_admin):
         """Test movie validate decline content
         Test:
             DELETE: /api/movie/<int:movie_id>
@@ -935,7 +935,7 @@ class TestMovie:
             headers (dict): HTTP header, to get the access token
         """
         movie = MovieAdditionalModel.query.filter_by(title="title2").first()
-        response = test_client.delete("/api/movie/additional/"+str(movie.movie_id), headers=headers)
+        response = test_client.delete("/api/movie/additional/"+str(movie.movie_id), headers=headers_admin)
 
         res = json.loads(response.data)
 

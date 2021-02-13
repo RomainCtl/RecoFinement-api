@@ -908,7 +908,7 @@ class TestSerie:
         assert res['content'] != []
 
     ### SERIE VALIDATE CONTENT ###
-    def test_serie_validate_additional_content(self, test_client, headers):
+    def test_serie_validate_additional_content(self, test_client, headers_admin):
         """Test serie validate additional content
         Test:
             PUT: /api/serie/<int:serie_id>
@@ -919,7 +919,7 @@ class TestSerie:
             headers (dict): HTTP header, to get the access token
         """
         serie = SerieAdditionalModel.query.filter_by(title="title").first()
-        response = test_client.put("/api/serie/additional/"+str(serie.serie_id), headers=headers)
+        response = test_client.put("/api/serie/additional/"+str(serie.serie_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -928,7 +928,7 @@ class TestSerie:
 
         
     ### SERIE DECLINE CONTENT ###
-    def test_serie_decline_additional_content(self, test_client, headers):
+    def test_serie_decline_additional_content(self, test_client, headers_admin):
         """Test serie validate decline content
         Test:
             DELETE: /api/serie/<int:serie_id>
@@ -939,7 +939,7 @@ class TestSerie:
             headers (dict): HTTP header, to get the access token
         """
         serie = SerieAdditionalModel.query.filter_by(title="title2").first()
-        response = test_client.delete("/api/serie/additional/"+str(serie.serie_id), headers=headers)
+        response = test_client.delete("/api/serie/additional/"+str(serie.serie_id), headers=headers_admin)
 
         res = json.loads(response.data)
 

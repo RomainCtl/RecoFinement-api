@@ -903,7 +903,7 @@ class TestGame:
         assert res['content'] != []
 
     ### GAME VALIDATE CONTENT ###
-    def test_game_validate_additional_content(self, test_client, headers):
+    def test_game_validate_additional_content(self, test_client, headers_admin):
         """Test game validate additional content
         Test:
             PUT: /api/game/<int:game_id>
@@ -914,7 +914,7 @@ class TestGame:
             headers (dict): HTTP header, to get the access token
         """
         game = GameAdditionalModel.query.filter_by(steamid=-1).first()
-        response = test_client.put("/api/game/additional/"+str(game.game_id), headers=headers)
+        response = test_client.put("/api/game/additional/"+str(game.game_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -923,7 +923,7 @@ class TestGame:
 
         
     ### GAME DECLINE CONTENT ###
-    def test_game_decline_additional_content(self, test_client, headers):
+    def test_game_decline_additional_content(self, test_client, headers_admin):
         """Test game validate decline content
         Test:
             DELETE: /api/game/<int:game_id>
@@ -934,7 +934,7 @@ class TestGame:
             headers (dict): HTTP header, to get the access token
         """
         game = GameAdditionalModel.query.filter_by(steamid=-2).first()
-        response = test_client.delete("/api/game/additional/"+str(game.game_id), headers=headers)
+        response = test_client.delete("/api/game/additional/"+str(game.game_id), headers=headers_admin)
 
         res = json.loads(response.data)
 

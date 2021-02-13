@@ -899,7 +899,7 @@ class TestTrack:
         assert res['content'] != []
 
     ### TRACK VALIDATE CONTENT ###
-    def test_track_validate_additional_content(self, test_client, headers):
+    def test_track_validate_additional_content(self, test_client, headers_admin):
         """Test track validate additional content
         Test:
             PUT: /api/track/<int:track_id>
@@ -910,7 +910,7 @@ class TestTrack:
             headers (dict): HTTP header, to get the access token
         """
         track = TrackAdditionalModel.query.filter_by(title="title").first()
-        response = test_client.put("/api/track/additional/"+str(track.track_id), headers=headers)
+        response = test_client.put("/api/track/additional/"+str(track.track_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
@@ -919,7 +919,7 @@ class TestTrack:
 
         
     ### TRACK DECLINE CONTENT ###
-    def test_track_decline_additional_content(self, test_client, headers):
+    def test_track_decline_additional_content(self, test_client, headers_admin):
         """Test track validate decline content
         Test:
             DELETE: /api/track/<int:track_id>
@@ -930,7 +930,7 @@ class TestTrack:
             headers (dict): HTTP header, to get the access token
         """
         track = TrackAdditionalModel.query.filter_by(title="title2").first()
-        response = test_client.delete("/api/track/additional/"+str(track.track_id), headers=headers)
+        response = test_client.delete("/api/track/additional/"+str(track.track_id), headers=headers_admin)
 
         res = json.loads(response.data)
 
