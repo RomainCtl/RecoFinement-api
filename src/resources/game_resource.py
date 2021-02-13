@@ -221,6 +221,7 @@ class GameAdditionalValidationResource(Resource):
         responses={
             201: ("Additional game data successfully validated"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or game not found!"),
         },
     )
@@ -236,6 +237,7 @@ class GameAdditionalValidationResource(Resource):
         responses={
             201: ("Additional game successfully deleted"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or game not found!"),
         },
     )

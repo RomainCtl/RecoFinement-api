@@ -222,6 +222,7 @@ class MovieAdditionalValidationResource(Resource):
         responses={
             201: ("Additional movie data successfully validated"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or movie not found!"),
         },
     )
@@ -237,6 +238,7 @@ class MovieAdditionalValidationResource(Resource):
         responses={
             201: ("Additional movie successfully deleted"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or movie not found!"),
         },
     )

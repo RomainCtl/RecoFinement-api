@@ -236,6 +236,7 @@ class SerieAdditionalValidationResource(Resource):
         responses={
             201: ("Additional series data successfully validated"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or series not found!"),
         },
     )
@@ -251,6 +252,7 @@ class SerieAdditionalValidationResource(Resource):
         responses={
             201: ("Additional series successfully deleted"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or series not found!"),
         },
     )

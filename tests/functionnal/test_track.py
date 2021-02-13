@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import TrackModel, ContentModel, MetaUserContentModel
+from src.model import TrackModel, ContentModel, MetaUserContentModel, TrackAdditionalModel
 from src import db
 import uuid
 
@@ -714,7 +714,6 @@ class TestTrack:
             "/api/track/"+str(track.content_id)+"/bad_recommendation", headers=headers_bad, json=dict(
                 year=["2010"]
             ))
-        #res = json.loads(response.data)
 
         assert response.status_code == 422
 
@@ -809,7 +808,7 @@ class TestTrack:
 
         response = test_client.post(
             "/api/track", headers=headers, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -831,7 +830,7 @@ class TestTrack:
 
         response = test_client.post(
             "/api/track", headers=headers_bad, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -852,7 +851,7 @@ class TestTrack:
 
         response = test_client.post(
             "/api/track", headers=headers_fake, json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
@@ -873,10 +872,67 @@ class TestTrack:
 
         response = test_client.post(
             "/api/track", json=dict(
-                title="title",
+                title="title2",
                 genres=[genre_test1.genre_id],
             ))
         res = json.loads(response.data)
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+        
+    ### TRACK GET ADDITIONAL CONTENT ###
+    def test_track_get_additional_content(self, test_client, headers):
+        """Test track get additional content
+        Test:
+            GET: /api/track/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/track/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### TRACK VALIDATE CONTENT ###
+    def test_track_validate_additional_content(self, test_client, headers):
+        """Test track validate additional content
+        Test:
+            PUT: /api/track/<int:track_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        track = TrackAdditionalModel.query.filter_by(title="title").first()
+        response = test_client.put("/api/track/additional/"+str(track.track_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### TRACK DECLINE CONTENT ###
+    def test_track_decline_additional_content(self, test_client, headers):
+        """Test track validate decline content
+        Test:
+            DELETE: /api/track/<int:track_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        track = TrackAdditionalModel.query.filter_by(title="title2").first()
+        response = test_client.delete("/api/track/additional/"+str(track.track_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

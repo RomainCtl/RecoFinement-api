@@ -246,6 +246,7 @@ class TrackAdditionalValidationResource(Resource):
         responses={
             201: ("Additional track data successfully validated"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or track not found!"),
         },
     )
@@ -261,6 +262,7 @@ class TrackAdditionalValidationResource(Resource):
         responses={
             201: ("Additional track successfully deleted"),
             401: ("Authentication required"),
+            403: ("Permission missing"),
             404: ("User or track not found!"),
         },
     )

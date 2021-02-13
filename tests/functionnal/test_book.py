@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import BookModel, ContentModel, MetaUserContentModel
+from src.model import BookModel, ContentModel, MetaUserContentModel, BookAdditionalModel
 from src import db
 
 
@@ -815,3 +815,60 @@ class TestBook:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### BOOK GET ADDITIONAL CONTENT ###
+    def test_book_get_additional_content(self, test_client, headers):
+        """Test book get additional content
+        Test:
+            GET: /api/book/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/book/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### BOOK VALIDATE CONTENT ###
+    def test_book_validate_additional_content(self, test_client, headers):
+        """Test book validate additional content
+        Test:
+            PUT: /api/book/<int:book_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        book = BookAdditionalModel.query.filter_by(isbn="isbn").first()
+        response = test_client.put("/api/book/additional/"+str(book.book_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### BOOK DECLINE CONTENT ###
+    def test_book_decline_additional_content(self, test_client, headers):
+        """Test book validate decline content
+        Test:
+            DELETE: /api/book/<int:book_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        book = BookAdditionalModel.query.filter_by(isbn="isbn2").first()
+        response = test_client.delete("/api/book/additional/"+str(book.book_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

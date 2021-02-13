@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import ApplicationModel, ContentModel, MetaUserContentModel
+from src.model import ApplicationModel, ContentModel, MetaUserContentModel, ApplicationAdditionalModel
 from src import db
 
 
@@ -884,3 +884,61 @@ class TestApplication:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+        
+    ### APPLICATION GET ADDITIONAL CONTENT ###
+    def test_application_get_additional_content(self, test_client, headers):
+        """Test application get additional content
+        Test:
+            GET: /api/application/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/application/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### APPLICATION VALIDATE CONTENT ###
+    def test_application_validate_additional_content(self, test_client, headers):
+        """Test application validate additional content
+        Test:
+            PUT: /api/application/<int:app_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        app = ApplicationAdditionalModel.query.filter_by(name="name").first()
+        response = test_client.put("/api/application/additional/"+str(app.app_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### APPLICATION DECLINE CONTENT ###
+    def test_application_decline_additional_content(self, test_client, headers):
+        """Test application validate decline content
+        Test:
+            DELETE: /api/application/<int:app_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        app = ApplicationAdditionalModel.query.filter_by(name="name1").first()
+        response = test_client.delete("/api/application/additional/"+str(app.app_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True

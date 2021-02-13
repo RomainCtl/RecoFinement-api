@@ -1,6 +1,6 @@
 import pytest
 import json
-from src.model import GameModel, ContentModel, MetaUserContentModel
+from src.model import GameModel, ContentModel, MetaUserContentModel, GameAdditionalModel
 from src import db
 
 
@@ -883,3 +883,60 @@ class TestGame:
 
         assert response.status_code == 401
         assert res['msg'] == "Missing Authorization Header"
+
+    ### GAME GET ADDITIONAL CONTENT ###
+    def test_game_get_additional_content(self, test_client, headers):
+        """Test game get additional content
+        Test:
+            GET: /api/game/additional/
+        Expected result: 
+            200, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        response = test_client.get("/api/game/additional", headers=headers)
+        res = json.loads(response.data)
+        
+        assert response.status_code == 200
+        assert res['status'] == True
+        assert res['content'] != []
+
+    ### GAME VALIDATE CONTENT ###
+    def test_game_validate_additional_content(self, test_client, headers):
+        """Test game validate additional content
+        Test:
+            PUT: /api/game/<int:game_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        game = GameAdditionalModel.query.filter_by(steamid=-1).first()
+        response = test_client.put("/api/game/additional/"+str(game.game_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
+
+        
+    ### GAME DECLINE CONTENT ###
+    def test_game_decline_additional_content(self, test_client, headers):
+        """Test game validate decline content
+        Test:
+            DELETE: /api/game/<int:game_id>
+        Expected result: 
+            201, {"status": True}
+        Args:
+            test_client (app context): Flask application
+            headers (dict): HTTP header, to get the access token
+        """
+        game = GameAdditionalModel.query.filter_by(steamid=-2).first()
+        response = test_client.delete("/api/game/additional/"+str(game.game_id), headers=headers)
+
+        res = json.loads(response.data)
+
+        assert response.status_code == 201
+        assert res['status'] == True
