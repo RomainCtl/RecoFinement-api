@@ -500,7 +500,7 @@ class ProfileService:
 
         try:
             if not (meta_profile_content := MetaProfileContentModel.query.filter_by(profile_id=profile.profile_id, content_id=content_id).first()):
-                meta_profile_content = MetaUserContentModel(
+                meta_profile_content = MetaProfileContentModel(
                     content_id=content_id, profile_id=profile.profile_id)
 
             meta_profile_content.rating = data["rating"]
