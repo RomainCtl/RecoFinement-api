@@ -25,4 +25,4 @@ COPY . $APP_HOME
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 # Upgrade DB and run app
-CMD bash -c "pipenv run gunicorn --access-logfile '-' --bind 0.0.0.0:4040 run:app"
+CMD bash -c "pipenv run gunicorn --access-logfile '-' --bind 0.0.0.0:4040 --worker-class eventlet run:app"
