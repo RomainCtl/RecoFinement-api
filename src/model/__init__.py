@@ -19,3 +19,5 @@ from .group_model import GroupModel, RecommendedContentForGroupModel
 from .role_model import RoleModel, PermissionModel
 
 from .event import *
+
+from .engine_model import EngineModel
