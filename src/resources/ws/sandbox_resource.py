@@ -6,6 +6,7 @@ from uuid import UUID
 
 from src.addons import socketio
 from src.model import UserModel
+from src.schemas import ProfileBase
 from src.service import ProfileService
 
 
@@ -99,18 +100,20 @@ class SandboxResource(Namespace):
                 'room': room
             }, room=room)
 
-            data, code = ProfileService.launch_recommendation(
+            data, code, profile = ProfileService.launch_recommendation(
                 profile_uuid, connected_user)
 
-            if code == 201:
+            if code == 200:
                 emit('server_response', {
                     'on': 'recommend',
-                    'action': 'launch recommend',
-                    'message': '%s, %s' % (code, data["message"])
+                    'action': 'recommend',
+                    'message': '%s, %s' % (code, data["message"]),
+                    'profile': ProfileBase.load(profile)
                 }, room=room)
             else:
                 emit('server_response', {
                     'on': 'recommend',
-                    'action': 'launch recommend',
-                    'message': 'Error %s, %s' % (code, data["message"])
+                    'action': 'recommend',
+                    'message': 'Error %s, %s' % (code, data["message"]),
+                    'profile': ProfileBase.load(profile)
                 }, room=room)

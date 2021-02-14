@@ -526,11 +526,6 @@ class ProfileService:
             return err_resp("Profile not found!", 404)
 
         try:
-            # Send request to reco_engine
-            # TODO change url to launch for profile
-            # requests.put('%s/recommend/%s' % (ENGINE_URL, current_user.uuid),
-            #              headers={'X-API-TOKEN': ENGINE_APIKEY})
-
             evt = RecommendationLaunchedForProfileEvent(
                 profile_id=profile.profile_id,
                 liked_genres=list(
@@ -562,8 +557,15 @@ class ProfileService:
             db.session.add(evt)
             db.session.commit()
 
-            resp = message(True, "Recommendation successfully started")
-            return resp, 201
+            # Send request to reco_engine
+            res = requests.put('%s/recommend/profile/%s/%s' % (ENGINE_URL, profile.uuid, evt.id),
+                               headers={'X-API-TOKEN': ENGINE_APIKEY})
+
+            if res.status_code == 500:
+                # TODO delete event ?
+                pass
+
+            return res.json(), res.status_code, profile
 
         except Exception as error:
             current_app.logger.error(error)
