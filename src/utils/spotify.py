@@ -8,8 +8,8 @@ from flask_jwt_extended import create_access_token
 
 class Spotify:
     @staticmethod
-    def oauth_url(uuid):
-        access_token = create_access_token(identity=uuid)
+    def oauth_url(user):
+        access_token = create_access_token(identity=user)
         params = urlencode({
             'client_id': SPOTIFY_CLIENT_ID,
             'scope': SPOTIFY_SCOPE,

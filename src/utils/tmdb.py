@@ -8,9 +8,12 @@ class TMDB:
 
         response = requests.get(TMDB_PROVIDER, params={
                                 "api_key": TMDB_CLIENT_TOKEN})
-        request_token = response.json()['request_token']
+        if response.status_code == requests.codes.ok:
+            request_token = response.json()['request_token']
 
-        return TMDB_USER_APPROVAL+request_token+"?redirect_to="+TMDB_REDIRECT_URI
+            return TMDB_USER_APPROVAL+request_token+"?redirect_to="+TMDB_REDIRECT_URI
+        else:
+            return ""
 
     @staticmethod
     def get_tokens(request_token):

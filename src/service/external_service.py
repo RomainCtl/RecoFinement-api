@@ -17,7 +17,7 @@ class ExternalService:
         try:
             if (ExternalModel.query.filter_by(user_id=user.user_id, service_name="Spotify").first()) is None:
                 resp = message(True, "Spotify oauth url sent")
-                resp["spotify_url"] = Spotify.oauth_url(user_uuid)
+                resp["spotify_url"] = Spotify.oauth_url(user)
             else:
                 resp = message(True, "Spotify is already linked")
                 resp["spotify_url"] = 'linked'
@@ -309,7 +309,7 @@ class ExternalService:
         try:
             if (ExternalModel.query.filter_by(user_id=user.user_id, service_name="GBooks").first()) is None:
                 resp = message(True, "GBooks oauth url sent")
-                resp["gbooks_url"] = GBooks.oauth_url(user_uuid)
+                resp["gbooks_url"] = GBooks.oauth_url(user)
             else:
                 resp = message(True, "GBooks is already linked")
                 resp["gbooks_url"] = 'linked'
