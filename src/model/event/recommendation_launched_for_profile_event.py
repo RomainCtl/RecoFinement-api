@@ -40,7 +40,7 @@ class RecoResultModel(db.Model):
     content_id = db.Column(db.Integer, db.ForeignKey(
         "content.content_id", ondelete="CASCADE"), primary_key=True)
     score = db.Column(db.Float)
-    engine = db.Column(db.String)
+    engine = db.Column(db.String, primary_key=True)
 
 
 class RecommendationLaunchedForProfileEvent(db.Model):
