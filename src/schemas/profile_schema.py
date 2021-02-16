@@ -30,21 +30,3 @@ class ProfileObject(SQLAlchemyAutoSchema):
 
     class Meta(ProfileMeta):
         fields = ("uuid", "profilename", "liked_genres")
-
-
-class UpdateProfileDataSchema(DTOSchema):
-    """ /auth/register  [POST]
-        /profile/update    [PATCH]
-
-    Parameters:
-    - Profilename (Str)
-    """
-    profilename = fields.Str(
-        validate=[
-            Length(min=4, max=15),
-            Regexp(
-                r"^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$",
-                error="Invalid profilename!",
-            ),
-        ],
-    )

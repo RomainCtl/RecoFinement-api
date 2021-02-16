@@ -5,7 +5,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from src.service import ProfileService, ExternalService
 from src.dto import ProfileDto
 
-from src.schemas import UpdateProfileDataSchema
 from src.utils import validation_error
 
 
@@ -26,7 +25,6 @@ result_game_resp = ProfileDto.result_game_resp
 result_movie_resp = ProfileDto.result_movie_resp
 result_serie_resp = ProfileDto.result_serie_resp
 result_track_resp = ProfileDto.result_track_resp
-update_schema = UpdateProfileDataSchema()
 
 
 @api.route("", doc={"params": {"page": {"in": "query", "type": "int", "default": 1}}})
@@ -120,9 +118,7 @@ class ProfileResource(Resource):
     def patch(self, uuid):
         profile_uuid = get_jwt_identity()
         data = request.get_json()
-        # Validate data
-        if (errors := update_schema.validate(data)):
-            return validation_error(False, errors)
+
         return ProfileService.update_profile_data(uuid, profile_uuid, data)
 
 
