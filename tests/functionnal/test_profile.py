@@ -357,29 +357,6 @@ class TestProfile:
         assert response.status_code == 404
         assert res['status'] == False
 
-    def test_update_profile_bad_field(self, test_client, headers_admin):
-        """Test update profile bad field with fake access token
-
-        Test:
-            PATCH: /api/profile/<uuid>
-
-        Expected result:
-            400, {"status" : False}
-
-        Args:
-            test_client (app context): Flask application
-            headers (dict): HTTP headers, to get the fake access token
-        """
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-        response = test_client.patch("/api/profile/"+str(profile.uuid), headers=headers_admin, json=dict(
-            profil="test"
-        ))
-        res = json.loads(response.data)
-        profile = ProfileModel.query.filter_by(profilename="admin1").first()
-
-        assert response.status_code == 400
-        assert res['status'] == False
-
     ### PROFILE GENRE ###
 
     def test_profile_genre(self, test_client, headers_admin):
