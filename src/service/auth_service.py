@@ -116,7 +116,7 @@ class AuthService:
                 reset_token = create_access_token(
                     identity=user, expires_delta=expires)
 
-                mailjet.sendForget(user, URL_FRONT+"/reset", reset_token)
+                mailjet.sendForget(user, URL_FRONT+"/app/reset", reset_token)
 
             resp = message(
                 True, "If your account exist, you will find an email to recover your password in your mailbox")
