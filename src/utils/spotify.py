@@ -112,35 +112,6 @@ class Spotify:
                 all_loaded = True
         return items_list
 
-    """ @staticmethod
-    def get_user_album_saved(access_token):
-        limit = 20
-        items_list = []
-        url = SPOTIFY_USER_URL + f"top/tracks?limit={limit}"
-        headers = {'Authorization': "Bearer "+access_token}
-        all_loaded = False
-        while not all_loaded:
-            response = requests.get(url, headers=headers).json()
-            items = response['items']
-            for item in items:
-                elements = {}
-                elements['artist_name'] = []
-                elements['release'] = item['album']['name']
-                elements['cover_art_url'] = item['album']['images'][0]["url"] if (isinstance(
-                    item['album']['images'], list) and len(item['album']['images']) > 0) else None
-                elements['year'] = item['album']['release_date'].split(
-                    "-")[0] if item['album']['release_date'] is not None else None
-                for artist in item['artists']:
-                    elements['artist_name'].append(artist['name'])
-                elements['artist_name'] = " & ".join(elements['artist_name'])
-                elements['played_at'] = None
-                items_list.append(elements)
-            if response['next']:
-                url = response['next']
-            else:
-                all_loaded = True
-        return items_list
-    """
     @staticmethod
     def get_user_recently_played(access_token):
         limit = 20
@@ -167,7 +138,7 @@ class Spotify:
                 url_cover = requests.get(
                     item['track']['href'], headers=headers).json()
                 elements['cover_art_url'] = url_cover['album']['images'][0]['url'] if (isinstance(
-                    url_cover['album']['images'], list) and len(url_cover['album']['images'] > 0)) else None
+                    url_cover['album']['images'], list) and len(url_cover['album']['images']) > 0) else None
                 items_list.append(elements)
             if response['next']:
                 url = response['next']
@@ -191,7 +162,7 @@ class Spotify:
                 url_playlist = requests.get(
                     item['href'], headers=headers).json()
                 elements['cover_art_url'] = url_playlist['images'][0]['url'] if (isinstance(
-                    url_playlist['images'], list) and len(url_playlist['images'] > 0)) else None
+                    url_playlist['images'], list) and len(url_playlist['images']) > 0) else None
                 elements['playlist_name'] = url_playlist['name']
                 for track in url_playlist["tracks"]["items"]:
                     tk = {}
