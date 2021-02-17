@@ -9,6 +9,8 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://' + \
     os.environ.get('DB_URL', '')+':'+os.environ.get('DB_PORT',
                                                     '')+'/'+os.environ.get('DB_NAME', '')
 
+PROPAGATE_EXCEPTIONS = True
+
 JWT_SECRET_KEY = os.environ.get('SECRET_KEY', '')
 JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(seconds=43_200)
 JWT_BLACKLIST_ENABLED = True
