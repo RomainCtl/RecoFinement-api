@@ -17,7 +17,7 @@ class UserService:
         if not (UserModel.query.filter_by(uuid=connected_user_uuid).first()):
             return err_resp("User not found!", 404)
         users, total_pages = Paginator.get_from(
-            UserModel.query.filter(UserModel.username.ilike(search_term+"%")).union(
+            UserModel.query.filter(UserModel.username.ilike(search_term+"%")).filter(UserModel.password_hash != 'no_pwd').union(
                 UserModel.query.filter(UserModel.username.ilike("%"+search_term+"%"))),
             page,
         )
