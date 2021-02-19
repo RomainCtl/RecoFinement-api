@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for src/utils/mailjet.py: 100%</title>
+    <title>Coverage for src/utils/mailjet.py: 44%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>src/utils/mailjet.py</b> :
-            <span class="pc_cov">100%</span>
+            <span class="pc_cov">44%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             16 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">16 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">7 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">9 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -60,7 +60,7 @@
     <p id="t6" class="pln"><span class="n"><a href="#t6">6</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t7" class="pln"><span class="n"><a href="#t7">7</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t8" class="run"><span class="n"><a href="#t8">8</a></span><span class="t"><span class="key">def</span> <span class="nam">sendForget</span><span class="op">(</span><span class="nam">user</span><span class="op">,</span> <span class="nam">url</span><span class="op">,</span> <span class="nam">reset_password_token</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t9" class="run"><span class="n"><a href="#t9">9</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t9" class="mis show_mis"><span class="n"><a href="#t9">9</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t10" class="pln"><span class="n"><a href="#t10">10</a></span><span class="t">        <span class="str">'Messages'</span><span class="op">:</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
     <p id="t11" class="pln"><span class="n"><a href="#t11">11</a></span><span class="t">            <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t">                <span class="str">"From"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
@@ -83,12 +83,12 @@
     <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t">            <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t">        <span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t33" class="run"><span class="n"><a href="#t33">33</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="mis show_mis"><span class="n"><a href="#t32">32</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="mis show_mis"><span class="n"><a href="#t33">33</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
     <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t36" class="run"><span class="n"><a href="#t36">36</a></span><span class="t"><span class="key">def</span> <span class="nam">sendReset</span><span class="op">(</span><span class="nam">user</span><span class="op">,</span> <span class="nam">url</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t37" class="run"><span class="n"><a href="#t37">37</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t37" class="mis show_mis"><span class="n"><a href="#t37">37</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t38" class="pln"><span class="n"><a href="#t38">38</a></span><span class="t">        <span class="str">'Messages'</span><span class="op">:</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
     <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t">            <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t">                <span class="str">"From"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
@@ -111,12 +111,12 @@
     <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t">            <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">        <span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t60" class="run"><span class="n"><a href="#t60">60</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t61" class="run"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="mis show_mis"><span class="n"><a href="#t60">60</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="mis show_mis"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
     <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t63" class="pln"><span class="n"><a href="#t63">63</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t"><span class="key">def</span> <span class="nam">sendNewAccount</span><span class="op">(</span><span class="nam">user</span><span class="op">,</span> <span class="nam">url</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="mis show_mis"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t66" class="pln"><span class="n"><a href="#t66">66</a></span><span class="t">        <span class="str">'Messages'</span><span class="op">:</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
     <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">            <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p id="t68" class="pln"><span class="n"><a href="#t68">68</a></span><span class="t">                <span class="str">"From"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
@@ -139,14 +139,14 @@
     <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">            <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t86" class="pln"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t88" class="run"><span class="n"><a href="#t88">88</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t89" class="run"><span class="n"><a href="#t89">89</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t88" class="mis show_mis"><span class="n"><a href="#t88">88</a></span><span class="t">    <span class="nam">result</span> <span class="op">=</span> <span class="nam">MAILJET</span><span class="op">.</span><span class="nam">send</span><span class="op">.</span><span class="nam">create</span><span class="op">(</span><span class="nam">data</span><span class="op">=</span><span class="nam">data</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="mis show_mis"><span class="n"><a href="#t89">89</a></span><span class="t">    <span class="key">return</span> <span class="nam">result</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.4</a>,
-            created at 2021-02-17 17:21 +0000
+            created at 2021-02-19 11:30 +0000
         </p>
     </div>
 </div>
